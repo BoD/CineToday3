@@ -1,0 +1,18 @@
+[versions]
+kotlin = "1.6.21"
+agp = "7.2.0"
+apollo = "3.3.0"
+hilt="2.38.1"
+appcompat="1.4.1"
+junit="4.13.2"
+
+[plugins]
+apollo = { id = "com.apollographql.apollo3", version.ref = "apollo" }
+
+[libraries]
+apollo = { group = "com.apollographql.apollo3", name = "apollo-runtime", version.ref = "apollo" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+androidx-appcompat-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+testing-junit = { group = "junit", name = "junit", version.ref = "junit" }
+

@@ -1,0 +1,18 @@
+query TheaterSearch($search: String!) {
+    theaterList(search: $search) @nonnull {
+        edges @nonnull {
+            node @nonnull {
+                id
+                name @nonnull
+                location @nonnull {
+                    address @nonnull
+                    zip @nonnull
+                    city @nonnull
+                }
+                poster {
+                    url @nonnull
+                }
+            }
+        }
+    }
+}
