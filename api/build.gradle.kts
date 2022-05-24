@@ -4,8 +4,7 @@ plugins {
 }
 
 dependencies {
-    // Should be implementation but needs to be api for hilt to be able to generate code in dependend modules
-    api(libs.apollo)
+    implementation(libs.apollo)
 }
 
 apollo {

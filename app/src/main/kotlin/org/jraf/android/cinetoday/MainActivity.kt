@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
-import org.jraf.android.cinetoday.api.TheaterRemoteSource
+import org.jraf.android.cinetoday.repository.TheaterRepository
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     @Inject
-    lateinit var theaterRemoteSource: TheaterRemoteSource
+    lateinit var theaterRepository: TheaterRepository
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main)
 
         runBlocking {
-            println(theaterRemoteSource.searchTheaters("trappes"))
+            println(theaterRepository.searchTheaters("trappes"))
         }
     }
 }

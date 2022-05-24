@@ -42,16 +42,11 @@ kapt {
     correctErrorTypes = true
 }
 
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
 dependencies {
-    // Why can't I use `libs` here?
-//    implementation(libs.hilt.android)
-//    kapt(libs.hilt.android.compiler)
-//
-//    testImplementation(libs.testing.junit)
+    implementation(libs.findLibrary("hilt.android").get())
+    kapt(libs.findLibrary("hilt.android.compiler").get())
 
-    implementation("com.google.dagger:hilt-android:2.38.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
-
-    testImplementation("junit:junit:4.13.2")
-
+    testImplementation(libs.findLibrary("testing.junit").get())
 }

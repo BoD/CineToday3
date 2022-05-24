@@ -3,10 +3,14 @@ package org.jraf.android.cinetoday.api
 import com.apollographql.apollo3.ApolloClient
 import javax.inject.Inject
 
-class TheaterRemoteSource @Inject constructor(
+interface TheaterRemoteSource {
+    suspend fun searchTheaters(search: String): List<RemoteTheater>
+}
+
+class TheaterRemoteSourceImpl @Inject constructor(
     private val apolloClient: ApolloClient,
-) {
-    suspend fun searchTheaters(search: String): List<RemoteTheater> {
+) : TheaterRemoteSource {
+    override suspend fun searchTheaters(search: String): List<RemoteTheater> {
         return apolloClient.query(TheaterSearchQuery(search)).execute().dataAssertNoErrors.theaterList.edges.mapNotNull { it?.node?.toRemoteTheater() }
     }
 }

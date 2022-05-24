@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -58,10 +56,15 @@ dependencies {
     implementation("androidx.wear:wear:1.1.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
-    implementation(projects.api)
+    implementation(projects.repository)
 }
 
 kapt {
     // See https://developer.android.com/training/dependency-injection/hilt-android
     correctErrorTypes = true
+}
+
+hilt {
+    // See https://dagger.dev/hilt/gradle-setup#aggregating-task
+    enableAggregatingTask = true
 }
