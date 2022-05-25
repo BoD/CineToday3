@@ -64,7 +64,7 @@ type Query {
   """
   Retrieves a list of Localizations.
   """
-  localizationList(after: String, "The amount of localizations to display." first: Int = 10, before: String, last: Int, "If provided, search filter will use specific language searching." analyzer: Locale, "Filter localization by types." type: [LocalizationTypeValue], "Filter localizations if they have theaters." hasTheater: Boolean, "Filter localizations if they have not the specified ids." exclude: [Int], "Filter localizations if they have coordinates." withCoordinates: Boolean, "Filter localizations displayed the movie by id." movieDisplayed: Int, "If provided will filter the results by name or zip (using full text algorithms)." search: String, "If provided, will only display localization for those countries." countries: [CountryCode], "The latitude and longitude as an object : {lat: XXX, lon: YYY}. This is meant to be used with the radius argument." location: CoordinateType, "Used with the \"location\" argument, defines the max distance in meter." radius: Float, "Filter localizations referenced by their parents." parents: [String], order: [LocalizationSorting] = [ALPHABETICAL]): localizationConnection
+  localizationList(after: String, "The amount of localizations to display." first: Int = 10, before: String, last: Int, "If provided, search filter will use specific language searching." analyzer: Locale, "Filter localization by types." type: [LocalizationTypeValue], "Filter localizations if they have theaters." hasTheater: Boolean, "Filter localizations if they have not the specified ids." exclude: [Int], "Filter localizations if they have coordinates." withCoordinates: Boolean, "Filter localizations displayed the movie by id." movieDisplayed: Int, "Filter localizations displayed the movie by id in the next two sliding weeks." movieDisplayedWithinTwoSlidingWeeks: Int, "If provided will filter the results by name or zip (using full text algorithms)." search: String, "If provided, will only display localization for those countries." countries: [CountryCode], "The latitude and longitude as an object : {lat: XXX, lon: YYY}. This is meant to be used with the radius argument." location: CoordinateType, "Used with the \"location\" argument, defines the max distance in meter." radius: Float, "Filter localizations referenced by their parents." parents: [String], order: [LocalizationSorting] = [ALPHABETICAL]): localizationConnection
 
   """
   Some informations about the current user.
@@ -81,12 +81,12 @@ type Query {
   """
   Will get movies aggregated by selected theaters
   """
-  movieByTheaterList(after: String, "The amount of elements to include." first: Int = 10, before: String, last: Int, "Will only display movies broadcasted in this theater. (Theater:C0000 in base64 encoded)" theater: [String]!, "Showtimes starting before this value won't be displayed. Default value is today." from: DateTime, "Showtimes starting after this value won't be displayed. Default value is tomorrow." to: DateTime, order: [MovieShowtimeSorting] = [SHOWTIME_DATE]): moviesByTheaterListConnection
+  movieByTheaterList(after: String, "The amount of elements to include." first: Int = 10, before: String, last: Int, "Will only display movies broadcasted in this theater. (Theater:C0000 in base64 encoded)" theater: [String]!, "Showtimes starting before this value won't be displayed. Default value is today." from: DateTime, "Showtimes starting after this value won't be displayed. Default value is tomorrow." to: DateTime, order: [MovieShowtimeSorting] = [RELEASE_DATE]): moviesByTheaterListConnection
 
   """
   A list of movie.
   """
-  movieList(after: String, "The amount of movies to display" first: Int = 10, before: String, last: Int, "When provided, will only select movies that have at least one of the given genres." genres: [Genre], "When provided, will only select movies not having at least one of the given genres." excludeGenres: [Genre], "When provided, will only select movies that have at least one of the given countries." countries: [CountryCode], "If provided, will only select movies that have at least one showtime in the given localization." localization: Int, "When not provided, movies are sorted in alphabetical order." order: [MovieSorting] = [ALPHABETICAL], "When provided, will only select movies that were released after this date." releaseFrom: DateTime, "When provided, will only select movies that were released before this date." releaseTo: DateTime, "!!! DEPRECATED (Use the releaseMaterialType filter instead) !!! When provided, the releaseFrom and releaseTo filters will be applied on the related release date type." releaseDateType: MovieReleaseDateFilterType, "Filter movies by releases features." releaseFilter: ReleaseFilterType, "Filter movies by a visa number." visaNumber: [String!], "When provided, will only select movies that were produced this year." productionYear: [Int], "When provided, will only select movies that were produced this decade. Must always be a multiple of 10." productionDecade: [Int], "When provided, will only select movies with press rating between selected values." pressRating: FilterRangeRating, "When provided, will only select movies with user rating between selected values." scoreRating: FilterRangeRating, "When provided, will only select movies with press rating counter between selected values." pressRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with user rating counter between selected values." scoreRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies that have at least the given amount of theaters during the current week." minTheaters: Int, "When provided, will only select movies with a given movie type." type: [MovieType], "When provided, will only select movies not having at least one of the given types." excludeTypes: [MovieType], "A special filter is a particular selection of movies. It only works with the order and pagination arguments.\n                                  Other arguments are not supported and will generate an error." specialFilter: MovieSpecialFilter, "A list of ids to be excluded from the search." exclude: [Int], "A list of ids to be included in the search" include: [Int], "Filter movie list with flags" flags: MovieFlagsType, "When provided, will add aggregation on you query search with the facets you want." facets: [FacetsType], "When provided, will only select movies that were updated after this date." lastUpdated: DateTime, "When provided, will only select movies that are linked to one of the companies ids." companies: [Int!], "When provided, will only select movies that have a company with the selected activity linked to it." activities: [CompanyActivity!], "When provided, will return only the movies linked to all specified tags." tag: [Int!], "Does the movie has an advice for children audience ?" forChildren: Boolean, "When provided, return only movies available on these providers." svodProviders: [SvodProviders!], "Filter movie list by release flag." svodFlags: [SvodFlags!], "Filter movies by release flag" releaseFlags: [BaseReleaseType!], "Filter movies matching all physical product flags given" physicalFlags: [PhysicalProductType!], "If true will only filter browsable movies" browsableOnly: Boolean = true): moviesConnection
+  movieList(after: String, "The amount of movies to display" first: Int = 10, before: String, last: Int, "When provided, will only select movies that have at least one of the given genres." genres: [Genre], "When provided, will only select movies not having at least one of the given genres." excludeGenres: [Genre], "When provided, will only select movies that have at least one of the given countries." countries: [CountryCode], "If provided, will only select movies that have at least one showtime in the given localization." localization: Int, "When not provided, movies are sorted in alphabetical order." order: [MovieSorting] = [ALPHABETICAL], "When provided, will only select movies that were released in the US after this date." releaseFromUs: DateTime, "When provided, will only select movies that were released in the US before this date." releaseToUs: DateTime, "When provided, will only select movies that were released after this date." releaseFrom: DateTime, "When provided, will only select movies that were released before this date." releaseTo: DateTime, "!!! DEPRECATED (Use the releaseMaterialType filter instead) !!! When provided, the releaseFrom and releaseTo filters will be applied on the related release date type." releaseDateType: MovieReleaseDateFilterType, "Filter movies by releases features." releaseFilter: ReleaseFilterType, "Filter movies by a visa number." visaNumber: [String!], "When provided, will only select movies that were produced this year." productionYear: [Int], "When provided, will only select movies that were produced this decade. Must always be a multiple of 10." productionDecade: [Int], "When provided, will only select movies with editorial rating between selected values." editorialRating: FilterRangeRating, "When provided, will only select movies with press rating between selected values." pressRating: FilterRangeRating, "When provided, will only select movies with user rating between selected values." scoreRating: FilterRangeRating, "When provided, will only select movies with editorial rating counter between selected values." editorialRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with press rating counter between selected values." pressRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with user rating counter between selected values." scoreRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies that have at least the given amount of theaters during the current week." minTheaters: Int, "When provided, will only select movies that have at least the given amount of theaters during the next two floating weeks." minTheatersTwoFloatingWeeks: Int, "When provided, will only select movies with a given movie type." type: [MovieType], "When provided, will only select movies not having at least one of the given types." excludeTypes: [MovieType], "A special filter is a particular selection of movies. It only works with the order and pagination arguments.\n                                  Other arguments are not supported and will generate an error." specialFilter: MovieSpecialFilter, "A list of ids to be excluded from the search." exclude: [Int], "A list of ids to be included in the search" include: [Int], "Filter movie list with flags" flags: MovieFlagsType, "When provided, will add aggregation on you query search with the facets you want." facets: [FacetsType], "When provided, will only select movies that were updated after this date." lastUpdated: DateTime, "When provided, will only select movies that are linked to one of the companies ids." companies: [Int!], "When provided, will only select movies that have a company with the selected activity linked to it." activities: [CompanyActivity!], "When provided, will return only the movies linked to all specified tags." tag: [Int!], "Does the movie has an advice for children audience ?" forChildren: Boolean, "When provided, return only movies available on these providers." svodProviders: [SvodProviders!], "Filter movie list by release flag." svodFlags: [SvodFlags!], "Filter movies by release flag" releaseFlags: [BaseReleaseType!], "Filter movies matching all physical product flags given" physicalFlags: [PhysicalProductType!], "If true will only filter browsable movies" browsableOnly: Boolean = true): moviesConnection
 
   movieRelease("The id of a movie release. (MovieRelease:1234 in base64 encoded)" id: String, "The internal id of a movie release." internalId: Int): MovieRelease
 
@@ -103,7 +103,7 @@ type Query {
   """
   A list of news Allocine.
   """
-  newsList(after: String, "The amount of news to display." first: Int = 10, before: String, last: Int, "A global id you want the news to be related to. (Like Movie:1234, Series:1234, ... in base64 encoded)" parentId: String, "Order news list." order: [NewsSorting] = [LATEST_PUBLICATION], "Add sponsored news in the list." insertSponsored: Boolean = false, "Filter news by operation target type." operation: [SpecialOperationCode], "Filter news by categories." category: [NewsCategory], "Exclude news by categories." excludeCategory: [NewsCategory], "Filter news by universes." universe: [NewsUniverse], "Exclude news by universe." excludeUniverse: [NewsUniverse], "Filter news by types." type: [NewsType], "Exclude news by id." excludeId: [Int], "Exclude news by types." excludeType: [NewsType], "Filter news by entities linked." relatedType: [NewsRelatedType], "Filter folder news." isFolder: Boolean, "Does the news has an advice for children audience ?" forChildren: Boolean, "When provided, return only news tagged with these providers" svodProviders: [SvodProviders!], "When provided, return only the news written by one of the authors." authors: [String!]): newsConnection
+  newsList(after: String, "The amount of news to display." first: Int = 10, before: String, last: Int, "A global id you want the news to be related to. (Like Movie:1234, Series:1234, ... in base64 encoded)" parentId: String, "Order news list." order: [NewsSorting] = [LATEST_PUBLICATION], "Add sponsored news in the list." insertSponsored: Boolean = false, "Filter news by operation target type." operation: [SpecialOperationCode], "Filter news by categories." category: [NewsCategory], "Exclude news by categories." excludeCategory: [NewsCategory], "Filter news by universes." universe: [NewsUniverse], "Exclude news by universe." excludeUniverse: [NewsUniverse], "Filter news by types." type: [NewsType], "Exclude news by id." excludeId: [Int], "Exclude news by types." excludeType: [NewsType], "Filter news by entities linked." relatedType: [NewsRelatedType], "Filter folder news." isFolder: Boolean, "Does the news has an advice for children audience ?" forChildren: Boolean, "When provided, return only news tagged with these providers" svodProviders: [SvodProviders!], "When provided, return only the news written by one of the authors." authors: [String!], "When provided, will only select news that were published after this date." publishedFrom: DateTime): newsConnection
 
   """
   Fetches an object given its ID
@@ -118,7 +118,7 @@ type Query {
   """
   A list of person.
   """
-  personList(after: String, "The amount of persons to display." first: Int!, before: String, last: Int, "When not provided, persons are sorted in random order" order: [PersonSorting!], "When provided, will add aggregation on you query search with the facets you want." facets: [FacetsType], "When provided, will only select persons which last name starts with the given letter. If set as '#', get only the persons which last name starts with a number or any special letter." nameFirstChar: [String], "When provided, will only select persons that were born this year." birthYear: [Int], "When provided, will only select persons that were born this decade. Must always be a multiple of 10." birthDecade: [Int], "If provided, will only display aggregation for those countries." countries: [CountryCode], "When provided, will only select persons that were born this day (mm\/dd format)." birthAnniversary: String, "When provided, will only select persons that died this day (mm\/dd format)." deathAnniversary: String): personsConnection
+  personList(after: String, "The amount of persons to display." first: Int!, before: String, last: Int, "When not provided, persons are sorted in random order" order: [PersonSorting!], "When provided, will add aggregation on you query search with the facets you want." facets: [FacetsType], "When provided, will only select persons which last name starts with the given letter. If set as '#', get only the persons which last name starts with a number or any special letter." nameFirstChar: [String], "When provided, will only select persons that were born this year." birthYear: [Int], "When provided, will only select persons that were born this decade. Must always be a multiple of 10." birthDecade: [Int], "If provided, will only display aggregation for those countries." countries: [CountryCode], "When provided, will only select persons that were born this day (mm\/dd format)." birthAnniversary: String, "When provided, will only select persons that died this day (mm\/dd format)." deathAnniversary: String, "If true will only filter browsable persons" browsableOnly: Boolean = true): personsConnection
 
   """
   A product of type vod, dvd or br.
@@ -588,6 +588,11 @@ type ImageFile {
   The height of the image in pixels.
   """
   height: Int
+
+  """
+  The mime type of the image.
+  """
+  mime: String
 }
 
 """
@@ -1266,7 +1271,7 @@ type Country {
   """
   The top movie by box office global data.
   """
-  topMovieBoxOffice(after: String, "The amount of movie to return." first: Int = 10, before: String, last: Int, "When provided, will only select movies that have at least one of the given genres." genres: [Genre], "When provided, will only select movies not having at least one of the given genres." excludeGenres: [Genre], "When provided, will only select movies that have at least one of the given countries." countries: [CountryCode], "If provided, will only select movies that have at least one showtime in the given localization." localization: Int, "When not provided, movies are sorted in alphabetical order." order: [MovieSorting] = [ALPHABETICAL], "When provided, will only select movies that were released after this date." releaseFrom: DateTime, "When provided, will only select movies that were released before this date." releaseTo: DateTime, "!!! DEPRECATED (Use the releaseMaterialType filter instead) !!! When provided, the releaseFrom and releaseTo filters will be applied on the related release date type." releaseDateType: MovieReleaseDateFilterType, "Filter movies by releases features." releaseFilter: ReleaseFilterType, "Filter movies by a visa number." visaNumber: [String!], "When provided, will only select movies that were produced this year." productionYear: [Int], "When provided, will only select movies that were produced this decade. Must always be a multiple of 10." productionDecade: [Int], "When provided, will only select movies with press rating between selected values." pressRating: FilterRangeRating, "When provided, will only select movies with user rating between selected values." scoreRating: FilterRangeRating, "When provided, will only select movies with press rating counter between selected values." pressRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with user rating counter between selected values." scoreRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies that have at least the given amount of theaters during the current week." minTheaters: Int, "When provided, will only select movies with a given movie type." type: [MovieType], "When provided, will only select movies not having at least one of the given types." excludeTypes: [MovieType], "A special filter is a particular selection of movies. It only works with the order and pagination arguments.\n                                  Other arguments are not supported and will generate an error." specialFilter: MovieSpecialFilter, "A list of ids to be excluded from the search." exclude: [Int], "A list of ids to be included in the search" include: [Int], "Filter movie list with flags" flags: MovieFlagsType, "When provided, will add aggregation on you query search with the facets you want." facets: [FacetsType], "When provided, will only select movies that were updated after this date." lastUpdated: DateTime, "When provided, will only select movies that are linked to one of the companies ids." companies: [Int!], "When provided, will only select movies that have a company with the selected activity linked to it." activities: [CompanyActivity!], "When provided, will return only the movies linked to all specified tags." tag: [Int!], "Does the movie has an advice for children audience ?" forChildren: Boolean, "When provided, return only movies available on these providers." svodProviders: [SvodProviders!], "Filter movie list by release flag." svodFlags: [SvodFlags!], "Filter movies by release flag" releaseFlags: [BaseReleaseType!], "Filter movies matching all physical product flags given" physicalFlags: [PhysicalProductType!], "If true will only filter browsable movies" browsableOnly: Boolean = true): moviesConnection
+  topMovieBoxOffice(after: String, "The amount of movie to return." first: Int = 10, before: String, last: Int, "When provided, will only select movies that have at least one of the given genres." genres: [Genre], "When provided, will only select movies not having at least one of the given genres." excludeGenres: [Genre], "When provided, will only select movies that have at least one of the given countries." countries: [CountryCode], "If provided, will only select movies that have at least one showtime in the given localization." localization: Int, "When not provided, movies are sorted in alphabetical order." order: [MovieSorting] = [ALPHABETICAL], "When provided, will only select movies that were released in the US after this date." releaseFromUs: DateTime, "When provided, will only select movies that were released in the US before this date." releaseToUs: DateTime, "When provided, will only select movies that were released after this date." releaseFrom: DateTime, "When provided, will only select movies that were released before this date." releaseTo: DateTime, "!!! DEPRECATED (Use the releaseMaterialType filter instead) !!! When provided, the releaseFrom and releaseTo filters will be applied on the related release date type." releaseDateType: MovieReleaseDateFilterType, "Filter movies by releases features." releaseFilter: ReleaseFilterType, "Filter movies by a visa number." visaNumber: [String!], "When provided, will only select movies that were produced this year." productionYear: [Int], "When provided, will only select movies that were produced this decade. Must always be a multiple of 10." productionDecade: [Int], "When provided, will only select movies with editorial rating between selected values." editorialRating: FilterRangeRating, "When provided, will only select movies with press rating between selected values." pressRating: FilterRangeRating, "When provided, will only select movies with user rating between selected values." scoreRating: FilterRangeRating, "When provided, will only select movies with editorial rating counter between selected values." editorialRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with press rating counter between selected values." pressRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with user rating counter between selected values." scoreRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies that have at least the given amount of theaters during the current week." minTheaters: Int, "When provided, will only select movies that have at least the given amount of theaters during the next two floating weeks." minTheatersTwoFloatingWeeks: Int, "When provided, will only select movies with a given movie type." type: [MovieType], "When provided, will only select movies not having at least one of the given types." excludeTypes: [MovieType], "A special filter is a particular selection of movies. It only works with the order and pagination arguments.\n                                  Other arguments are not supported and will generate an error." specialFilter: MovieSpecialFilter, "A list of ids to be excluded from the search." exclude: [Int], "A list of ids to be included in the search" include: [Int], "Filter movie list with flags" flags: MovieFlagsType, "When provided, will add aggregation on you query search with the facets you want." facets: [FacetsType], "When provided, will only select movies that were updated after this date." lastUpdated: DateTime, "When provided, will only select movies that are linked to one of the companies ids." companies: [Int!], "When provided, will only select movies that have a company with the selected activity linked to it." activities: [CompanyActivity!], "When provided, will return only the movies linked to all specified tags." tag: [Int!], "Does the movie has an advice for children audience ?" forChildren: Boolean, "When provided, return only movies available on these providers." svodProviders: [SvodProviders!], "Filter movie list by release flag." svodFlags: [SvodFlags!], "Filter movies by release flag" releaseFlags: [BaseReleaseType!], "Filter movies matching all physical product flags given" physicalFlags: [PhysicalProductType!], "If true will only filter browsable movies" browsableOnly: Boolean = true): moviesConnection
 }
 
 """
@@ -1546,9 +1551,19 @@ type Movie implements Node {
   trivias(after: String, "The amount of trivias to return." first: Int = 10, before: String, last: Int, "The order to apply to the trivias." order: [TriviaSorting] = [RANK]): triviasConnection
 
   """
+  !!!!! DEPRECATED !!!!! Use selection instead.
+  """
+  selections("If true will include only the winners. Does nothing by default." hasWon: Boolean = null): [FestivalSelection] @deprecated(reason: "Use selection instead")
+
+  """
   The selections the movie was selected in.
   """
-  selections("If true will include only the winners. Does nothing by default." hasWon: Boolean = null): [FestivalSelection]
+  selection(after: String, "The amount of entries to return." first: Int = 5, before: String, last: Int, "If true will include only the winners. Does nothing by default." hasWon: Boolean = null): FestivalSelectionConnection
+
+  """
+  The festival editions the movie was selected in.
+  """
+  festivalEdition(after: String, "The amount of editions to return. If not provided, will get all editions" first: Int, before: String, last: Int, "If provided will get all edition which the starts date is after or before the selected date." startDate: FilterDate, "If provided will get all edition which the ends date is after or before the selected date." endDate: FilterDate, "The order of the editions to return. If none provided the \"YEAR\" descendant order is used." order: [FestivalEditionSorting] = [LATEST]): FestivalEditionConnection
 
   """
   !!!!! DEPRECATED !!!!! Use relatedProducts instead.
@@ -1579,6 +1594,11 @@ type Movie implements Node {
   The amount of theaters that will be playing or have played this movie in the current week.
   """
   weeklyTheatersCount("If provided will filter theaters by country code." country: [CountryCode], "The latitude and longitude as an object : {lat: XXX, lon: YYY}. This is meant to be used with the radius argument." location: CoordinateType, "Used with the \"location\" argument, defines the max distance in meter." radius: Float, "If provided, returns the amount of theaters among those theaters on which this movie is played. (Theater:C0000 in base64 encoded)" theater: [String]): Int
+
+  """
+  The amount of theaters that will be playing this movie in the next two floating weeks.
+  """
+  twoFloatingWeeksTheatersCount("If provided will filter theaters by country code." country: [CountryCode], "The latitude and longitude as an object : {lat: XXX, lon: YYY}. This is meant to be used with the radius argument." location: CoordinateType, "Used with the \"location\" argument, defines the max distance in meter." radius: Float, "If provided, returns the amount of theaters among those theaters on which this movie is played. (Theater:C0000 in base64 encoded)" theater: [String]): Int
 
   """
   The list of movies/series/seasons/... this movie relates to.
@@ -2480,7 +2500,7 @@ type Person implements Node {
   """
   The list of collobaration (order by number desc)
   """
-  collaboration("The amount of entries to return." first: Int = 5): personsCollaborationConnection
+  collaboration("The amount of entries to return." first: Int = 5, "If true will only filter browsable persons" browsableOnly: Boolean = true): personsCollaborationConnection
 
   """
   The keywords of the person
@@ -2564,6 +2584,11 @@ enum EntityVideoSorting {
   Video sorted by popularity (all time).
   """
   ALL_TIME_POPULARITY
+
+  """
+  This order will display the trailers first, then the teasers, then the clips, and then the other types.
+  """
+  CUSTOM_VIDEO_TYPE
 }
 
 enum VideoType {
@@ -3353,12 +3378,17 @@ type News implements Node {
   """
   The related entities of the news
   """
-  relatedEntities("A list of types to be excluded from the search." excludedTypes: [NewsRelatedEntityTypes]): [Node]
+  relatedEntities("A list of types to be excluded from the search." excludedTypes: [NewsRelatedEntityTypes], "A list of types to search for." types: [NewsRelatedEntityTypes]): [Node]
 
   """
   The pages of the news. This is were the readable content is stored.
   """
-  pages: [NewsPage]
+  pages: [NewsPage!]
+
+  """
+  The slides of the news.
+  """
+  slides: [NewsSlide!]
 
   """
   The categories of the news.
@@ -3448,18 +3478,18 @@ enum NewsRelatedEntityTypes {
 }
 
 """
-A page of a news, this is were the news content lives.
+A page of a news, this is where the news content lives.
 """
 type NewsPage {
   """
   The news this page belongs to.
   """
-  news: News
+  news: News!
 
   """
   The page number, from 1 to +Inf.
   """
-  number: Int
+  number: Int!
 
   """
   The title of the page.
@@ -3472,9 +3502,64 @@ type NewsPage {
   body: String
 
   """
+  The content of the page on json format.
+  """
+  body_json: BodyJson
+
+  """
   The video attached to this news. This is the player that appears at the top of the news on the website.
   """
   video: Video
+}
+
+"""
+An object containing all the informations needed to display a body_json
+"""
+type BodyJson {
+  """
+  The body_json field itself.
+  """
+  body: Json
+
+  """
+  The related entities of the body_json
+  """
+  relatedEntities: [Node]
+}
+
+"""
+A slide of a news, this is where the news content lives.
+"""
+type NewsSlide {
+  """
+  The news this page belongs to.
+  """
+  news: News!
+
+  """
+  The slide number, from 1 to +Inf.
+  """
+  number: Int!
+
+  """
+  The title of the slide.
+  """
+  title: String
+
+  """
+  The content of the slide.
+  """
+  body: String
+
+  """
+  The content of the slide on json format.
+  """
+  body_json: BodyJson
+
+  """
+  The image attached to this slide.
+  """
+  image: InternalImage
 }
 
 """
@@ -3800,7 +3885,7 @@ type Author implements Node {
   """
   The full biography of the author.
   """
-  biography: Json
+  biography: BodyJson
 
   """
   The short biography of the author.
@@ -5318,7 +5403,7 @@ type Localization {
   """
   Return a list of theaters.
   """
-  theaters(after: String, "The amount of theaters to display." first: Int = 10, before: String, last: Int, "Defines how to order theaters." order: [TheaterSortingLight], "If provided, will only show the theaters that have some showtimes for the specified movie." movie: String): TheaterConnection
+  theaters(after: String, "The amount of theaters to display." first: Int = 10, before: String, last: Int, "Defines how to order theaters." order: [TheaterSortingLight], "If provided, will only show the theaters that have some showtimes for the specified movie." movie: String, "If true, will filter the movie argument so it fetches only the movies that will be display in the next two sliding weeks." nextTwoSlidingWeeks: Boolean = false): TheaterConnection
 }
 
 """
@@ -5583,6 +5668,11 @@ type PressReview implements Node {
   The body text of the press review.
   """
   body: String
+
+  """
+  The body of the press review on json format.
+  """
+  body_json: BodyJson
 
   """
   The rating of the press review.
@@ -6209,7 +6299,7 @@ type UserRelatedEntities {
   """
   The top movies not impacted by given social actions of the current user.
   """
-  unratedTopMovies(after: String, "The amount of movies to display" first: Int = 10, before: String, last: Int, "When provided, will only select movies that have at least one of the given genres." genres: [Genre], "When provided, will only select movies not having at least one of the given genres." excludeGenres: [Genre], "When provided, will only select movies that have at least one of the given countries." countries: [CountryCode], "If provided, will only select movies that have at least one showtime in the given localization." localization: Int, "When not provided, movies are sorted in alphabetical order." order: [MovieSorting] = [ALPHABETICAL], "When provided, will only select movies that were released after this date." releaseFrom: DateTime, "When provided, will only select movies that were released before this date." releaseTo: DateTime, "!!! DEPRECATED (Use the releaseMaterialType filter instead) !!! When provided, the releaseFrom and releaseTo filters will be applied on the related release date type." releaseDateType: MovieReleaseDateFilterType, "Filter movies by releases features." releaseFilter: ReleaseFilterType, "Filter movies by a visa number." visaNumber: [String!], "When provided, will only select movies that were produced this year." productionYear: [Int], "When provided, will only select movies that were produced this decade. Must always be a multiple of 10." productionDecade: [Int], "When provided, will only select movies with press rating between selected values." pressRating: FilterRangeRating, "When provided, will only select movies with user rating between selected values." scoreRating: FilterRangeRating, "When provided, will only select movies with press rating counter between selected values." pressRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with user rating counter between selected values." scoreRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies that have at least the given amount of theaters during the current week." minTheaters: Int, "When provided, will only select movies with a given movie type." type: [MovieType], "When provided, will only select movies not having at least one of the given types." excludeTypes: [MovieType], "A special filter is a particular selection of movies. It only works with the order and pagination arguments.\n                                  Other arguments are not supported and will generate an error." specialFilter: MovieSpecialFilter, "A list of ids to be excluded from the search." exclude: [Int], "A list of ids to be included in the search" include: [Int], "Filter movie list with flags" flags: MovieFlagsType, "When provided, will add aggregation on you query search with the facets you want." facets: [FacetsType], "When provided, will only select movies that were updated after this date." lastUpdated: DateTime, "When provided, will only select movies that are linked to one of the companies ids." companies: [Int!], "When provided, will only select movies that have a company with the selected activity linked to it." activities: [CompanyActivity!], "When provided, will return only the movies linked to all specified tags." tag: [Int!], "Does the movie has an advice for children audience ?" forChildren: Boolean, "When provided, return only movies available on these providers." svodProviders: [SvodProviders!], "Filter movie list by release flag." svodFlags: [SvodFlags!], "Filter movies by release flag" releaseFlags: [BaseReleaseType!], "Filter movies matching all physical product flags given" physicalFlags: [PhysicalProductType!], "If true will only filter browsable movies" browsableOnly: Boolean = true, "A filter on social actions." action: [UserSocialActionType] = [OPINION]): moviesConnection
+  unratedTopMovies(after: String, "The amount of movies to display" first: Int = 10, before: String, last: Int, "When provided, will only select movies that have at least one of the given genres." genres: [Genre], "When provided, will only select movies not having at least one of the given genres." excludeGenres: [Genre], "When provided, will only select movies that have at least one of the given countries." countries: [CountryCode], "If provided, will only select movies that have at least one showtime in the given localization." localization: Int, "When not provided, movies are sorted in alphabetical order." order: [MovieSorting] = [ALPHABETICAL], "When provided, will only select movies that were released in the US after this date." releaseFromUs: DateTime, "When provided, will only select movies that were released in the US before this date." releaseToUs: DateTime, "When provided, will only select movies that were released after this date." releaseFrom: DateTime, "When provided, will only select movies that were released before this date." releaseTo: DateTime, "!!! DEPRECATED (Use the releaseMaterialType filter instead) !!! When provided, the releaseFrom and releaseTo filters will be applied on the related release date type." releaseDateType: MovieReleaseDateFilterType, "Filter movies by releases features." releaseFilter: ReleaseFilterType, "Filter movies by a visa number." visaNumber: [String!], "When provided, will only select movies that were produced this year." productionYear: [Int], "When provided, will only select movies that were produced this decade. Must always be a multiple of 10." productionDecade: [Int], "When provided, will only select movies with editorial rating between selected values." editorialRating: FilterRangeRating, "When provided, will only select movies with press rating between selected values." pressRating: FilterRangeRating, "When provided, will only select movies with user rating between selected values." scoreRating: FilterRangeRating, "When provided, will only select movies with editorial rating counter between selected values." editorialRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with press rating counter between selected values." pressRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies with user rating counter between selected values." scoreRatingCounter: FilterRangeRatingCounter, "When provided, will only select movies that have at least the given amount of theaters during the current week." minTheaters: Int, "When provided, will only select movies that have at least the given amount of theaters during the next two floating weeks." minTheatersTwoFloatingWeeks: Int, "When provided, will only select movies with a given movie type." type: [MovieType], "When provided, will only select movies not having at least one of the given types." excludeTypes: [MovieType], "A special filter is a particular selection of movies. It only works with the order and pagination arguments.\n                                  Other arguments are not supported and will generate an error." specialFilter: MovieSpecialFilter, "A list of ids to be excluded from the search." exclude: [Int], "A list of ids to be included in the search" include: [Int], "Filter movie list with flags" flags: MovieFlagsType, "When provided, will add aggregation on you query search with the facets you want." facets: [FacetsType], "When provided, will only select movies that were updated after this date." lastUpdated: DateTime, "When provided, will only select movies that are linked to one of the companies ids." companies: [Int!], "When provided, will only select movies that have a company with the selected activity linked to it." activities: [CompanyActivity!], "When provided, will return only the movies linked to all specified tags." tag: [Int!], "Does the movie has an advice for children audience ?" forChildren: Boolean, "When provided, return only movies available on these providers." svodProviders: [SvodProviders!], "Filter movie list by release flag." svodFlags: [SvodFlags!], "Filter movies by release flag" releaseFlags: [BaseReleaseType!], "Filter movies matching all physical product flags given" physicalFlags: [PhysicalProductType!], "If true will only filter browsable movies" browsableOnly: Boolean = true, "A filter on social actions." action: [UserSocialActionType] = [OPINION]): moviesConnection
 }
 
 """
@@ -9236,6 +9326,11 @@ type Trivia {
   The content of the trivia.
   """
   body("If true will strip the content." strip: Boolean = false): String
+
+  """
+  The content of the trivia on json format.
+  """
+  body_json: BodyJson
 }
 
 """
@@ -9482,9 +9577,14 @@ type FestivalEdition implements Node {
   festival: Festival
 
   """
-  The selections in this festival competition
+  !!!!! DEPRECATED !!!!! The selections in this festival competition
   """
-  selections("If true will include only the winners. Does nothing by default." hasWon: Boolean = null, "The amount of selections to return." first: Int = 50): [FestivalSelection]
+  selections("If true will include only the winners. Does nothing by default." hasWon: Boolean = null, "The amount of selections to return." first: Int = 50): [FestivalSelection] @deprecated(reason: "Use selection instead")
+
+  """
+  The selections the person was selected in.
+  """
+  selection(after: String, "The amount of entries to return." first: Int = 5, before: String, last: Int, "It's an entity id in base64. If provided, will only return the selection where the entity is present." entity: String = null, "If true will include only the winners. Does nothing by default." hasWon: Boolean = null): FestivalSelectionConnection
 
   """
   The news related to this edition.
@@ -9495,6 +9595,38 @@ type FestivalEdition implements Node {
   The list of the images for this festival edition.
   """
   images("The amount of images to return." first: Int = 10, "The order of the images to return. If none provided the \"RANK\" order is used." order: [EntityImageSorting] = [RANK], "If true will also include videos from festival edition." withChildren: Boolean = false): [InternalImage]
+}
+
+"""
+A connection to a list of items.
+"""
+type FestivalSelectionConnection {
+  totalCount: Int
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  Information to aid in pagination.
+  """
+  edges: [FestivalSelectionEdge]
+}
+
+"""
+An edge in a connection.
+"""
+type FestivalSelectionEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: FestivalSelection
+
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
 }
 
 """
@@ -10139,6 +10271,26 @@ enum MovieSorting {
   OLDEST_RELEASES_VOD
 
   """
+  Movies sorted by their DVD/BR release dates, most recent releases first.
+  """
+  LATEST_RELEASES_PHYSICAL
+
+  """
+  Movies sorted by their DVD/BR release dates, oldest releases first.
+  """
+  OLDEST_RELEASES_PHYSICAL
+
+  """
+  Movies sorted by their first DVD/BR release dates, most recent releases first.
+  """
+  LATEST_FIRST_RELEASES_PHYSICAL
+
+  """
+  Movies sorted by their first DVD/BR release dates, oldest releases first.
+  """
+  OLDEST_FIRST_RELEASES_PHYSICAL
+
+  """
   Movies sorted by their latest release dates, most recent releases first.
   """
   ORDER_LATEST_LAST_RELEASES
@@ -10243,6 +10395,12 @@ input ReleaseFilterType {
   When provided, will only select releases of the specified type.
   """
   type: [ReleaseFilterTypeValue!]
+
+  """
+  When provided, will only select releases of the specified physical type.
+  Can only be used with the "type: [PHYSICAL]" argument.
+  """
+  physicalMaterial: [ReleaseFilterPhysicalMaterialValue!]
 }
 
 enum ReleaseFilterStatusValue {
@@ -10271,6 +10429,12 @@ enum ReleaseFilterTypeValue {
   TV
 
   VOD
+}
+
+enum ReleaseFilterPhysicalMaterialValue {
+  BLURAY
+
+  DVD
 }
 
 input FilterRangeRating {
@@ -10443,6 +10607,8 @@ enum BaseReleaseType {
   NOW_PLAYING
 
   COMING_SOON
+
+  COMING_SOON_THEATER
 }
 
 enum PhysicalProductType {
@@ -10784,38 +10950,6 @@ type AuthorSignature {
   body: String
 }
 
-"""
-A connection to a list of items.
-"""
-type FestivalSelectionConnection {
-  totalCount: Int
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  Information to aid in pagination.
-  """
-  edges: [FestivalSelectionEdge]
-}
-
-"""
-An edge in a connection.
-"""
-type FestivalSelectionEdge {
-  """
-  The item at the end of the edge.
-  """
-  node: FestivalSelection
-
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-}
-
 enum FilmographyEntityStatus {
   MOVIE_IN_THEATER
 
@@ -11057,6 +11191,8 @@ enum MovieReleaseType {
 
   COMING_SOON
 
+  COMING_SOON_THEATER
+
   COMING_SOON_ON_NETFLIX @deprecated(reason: "Use non-provider based types instead.")
 
   DIRECT_TO_TV
@@ -11215,6 +11351,38 @@ type EditorialReview implements Node {
 }
 
 """
+A connection to a list of items.
+"""
+type FestivalEditionConnection {
+  totalCount: Int
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  Information to aid in pagination.
+  """
+  edges: [FestivalEditionEdge]
+}
+
+"""
+An edge in a connection.
+"""
+type FestivalEditionEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: FestivalEdition
+
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+}
+
+"""
 An external link contains information to generate links for a given locale.
 """
 type ExternalLink {
@@ -11316,6 +11484,11 @@ type MovieFlags {
   True if the movie has some trivia.
   """
   hasTrivia: Boolean
+
+  """
+  True if the movie has some awards or nominations.
+  """
+  hasAwards: Boolean
 
   """
   True if the movie is coming soon without release dates.
@@ -11619,6 +11792,11 @@ enum LocalizationSorting {
   THEATER_FOR_MOVIE_COUNTER
 
   """
+  Sort by number of theaters that display the movie in the next two sliding weeks. Need movieDisplayedWithinTwoSlidingWeeks.
+  """
+  THEATER_FOR_MOVIE_COUNTER_WITHIN_TWO_SLIDING_WEEKS
+
+  """
   Sort by score the matching result.
   """
   SCORE
@@ -11683,14 +11861,14 @@ enum MovieShowtimeSorting {
   NONE
 
   """
-  Sort by the date of the first showtime of the movie.
+  Sort by release date of the movie.
   """
-  SHOWTIME_DATE
+  RELEASE_DATE
 
   """
-  Sort by the date of the first showtime of the movie descending.
+  Sort by release date of the movie descending.
   """
-  REVERSE_SHOWTIME_DATE
+  REVERSE_RELEASE_DATE
 
   """
   Sort by weekly popularity descending.
@@ -12133,6 +12311,11 @@ enum PersonSorting {
   Persons sorted by popularity on a daily basis.
   """
   DAILY_POPULARITY
+
+  """
+  Persons sorted by popularity on a weekly basis.
+  """
+  WEEKLY_POPULARITY
 
   """
   Persons sorted by popularity on a monthly basis.
@@ -12642,6 +12825,11 @@ enum SearchTypes {
   Search program type.
   """
   Program
+
+  """
+  Search tag type.
+  """
+  Tag
 }
 
 """
