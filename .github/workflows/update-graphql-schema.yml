@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: martinbonnin/update-graphql-schema-sample@main
+      - uses: martinbonnin/update-graphql-schema@main
         with:
           endpoint: "https://graph.allocine.fr/v1/mobile"
           schema: "api/src/main/graphql/schema.graphqls"
