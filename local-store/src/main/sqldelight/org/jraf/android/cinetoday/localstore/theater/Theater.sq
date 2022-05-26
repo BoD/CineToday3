@@ -1,0 +1,15 @@
+CREATE TABLE Theater (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    posterUrl TEXT,
+    address TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM Theater;
+
+insert:
+INSERT OR REPLACE INTO Theater (id, name, posterUrl, address) VALUES (?, ?, ?, ?);
+
+delete:
+DELETE FROM Theater WHERE id = ?;

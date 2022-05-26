@@ -42,11 +42,16 @@ kapt {
     correctErrorTypes = true
 }
 
-val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+val libs: VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 dependencies {
     implementation(libs.findLibrary("hilt.android").get())
     kapt(libs.findLibrary("hilt.android.compiler").get())
+    api(libs.findLibrary("kotlinx.coroutines.android").get())
+    if (project.name != "util") {
+        // All projects depend on util... except util (that would cause a stack overflow)
+        api(project(":util"))
+    }
 
     testImplementation(libs.findLibrary("testing.junit").get())
 }

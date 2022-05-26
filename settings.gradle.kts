@@ -20,6 +20,8 @@ dependencyResolutionManagement {
     }
 }
 
-include(":app")
+include(":util")
 include(":api")
+include(":local-store")
 include(":repository")
+include(":app")
