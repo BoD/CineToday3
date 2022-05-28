@@ -5,7 +5,7 @@ query TheaterSearch($search: String!) {
                 id
                 name @nonnull
                 location @nonnull {
-                    address @nonnull
+                    address
                     city @nonnull
                 }
                 poster {

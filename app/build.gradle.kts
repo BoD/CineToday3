@@ -63,7 +63,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.ui.util)
+//    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.icons.core)
+
+    implementation(libs.androidx.wear.input)
     implementation(libs.androidx.wear.compose.foundation)
     implementation(libs.androidx.wear.compose.material)
 

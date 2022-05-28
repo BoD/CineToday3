@@ -24,12 +24,11 @@
  */
 package org.jraf.android.cinetoday.ui.theater.list
 
+import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -37,34 +36,28 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
-import androidx.wear.compose.material.Chip
-import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.items
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import org.jraf.android.cinetoday.R
 import org.jraf.android.cinetoday.repository.Theater
+import org.jraf.android.cinetoday.ui.theater.item.TheaterItem
+import org.jraf.android.cinetoday.ui.theater.search.TheaterSearchActivity
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_API_LEVEL
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_BACKGROUND_COLOR_BLACK
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_HEIGHT_DP
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_WIDTH_DP
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_SHOW_BACKGROUND
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_UI_MODE
-import org.jraf.android.cinetoday.util.logging.logd
 
 @Composable
 fun TheaterListScreen() {
@@ -76,17 +69,18 @@ fun TheaterListScreen() {
     ) {
         item {
             ListHeader {
-                Text(stringResource(R.string.theaters_title))
+                Text(stringResource(R.string.theater_list_title))
             }
         }
         item {
+            val context = LocalContext.current
             Button(
-                onClick = { logd("Add theater") },
+                onClick = { context.startActivity(Intent(context, TheaterSearchActivity::class.java)) },
                 modifier = Modifier.padding(PaddingValues(bottom = 16.dp)),
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = stringResource(R.string.theaters_add),
+                    contentDescription = stringResource(R.string.theater_list_add),
                     modifier = Modifier
                         .size(ButtonDefaults.DefaultIconSize)
                         .wrapContentSize(align = Alignment.Center),
@@ -94,38 +88,9 @@ fun TheaterListScreen() {
             }
         }
         items(favoriteTheaterList) { theater ->
-            logd(theater)
-            TheaterItem(theater)
+            TheaterItem(theater, onClick = {})
         }
     }
-}
-
-@Composable
-private fun TheaterItem(theater: Theater) {
-    Chip(
-        modifier = Modifier.fillMaxWidth(),
-        colors = ChipDefaults.secondaryChipColors(),
-        label = {
-            Text(theater.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        },
-        secondaryLabel = {
-            Text(theater.address, overflow = TextOverflow.Ellipsis)
-        },
-        icon = {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(theater.posterUrl)
-                    .crossfade(true)
-                    .build(),
-                contentScale = ContentScale.Crop,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(ChipDefaults.IconSize)
-                    .clip(CircleShape)
-                    .wrapContentSize(align = Alignment.Center),
-            )
-        },
-        onClick = { logd("Theater clicked") })
 }
 
 @Preview(
@@ -135,9 +100,13 @@ private fun TheaterItem(theater: Theater) {
     backgroundColor = WEAR_PREVIEW_BACKGROUND_COLOR_BLACK,
     showBackground = WEAR_PREVIEW_SHOW_BACKGROUND
 )
+
 @Composable
 private fun TheaterItemPreview() {
-    TheaterItem(Theater("1", "Theater 1", posterUrl = null, address = "19 avenue de Choisy 75013 Paris"))
+    TheaterItem(
+        Theater("1", "Theater 1", posterUrl = null, address = "19 avenue de Choisy 75013 Paris"),
+        onClick = {}
+    )
 }
 
 @Preview(

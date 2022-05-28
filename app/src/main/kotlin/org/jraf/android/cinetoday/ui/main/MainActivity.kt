@@ -111,7 +111,7 @@ private fun MainScreenContent() {
     val pagerState: PagerState = rememberPagerState()
     LaunchedEffect(Unit) {
         // TODO
-//        pagerState.scrollToPage(1)
+        pagerState.scrollToPage(1)
     }
     HorizontalPager(
         count = PAGE_COUNT,

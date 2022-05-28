@@ -50,5 +50,5 @@ private fun TheaterSearchQuery.Data.TheaterList.Edge.Node.toRemoteTheater() = Re
     id = id,
     name = name,
     posterUrl = poster?.url,
-    address = location.address + " - " + location.city
+    address = (location.address?.let { "$it - " } ?: "") + location.city
 )

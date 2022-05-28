@@ -25,6 +25,8 @@
 package org.jraf.android.cinetoday.api
 
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.network.http.LoggingInterceptor
+import org.jraf.android.cinetoday.util.logging.logd
 
 // GraphQL
 private const val GRAPHQL_URL = "https://graph.allocine.fr/v1/mobile"
@@ -51,4 +53,5 @@ internal fun createApolloClient() = ApolloClient.Builder()
         HEADER_AC_AUTH_TOKEN_KEY,
         HEADER_AC_AUTH_TOKEN_VALUE
     )
+    .addHttpInterceptor(LoggingInterceptor { logd(it) })
     .build()
