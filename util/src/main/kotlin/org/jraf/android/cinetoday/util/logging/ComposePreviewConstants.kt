@@ -22,33 +22,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api
+package org.jraf.android.cinetoday.util.logging
 
-import com.apollographql.apollo3.ApolloClient
-import javax.inject.Inject
+import android.content.res.Configuration
 
-interface TheaterRemoteSource {
-    suspend fun searchTheaters(search: String): List<RemoteTheater>
-}
 
-class TheaterRemoteSourceImpl @Inject constructor(
-    private val apolloClient: ApolloClient,
-) : TheaterRemoteSource {
-    override suspend fun searchTheaters(search: String): List<RemoteTheater> {
-        return apolloClient.query(TheaterSearchQuery(search)).execute().dataAssertNoErrors.theaterList.edges.mapNotNull { it?.node?.toRemoteTheater() }
-    }
-}
+const val WEAR_PREVIEW_DEVICE_WIDTH_DP = 300
+const val WEAR_PREVIEW_DEVICE_HEIGHT_DP = 300
 
-data class RemoteTheater(
-    val id: String,
-    val name: String,
-    val posterUrl: String?,
-    val address: String,
-)
+const val WEAR_PREVIEW_API_LEVEL = 26
 
-private fun TheaterSearchQuery.Data.TheaterList.Edge.Node.toRemoteTheater() = RemoteTheater(
-    id = id,
-    name = name,
-    posterUrl = poster?.url,
-    address = location.address + " - " + location.city
-)
+const val WEAR_PREVIEW_UI_MODE = Configuration.UI_MODE_TYPE_WATCH
+
+const val WEAR_PREVIEW_BACKGROUND_COLOR_BLACK: Long = 0x000000
+const val WEAR_PREVIEW_SHOW_BACKGROUND = true

@@ -22,37 +22,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday
+package org.jraf.android.cinetoday.ui.theater.list
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import org.jraf.android.cinetoday.repository.Theater
 import org.jraf.android.cinetoday.repository.TheaterRepository
-import org.jraf.android.cinetoday.util.logging.logd
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit var theaterRepository: TheaterRepository
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.main)
-
-        runBlocking {
-            val theaters: List<Theater> = theaterRepository.search("trappes")
-            logd(theaters)
-            theaterRepository.addToFavorites(theaters[0])
-            val favorites: List<Theater> = theaterRepository.getFavorites().first()
-            logd("Favorites: $favorites")
-            theaterRepository.removeFromFavorites(favorites[0].id)
-            val favoritesAfter: List<Theater> = theaterRepository.getFavorites().first()
-            logd("Favorites after: $favoritesAfter")
-        }
-    }
+@HiltViewModel
+class TheaterListViewModel @Inject constructor(
+    private val theaterRepository: TheaterRepository,
+) : ViewModel() {
+    val favoriteTheaterList: Flow<List<Theater>> = theaterRepository.getFavorites()
 }

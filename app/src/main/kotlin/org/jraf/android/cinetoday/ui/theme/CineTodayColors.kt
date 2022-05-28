@@ -22,33 +22,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api
+package org.jraf.android.cinetoday.ui.theme
 
-import com.apollographql.apollo3.ApolloClient
-import javax.inject.Inject
+import androidx.compose.ui.graphics.Color
+import androidx.wear.compose.material.Colors
 
-interface TheaterRemoteSource {
-    suspend fun searchTheaters(search: String): List<RemoteTheater>
-}
+private val Purple200 = Color(0xFFBB86FC)
+private val Purple500 = Color(0xFF6200EE)
+private val Purple700 = Color(0xFF3700B3)
+private val Teal200 = Color(0xFF03DAC5)
+private val Red400 = Color(0xFFCF6679)
 
-class TheaterRemoteSourceImpl @Inject constructor(
-    private val apolloClient: ApolloClient,
-) : TheaterRemoteSource {
-    override suspend fun searchTheaters(search: String): List<RemoteTheater> {
-        return apolloClient.query(TheaterSearchQuery(search)).execute().dataAssertNoErrors.theaterList.edges.mapNotNull { it?.node?.toRemoteTheater() }
-    }
-}
-
-data class RemoteTheater(
-    val id: String,
-    val name: String,
-    val posterUrl: String?,
-    val address: String,
-)
-
-private fun TheaterSearchQuery.Data.TheaterList.Edge.Node.toRemoteTheater() = RemoteTheater(
-    id = id,
-    name = name,
-    posterUrl = poster?.url,
-    address = location.address + " - " + location.city
+val CineTodayColors: Colors = Colors(
+    primary = Purple200,
+    primaryVariant = Purple700,
+    secondary = Teal200,
+    secondaryVariant = Teal200,
+    error = Red400,
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onError = Color.Black
 )

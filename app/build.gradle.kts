@@ -17,6 +17,10 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+        }
+
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -24,7 +28,11 @@ android {
     }
 
     buildFeatures {
-//        compose = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.get()
     }
 
     compileOptions {
@@ -34,6 +42,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
     }
 
     sourceSets {
@@ -46,11 +55,23 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
-    implementation(libs.androidx.appcompat.appcompat)
     implementation(libs.kotlinx.coroutines.android)
 
-    implementation("com.google.android.gms:play-services-wearable:17.1.0")
-    implementation("androidx.wear:wear:1.2.0")
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.ui.util)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.wear.compose.foundation)
+    implementation(libs.androidx.wear.compose.material)
+
+//    implementation("com.google.android.gms:play-services-wearable:17.1.0")
+
+    implementation(libs.accompanist.pager)
+
+    implementation(libs.coil.compose)
 
     implementation(projects.repository)
 }

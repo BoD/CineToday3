@@ -22,33 +22,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api
+package org.jraf.android.cinetoday.ui.theme
 
-import com.apollographql.apollo3.ApolloClient
-import javax.inject.Inject
+import androidx.compose.runtime.Composable
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Typography
 
-interface TheaterRemoteSource {
-    suspend fun searchTheaters(search: String): List<RemoteTheater>
+@Composable
+fun CineTodayTheme(
+    content: @Composable () -> Unit,
+) {
+    MaterialTheme(
+        colors = CineTodayColors,
+        typography = Typography(),
+        content = content
+    )
 }
-
-class TheaterRemoteSourceImpl @Inject constructor(
-    private val apolloClient: ApolloClient,
-) : TheaterRemoteSource {
-    override suspend fun searchTheaters(search: String): List<RemoteTheater> {
-        return apolloClient.query(TheaterSearchQuery(search)).execute().dataAssertNoErrors.theaterList.edges.mapNotNull { it?.node?.toRemoteTheater() }
-    }
-}
-
-data class RemoteTheater(
-    val id: String,
-    val name: String,
-    val posterUrl: String?,
-    val address: String,
-)
-
-private fun TheaterSearchQuery.Data.TheaterList.Edge.Node.toRemoteTheater() = RemoteTheater(
-    id = id,
-    name = name,
-    posterUrl = poster?.url,
-    address = location.address + " - " + location.city
-)
