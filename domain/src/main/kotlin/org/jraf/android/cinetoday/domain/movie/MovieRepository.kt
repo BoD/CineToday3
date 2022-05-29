@@ -24,28 +24,75 @@
  */
 package org.jraf.android.cinetoday.domain.movie
 
+import kotlinx.coroutines.CoroutineScope
 import org.jraf.android.cinetoday.api.MovieRemoteSource
 import org.jraf.android.cinetoday.api.RemoteMovie
+import org.jraf.android.cinetoday.api.RemoteShowtime
+import org.jraf.android.cinetoday.localstore.LocalMovie
+import org.jraf.android.cinetoday.localstore.LocalMovieShowtime
+import org.jraf.android.cinetoday.localstore.LocalShowtime
+import org.jraf.android.cinetoday.localstore.MovieShowtimeLocalSource
 import java.util.Date
 import javax.inject.Inject
 
-interface MovieRepository {
-    suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date): List<Movie>
-}
-
-class MovieRepositoryImpl @Inject constructor(
+class MovieRepository @Inject constructor(
     private val movieRemoteSource: MovieRemoteSource,
-) : MovieRepository {
-    override suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date): List<Movie> {
-        return movieRemoteSource.getMovies(theaterIds = theaterIds, from = from, to = to).map { it.toMovie() }
+    private val movieShowtimeLocalSource: MovieShowtimeLocalSource,
+) {
+    suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<Movie>> {
+        return movieRemoteSource
+            .getMovies(theaterIds = theaterIds, from = from, to = to, coroutineScope = coroutineScope)
+            .mapValues { entry -> entry.value.map { it.toMovie() } }
+    }
+
+    suspend fun saveMoviesWithShowtimes(movies: Map<String, List<Movie>>) {
+        val localMovieShowtimes = mutableListOf<LocalMovieShowtime>()
+        for ((theaterId, moviesForTheater) in movies) {
+            for (movie in moviesForTheater) {
+                val previousLocalMovieShowtime = localMovieShowtimes.find { it.movie.id == movie.id }
+                val localMovieShowtime = LocalMovieShowtime(
+                    movie = movie.toLocalMovie(),
+                    showtimes = movie.showtimes.associate { theaterId to it.toLocalShowtime() } + (previousLocalMovieShowtime?.showtimes ?: emptyMap()),
+                )
+                if (previousLocalMovieShowtime != null) {
+                    localMovieShowtimes.remove(previousLocalMovieShowtime)
+                }
+                localMovieShowtimes += localMovieShowtime
+            }
+        }
+        movieShowtimeLocalSource.addMovieShowtimes(localMovieShowtimes)
     }
 }
 
-private fun RemoteMovie.toMovie() = Movie(id = id, title = title, posterUrl = posterUrl)
+private fun Showtime.toLocalShowtime() = LocalShowtime(id = id, startsAt = startsAt, projection = projection, languageVersion = languageVersion)
+
+private fun Movie.toLocalMovie() = LocalMovie(id = id, title = title, posterUrl = posterUrl)
+
+private fun RemoteMovie.toMovie() = Movie(
+    id = id,
+    title = title,
+    posterUrl = posterUrl,
+    showtimes = showtimes.map { it.toShowtime() },
+)
+
+private fun RemoteShowtime.toShowtime() = Showtime(
+    id = id,
+    startsAt = startsAt,
+    projection = projection,
+    languageVersion = languageVersion,
+)
 
 data class Movie(
     val id: String,
     val title: String,
     val posterUrl: String?,
+
+    val showtimes: List<Showtime>,
 )
 
+data class Showtime(
+    val id: String,
+    val startsAt: Date,
+    val projection: List<String>,
+    val languageVersion: String?,
+)

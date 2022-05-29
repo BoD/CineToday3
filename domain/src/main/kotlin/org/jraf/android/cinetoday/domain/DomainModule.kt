@@ -24,20 +24,12 @@
  */
 package org.jraf.android.cinetoday.domain
 
-import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.jraf.android.cinetoday.domain.movie.MovieRepository
-import org.jraf.android.cinetoday.domain.movie.MovieRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface DomainModule {
-
-    @Binds
-    fun bindsMovieRepository(
-        theaterRepository: MovieRepositoryImpl,
-    ): MovieRepository
 
 }

@@ -1,0 +1,9 @@
+CREATE TABLE Showtime (
+    id TEXT NOT NULL PRIMARY KEY,
+    startsAt INTEGER NOT NULL,
+    projection TEXT NOT NULL,
+    languageVersion TEXT
+);
+
+insert:
+INSERT OR REPLACE INTO Showtime (id, startsAt, projection, languageVersion) VALUES (?, ?, ?, ?);

@@ -1,3 +1,0 @@
-extend type Movie @typePolicy(keyFields: "id")
-
-extend type Showtime @typePolicy(keyFields: "id")

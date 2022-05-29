@@ -52,11 +52,12 @@ import kotlin.random.Random
 @Composable
 fun MovieListScreen() {
     val viewModel: MovieListViewModel = viewModel()
-    val movieList by viewModel.movieList.collectAsState(emptyList())
+    val movieList by viewModel.movieList.collectAsState(emptyMap())
     if (movieList.isEmpty()) {
         Loading()
     } else {
-        MovieList(movieList)
+        // TODO
+        MovieList(movieList.values.flatten())
     }
 }
 

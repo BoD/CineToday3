@@ -1,0 +1,21 @@
+CREATE TABLE MovieShowtime (
+    movieId TEXT NOT NULL,
+    showtimeId TEXT NOT NULL,
+    theaterId TEXT NOT NULL,
+    FOREIGN KEY(movieId) REFERENCES Movie(id),
+    FOREIGN KEY(showtimeId) REFERENCES Showtime(id),
+    FOREIGN KEY(theaterId) REFERENCES Theater(id)
+);
+
+insert:
+INSERT OR REPLACE INTO MovieShowtime (movieId, showtimeId, theaterId) VALUES (?, ?, ?);
+
+selectByMovieId:
+SELECT
+Movie.*, Movie.id AS movieId, Showtime.*, Showtime.id AS showtimeId, Theater.id AS theaterId
+FROM MovieShowtime
+JOIN Movie ON MovieShowtime.movieId = Movie.id
+JOIN Showtime ON MovieShowtime.showtimeId = Showtime.id
+JOIN Theater ON MovieShowtime.theaterId = Theater.id
+WHERE Movie.id = ?
+ORDER BY Theater.id;

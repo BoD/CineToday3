@@ -5,8 +5,6 @@ plugins {
 
 dependencies {
     implementation(libs.apollo)
-    implementation(libs.apollo.normalizedCache)
-    implementation(libs.apollo.normalizedCache.sqlite)
 }
 
 apollo {

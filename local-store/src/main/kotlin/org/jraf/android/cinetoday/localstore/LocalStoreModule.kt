@@ -38,8 +38,13 @@ import javax.inject.Singleton
 interface LocalStoreModule {
     @Binds
     fun TheaterLocalSource(
-        theaterLocalSource: TheaterLocalSourceImpl,
+        TheaterLocalSource: TheaterLocalSourceImpl,
     ): TheaterLocalSource
+
+    @Binds
+    fun MovieShowtimeLocalSource(
+        MovieShowtimeLocalSource: MovieShowtimeLocalSourceImpl,
+    ): MovieShowtimeLocalSource
 
     companion object {
         @Provides

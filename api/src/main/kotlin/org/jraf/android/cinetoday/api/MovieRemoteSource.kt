@@ -25,19 +25,33 @@
 package org.jraf.android.cinetoday.api
 
 import com.apollographql.apollo3.ApolloClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
 interface MovieRemoteSource {
-    suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date): List<RemoteMovie>
+    suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>>
 }
 
 class MovieRemoteSourceImpl @Inject constructor(
     private val apolloClient: ApolloClient,
 ) : MovieRemoteSource {
-    override suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date): List<RemoteMovie> {
-        return apolloClient.query(MovieShowtimesQuery(theaterId = theaterIds.first(), from = from, to = to))
-            .execute().dataAssertNoErrors.movieShowtimeList.edges.mapNotNull { it?.node?.toRemoteMovie() }
+    override suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>> {
+        val result = mutableMapOf<String, List<RemoteMovie>>()
+        val jobs = mutableListOf<Job>()
+        for (theaterId in theaterIds) {
+            jobs += coroutineScope.launch {
+                result[theaterId] = apolloClient
+                    .query(MovieWithShowtimesListQuery(theaterId = theaterId, from = from, to = to))
+                    .execute()
+                    .dataAssertNoErrors.movieShowtimeList.edges.mapNotNull { it?.node?.toRemoteMovie() }
+            }
+        }
+        jobs.joinAll()
+        return result
     }
 }
 
@@ -45,11 +59,27 @@ data class RemoteMovie(
     val id: String,
     val title: String,
     val posterUrl: String?,
+    val showtimes: List<RemoteShowtime>,
 )
 
-private fun MovieShowtimesQuery.Data.MovieShowtimeList.Edge.Node.toRemoteMovie() = RemoteMovie(
+data class RemoteShowtime(
+    val id: String,
+    val startsAt: Date,
+    val projection: List<String>,
+    val languageVersion: String?,
+)
+
+private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.toRemoteMovie() = RemoteMovie(
     id = movie.id,
     title = movie.title,
-    posterUrl = null
+    posterUrl = movie.poster?.url,
+    showtimes = showtimes.mapNotNull { it?.toRemoteShowtime() }
+)
+
+private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.Showtime.toRemoteShowtime() = RemoteShowtime(
+    id = id,
+    startsAt = startsAt,
+    projection = projection?.mapNotNull { it?.name } ?: emptyList(),
+    languageVersion = diffusionVersion?.name
 )
 

@@ -1,4 +1,4 @@
-query MovieShowtimes($theaterId: String!, $from: DateTime!, $to: DateTime!) {
+query MovieWithShowtimesList($theaterId: String!, $from: DateTime!, $to: DateTime!) {
     movieShowtimeList(
         theater: $theaterId
         from: $from
@@ -14,52 +14,57 @@ query MovieShowtimes($theaterId: String!, $from: DateTime!, $to: DateTime!) {
         }
         edges @nonnull {
             node @nonnull {
-                movie @nonnull {
-                    id
-                    title @nonnull
-                    originalTitle
-                    credits(first: 3, activity: DIRECTOR) {
-                        edges {
-                            node {
-                                person {
-                                    stringValue
-                                }
-                            }
-                        }
-                    }
-                    cast(first: 5) {
-                        edges {
-                            node {
-                                actor {
-                                    stringValue
-                                }
-                            }
-                        }
-                    }
-                    releases(type: [RELEASED], country: FRANCE) {
-                        releaseDate {
-                            date
-                        }
-                    }
-                    genres
-                    runtime
-                    videos(type: [TRAILER], first: 1) {
-                        files(quality: [STANDARD]) {
-                            url
-                        }
-                    }
-                    poster {
-                        url
-                    }
-                    synopsis(long: true)
-                }
-                showtimes @nonnull {
-                    id
-                    startsAt
-                    projection
-                    diffusionVersion
-                }
+                ...MovieWithShowtimesFragment
             }
         }
     }
 }
+
+fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
+    movie @nonnull {
+        id
+        title @nonnull
+        originalTitle
+        credits(first: 3, activity: DIRECTOR) {
+            edges {
+                node {
+                    person {
+                        stringValue
+                    }
+                }
+            }
+        }
+        cast(first: 5) {
+            edges {
+                node {
+                    actor {
+                        stringValue
+                    }
+                }
+            }
+        }
+        releases(type: [RELEASED], country: FRANCE) {
+            releaseDate {
+                date
+            }
+        }
+        genres
+        runtime
+        videos(type: [TRAILER], first: 1) {
+            files(quality: [STANDARD]) {
+                url
+            }
+        }
+        poster {
+            url
+        }
+        synopsis(long: true)
+    }
+    showtimes @nonnull {
+        id @nonnull
+        startsAt @nonnull
+        projection
+        diffusionVersion
+    }
+}
+
