@@ -32,7 +32,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.theater.search.TheaterSearchActivity" />
     </application>
 
 </manifest>

@@ -58,25 +58,15 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.ui.util)
-//    implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.compose.material.icons.core)
 
-    implementation(libs.androidx.wear.input)
     implementation(libs.androidx.wear.compose.foundation)
     implementation(libs.androidx.wear.compose.material)
 
-//    implementation("com.google.android.gms:play-services-wearable:17.1.0")
-
     implementation(libs.accompanist.pager)
-
-    implementation(libs.coil.compose)
-
-    implementation(projects.repository)
 }
 
 kapt {

@@ -5,7 +5,6 @@ enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
-    includeBuild("build-logic")
     repositories {
         gradlePluginPortal()
         google()
@@ -20,8 +19,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":util")
-include(":api")
-include(":local-store")
-include(":repository")
 include(":app")
