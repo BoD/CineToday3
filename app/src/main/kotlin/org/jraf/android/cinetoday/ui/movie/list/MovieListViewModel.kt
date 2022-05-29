@@ -22,36 +22,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api
+package org.jraf.android.cinetoday.ui.movie.list
 
-import android.content.Context
-import com.apollographql.apollo3.ApolloClient
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import org.jraf.android.cinetoday.api.apollo.createApolloClient
-import javax.inject.Singleton
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import org.jraf.android.cinetoday.domain.movie.GetMovieListForTodayUseCase
+import org.jraf.android.cinetoday.domain.movie.Movie
+import javax.inject.Inject
 
-@Module
-@InstallIn(SingletonComponent::class)
-interface ApiModule {
-    companion object {
-        @Provides
-        @Singleton
-        fun provideApolloClient(@ApplicationContext context: Context): ApolloClient = createApolloClient(context)
-    }
-
-    @Binds
-    fun TheaterRemoteSource(
-        theaterRemoteSource: TheaterRemoteSourceImpl,
-    ): TheaterRemoteSource
-
-    @Binds
-    fun MovieRemoteSource(
-        movieRemoteSource: MovieRemoteSourceImpl,
-    ): MovieRemoteSource
-
+@HiltViewModel
+class MovieListViewModel @Inject constructor(
+    getMovieListForToday: GetMovieListForTodayUseCase,
+) : ViewModel() {
+    val movieList: Flow<List<Movie>> = getMovieListForToday()
 }

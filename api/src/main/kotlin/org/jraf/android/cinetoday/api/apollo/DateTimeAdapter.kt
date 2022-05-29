@@ -22,36 +22,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api
+package org.jraf.android.cinetoday.api.apollo
 
-import android.content.Context
-import com.apollographql.apollo3.ApolloClient
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import org.jraf.android.cinetoday.api.apollo.createApolloClient
-import javax.inject.Singleton
+import com.apollographql.apollo3.api.Adapter
+import com.apollographql.apollo3.api.CustomScalarAdapters
+import com.apollographql.apollo3.api.json.JsonReader
+import com.apollographql.apollo3.api.json.JsonWriter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-@Module
-@InstallIn(SingletonComponent::class)
-interface ApiModule {
-    companion object {
-        @Provides
-        @Singleton
-        fun provideApolloClient(@ApplicationContext context: Context): ApolloClient = createApolloClient(context)
+object DateTimeAdapter : Adapter<Date> {
+    private val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
+
+    override fun fromJson(reader: JsonReader, customScalarAdapters: CustomScalarAdapters): Date {
+        val isoDateStr = reader.nextString()!!
+        return DATE_FORMAT.parse(isoDateStr)!!
     }
 
-    @Binds
-    fun TheaterRemoteSource(
-        theaterRemoteSource: TheaterRemoteSourceImpl,
-    ): TheaterRemoteSource
-
-    @Binds
-    fun MovieRemoteSource(
-        movieRemoteSource: MovieRemoteSourceImpl,
-    ): MovieRemoteSource
-
+    override fun toJson(writer: JsonWriter, customScalarAdapters: CustomScalarAdapters, value: Date) {
+        writer.value(DATE_FORMAT.format(value))
+    }
 }

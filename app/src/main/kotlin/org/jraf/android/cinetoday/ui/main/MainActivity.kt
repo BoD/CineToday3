@@ -41,7 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.PageIndicatorState
@@ -52,17 +51,11 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import org.jraf.android.cinetoday.repository.TheaterRepository
+import org.jraf.android.cinetoday.domain.theater.TheaterRepository
 import org.jraf.android.cinetoday.ui.movie.list.MovieListScreen
 import org.jraf.android.cinetoday.ui.settings.SettingsScreen
 import org.jraf.android.cinetoday.ui.theater.list.TheaterListScreen
 import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_API_LEVEL
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_BACKGROUND_COLOR_BLACK
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_HEIGHT_DP
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_WIDTH_DP
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_SHOW_BACKGROUND
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_UI_MODE
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -110,7 +103,6 @@ private fun MainScreen() {
 private fun MainScreenContent() {
     val pagerState: PagerState = rememberPagerState()
     LaunchedEffect(Unit) {
-        // TODO
         pagerState.scrollToPage(1)
     }
     HorizontalPager(
@@ -153,15 +145,3 @@ private fun MainScreenContent() {
     }
 }
 
-@Preview(
-    widthDp = WEAR_PREVIEW_DEVICE_WIDTH_DP,
-    heightDp = WEAR_PREVIEW_DEVICE_HEIGHT_DP,
-    apiLevel = WEAR_PREVIEW_API_LEVEL,
-    uiMode = WEAR_PREVIEW_UI_MODE,
-    backgroundColor = WEAR_PREVIEW_BACKGROUND_COLOR_BLACK,
-    showBackground = WEAR_PREVIEW_SHOW_BACKGROUND
-)
-@Composable
-fun MainScreenPreview() {
-    MainScreen()
-}

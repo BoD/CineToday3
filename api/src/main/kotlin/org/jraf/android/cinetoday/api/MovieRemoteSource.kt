@@ -25,37 +25,31 @@
 package org.jraf.android.cinetoday.api
 
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
-import com.apollographql.apollo3.cache.normalized.fetchPolicy
+import java.util.Date
 import javax.inject.Inject
 
-interface TheaterRemoteSource {
-    suspend fun searchTheaters(search: String): List<RemoteTheater>
+interface MovieRemoteSource {
+    suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date): List<RemoteMovie>
 }
 
-class TheaterRemoteSourceImpl @Inject constructor(
+class MovieRemoteSourceImpl @Inject constructor(
     private val apolloClient: ApolloClient,
-) : TheaterRemoteSource {
-    override suspend fun searchTheaters(search: String): List<RemoteTheater> {
-        return apolloClient
-            .query(TheaterSearchQuery(search))
-            // No cache for search
-            .fetchPolicy(FetchPolicy.NetworkOnly)
-            .execute()
-            .dataAssertNoErrors.theaterList.edges.mapNotNull { it?.node?.toRemoteTheater() }
+) : MovieRemoteSource {
+    override suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date): List<RemoteMovie> {
+        return apolloClient.query(MovieShowtimesQuery(theaterId = theaterIds.first(), from = from, to = to))
+            .execute().dataAssertNoErrors.movieShowtimeList.edges.mapNotNull { it?.node?.toRemoteMovie() }
     }
 }
 
-data class RemoteTheater(
+data class RemoteMovie(
     val id: String,
-    val name: String,
+    val title: String,
     val posterUrl: String?,
-    val address: String,
 )
 
-private fun TheaterSearchQuery.Data.TheaterList.Edge.Node.toRemoteTheater() = RemoteTheater(
-    id = id,
-    name = name,
-    posterUrl = poster?.url,
-    address = (location.address?.let { "$it - " } ?: "") + location.city
+private fun MovieShowtimesQuery.Data.MovieShowtimeList.Edge.Node.toRemoteMovie() = RemoteMovie(
+    id = movie.id,
+    title = movie.title,
+    posterUrl = null
 )
+

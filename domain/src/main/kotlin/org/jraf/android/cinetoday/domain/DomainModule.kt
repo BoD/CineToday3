@@ -22,36 +22,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api
+package org.jraf.android.cinetoday.domain
 
-import android.content.Context
-import com.apollographql.apollo3.ApolloClient
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import org.jraf.android.cinetoday.api.apollo.createApolloClient
-import javax.inject.Singleton
+import org.jraf.android.cinetoday.domain.movie.MovieRepository
+import org.jraf.android.cinetoday.domain.movie.MovieRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface ApiModule {
-    companion object {
-        @Provides
-        @Singleton
-        fun provideApolloClient(@ApplicationContext context: Context): ApolloClient = createApolloClient(context)
-    }
+interface DomainModule {
 
     @Binds
-    fun TheaterRemoteSource(
-        theaterRemoteSource: TheaterRemoteSourceImpl,
-    ): TheaterRemoteSource
-
-    @Binds
-    fun MovieRemoteSource(
-        movieRemoteSource: MovieRemoteSourceImpl,
-    ): MovieRemoteSource
+    fun bindsMovieRepository(
+        theaterRepository: MovieRepositoryImpl,
+    ): MovieRepository
 
 }

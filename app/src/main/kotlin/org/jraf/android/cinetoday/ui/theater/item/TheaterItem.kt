@@ -38,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
@@ -46,7 +47,12 @@ import androidx.wear.compose.material.Text
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.jraf.android.cinetoday.R
-import org.jraf.android.cinetoday.repository.Theater
+import org.jraf.android.cinetoday.domain.theater.Theater
+import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_API_LEVEL
+import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_BACKGROUND_COLOR_BLACK
+import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_WIDTH_DP
+import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_SHOW_BACKGROUND
+import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_UI_MODE
 
 @Composable
 fun TheaterItem(theater: Theater, onClick: () -> Unit) {
@@ -94,4 +100,19 @@ fun TheaterItem(theater: Theater, onClick: () -> Unit) {
             }
         },
         onClick = onClick)
+}
+
+@Preview(
+    widthDp = WEAR_PREVIEW_DEVICE_WIDTH_DP,
+    apiLevel = WEAR_PREVIEW_API_LEVEL,
+    uiMode = WEAR_PREVIEW_UI_MODE,
+    backgroundColor = WEAR_PREVIEW_BACKGROUND_COLOR_BLACK,
+    showBackground = WEAR_PREVIEW_SHOW_BACKGROUND
+)
+@Composable
+private fun TheaterItemPreview() {
+    TheaterItem(
+        Theater("1", "Theater 1", posterUrl = null, address = "19 avenue de Choisy 75013 Paris"),
+        onClick = {}
+    )
 }

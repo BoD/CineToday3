@@ -23,5 +23,5 @@ dependencyResolutionManagement {
 include(":util")
 include(":api")
 include(":local-store")
-include(":repository")
+include(":domain")
 include(":app")

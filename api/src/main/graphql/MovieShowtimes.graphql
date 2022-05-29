@@ -6,17 +6,17 @@ query MovieShowtimes($theaterId: String!, $from: DateTime!, $to: DateTime!) {
         first: 50
         displayPreview: false
         order: [REVERSE_RELEASE_DATE, WEEKLY_POPULARITY]
-    ) {
+    ) @nonnull {
         totalCount
         pageInfo {
             hasNextPage
             endCursor
         }
-        edges {
-            node {
-                movie {
+        edges @nonnull {
+            node @nonnull {
+                movie @nonnull {
                     id
-                    title
+                    title @nonnull
                     originalTitle
                     credits(first: 3, activity: DIRECTOR) {
                         edges {
@@ -53,7 +53,7 @@ query MovieShowtimes($theaterId: String!, $from: DateTime!, $to: DateTime!) {
                     }
                     synopsis(long: true)
                 }
-                showtimes {
+                showtimes @nonnull {
                     id
                     startsAt
                     projection

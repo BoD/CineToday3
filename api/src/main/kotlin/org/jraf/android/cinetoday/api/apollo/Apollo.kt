@@ -22,9 +22,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api
+package org.jraf.android.cinetoday.api.apollo
 
+import android.content.Context
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.cache.normalized.normalizedCache
+import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo3.network.http.LoggingInterceptor
 import org.jraf.android.cinetoday.util.logging.logd
 
@@ -43,15 +46,21 @@ private const val HEADER_AC_AUTH_TOKEN_KEY = "AC-Auth-Token"
 private const val HEADER_AC_AUTH_TOKEN_VALUE =
     "fRCoWAfDyLs:APA91bF0V8MX1qMRDgG51FLWSZOYzec9vqTR74iWZdcrRUs-VeDF1LZoRmHcDhdNOr-7Z0WNnUi5TBTncvyRse4XbkpiEjvMgvVpBgAmeMMtW6wa8bKEcEUuXEw6xbW3ddhnrrpCYOrx"
 
-internal fun createApolloClient() = ApolloClient.Builder()
-    .serverUrl(GRAPHQL_URL)
-    .addHttpHeader(
-        HEADER_AUTHORIZATION_KEY,
-        HEADER_AUTHORIZATION_VALUE
-    )
-    .addHttpHeader(
-        HEADER_AC_AUTH_TOKEN_KEY,
-        HEADER_AC_AUTH_TOKEN_VALUE
-    )
-    .addHttpInterceptor(LoggingInterceptor { logd(it) })
-    .build()
+internal fun createApolloClient(context: Context): ApolloClient {
+    val sqlNormalizedCacheFactory = SqlNormalizedCacheFactory(context, "apollo.db")
+
+    return ApolloClient.Builder()
+        .serverUrl(GRAPHQL_URL)
+        .addHttpHeader(
+            HEADER_AUTHORIZATION_KEY,
+            HEADER_AUTHORIZATION_VALUE
+        )
+        .addHttpHeader(
+            HEADER_AC_AUTH_TOKEN_KEY,
+            HEADER_AC_AUTH_TOKEN_VALUE
+        )
+        // TODO Only enable in debug builds
+        .addHttpInterceptor(LoggingInterceptor { logd(it) })
+        .normalizedCache(sqlNormalizedCacheFactory)
+        .build()
+}

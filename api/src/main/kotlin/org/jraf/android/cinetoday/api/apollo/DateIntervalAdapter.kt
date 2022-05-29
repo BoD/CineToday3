@@ -22,18 +22,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.repository
+package org.jraf.android.cinetoday.api.apollo
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import com.apollographql.apollo3.api.Adapter
+import com.apollographql.apollo3.api.CustomScalarAdapters
+import com.apollographql.apollo3.api.json.JsonReader
+import com.apollographql.apollo3.api.json.JsonWriter
+import java.time.Duration
+import java.time.temporal.ChronoUnit
 
-@Module
-@InstallIn(SingletonComponent::class)
-interface RepositoryModule {
-    @Binds
-    fun bindsTheaterRepository(
-        theaterRepository: TheaterRepositoryImpl,
-    ): TheaterRepository
+object DateIntervalAdapter : Adapter<Long> {
+    override fun fromJson(reader: JsonReader, customScalarAdapters: CustomScalarAdapters): Long {
+        val isoDurationStr = reader.nextString()!!
+        return if (isoDurationStr.startsWith("P")) {
+            val duration = Duration.parse(isoDurationStr)
+            duration.get(ChronoUnit.SECONDS)
+        } else {
+            isoDurationStr.toLong()
+        }
+    }
+
+    override fun toJson(writer: JsonWriter, customScalarAdapters: CustomScalarAdapters, value: Long) {
+        writer.value(value.toString())
+    }
 }

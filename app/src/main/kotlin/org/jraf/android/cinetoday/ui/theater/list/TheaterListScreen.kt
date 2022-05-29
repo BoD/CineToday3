@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,21 +50,19 @@ import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.items
 import org.jraf.android.cinetoday.R
-import org.jraf.android.cinetoday.repository.Theater
+import org.jraf.android.cinetoday.domain.theater.Theater
 import org.jraf.android.cinetoday.ui.theater.item.TheaterItem
 import org.jraf.android.cinetoday.ui.theater.search.TheaterSearchActivity
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_API_LEVEL
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_BACKGROUND_COLOR_BLACK
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_HEIGHT_DP
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_WIDTH_DP
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_SHOW_BACKGROUND
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_UI_MODE
 
 @Composable
 fun TheaterListScreen() {
     val viewModel: TheaterListViewModel = viewModel()
     val favoriteTheaterList by viewModel.favoriteTheaterList.collectAsState(emptyList())
+    TheaterList(favoriteTheaterList)
+}
 
+@Composable
+private fun TheaterList(favoriteTheaterList: List<Theater>) {
     ScalingLazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -93,32 +92,13 @@ fun TheaterListScreen() {
     }
 }
 
-@Preview(
-    widthDp = WEAR_PREVIEW_DEVICE_WIDTH_DP,
-    apiLevel = WEAR_PREVIEW_API_LEVEL,
-    uiMode = WEAR_PREVIEW_UI_MODE,
-    backgroundColor = WEAR_PREVIEW_BACKGROUND_COLOR_BLACK,
-    showBackground = WEAR_PREVIEW_SHOW_BACKGROUND
-)
-
+@Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable
-private fun TheaterItemPreview() {
-    TheaterItem(
-        Theater("1", "Theater 1", posterUrl = null, address = "19 avenue de Choisy 75013 Paris"),
-        onClick = {}
+private fun TheaterListPreview() {
+    TheaterList(
+        listOf(
+            Theater("1", "Theater 1", posterUrl = null, address = "19 avenue de Choisy 75013 Paris"),
+        )
     )
-}
-
-@Preview(
-    widthDp = WEAR_PREVIEW_DEVICE_WIDTH_DP,
-    heightDp = WEAR_PREVIEW_DEVICE_HEIGHT_DP,
-    apiLevel = WEAR_PREVIEW_API_LEVEL,
-    uiMode = WEAR_PREVIEW_UI_MODE,
-    backgroundColor = WEAR_PREVIEW_BACKGROUND_COLOR_BLACK,
-    showBackground = WEAR_PREVIEW_SHOW_BACKGROUND
-)
-@Composable
-private fun TheaterListScreenPreview() {
-    TheaterListScreen()
 }
 

@@ -76,7 +76,7 @@ dependencies {
 
     implementation(libs.coil.compose)
 
-    implementation(projects.repository)
+    implementation(projects.domain)
 }
 
 kapt {

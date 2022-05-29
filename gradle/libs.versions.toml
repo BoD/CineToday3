@@ -31,6 +31,8 @@ hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-comp
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 
 apollo = { group = "com.apollographql.apollo3", name = "apollo-runtime", version.ref = "apollo" }
+apollo-normalizedCache = { group = "com.apollographql.apollo3", name = "apollo-normalized-cache-sqlite", version.ref = "apollo" }
+apollo-normalizedCache-sqlite = { group = "com.apollographql.apollo3", name = "apollo-normalized-cache", version.ref = "apollo" }
 
 sqldelight-androidDriver = { group = "com.squareup.sqldelight", name = "android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { group = "com.squareup.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }

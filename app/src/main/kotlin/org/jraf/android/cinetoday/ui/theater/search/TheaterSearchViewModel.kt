@@ -31,13 +31,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.jraf.android.cinetoday.repository.Theater
-import org.jraf.android.cinetoday.repository.TheaterRepository
+import org.jraf.android.cinetoday.domain.theater.AddTheaterToFavoritesUseCase
+import org.jraf.android.cinetoday.domain.theater.SearchTheaterUseCase
+import org.jraf.android.cinetoday.domain.theater.Theater
 import javax.inject.Inject
 
 @HiltViewModel
 class TheaterSearchViewModel @Inject constructor(
-    private val theaterRepository: TheaterRepository,
+    private val searchTheater: SearchTheaterUseCase,
+    private val addTheaterToFavorites: AddTheaterToFavoritesUseCase,
 ) : ViewModel() {
     val searchTerms = MutableStateFlow("")
 
@@ -45,13 +47,13 @@ class TheaterSearchViewModel @Inject constructor(
         if (searchTerms.isBlank()) {
             emptyList()
         } else {
-            theaterRepository.search(searchTerms)
+            searchTheater(searchTerms)
         }
     }
 
     fun onTheaterClick(theater: Theater, afterTheaterAdded: () -> Unit) {
         viewModelScope.launch {
-            theaterRepository.addToFavorites(theater)
+            addTheaterToFavorites(theater)
             afterTheaterAdded()
         }
     }

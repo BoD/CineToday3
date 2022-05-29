@@ -22,36 +22,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api
+package org.jraf.android.cinetoday.domain.movie
 
-import android.content.Context
-import com.apollographql.apollo3.ApolloClient
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import org.jraf.android.cinetoday.api.apollo.createApolloClient
-import javax.inject.Singleton
+import org.jraf.android.cinetoday.api.MovieRemoteSource
+import org.jraf.android.cinetoday.api.RemoteMovie
+import java.util.Date
+import javax.inject.Inject
 
-@Module
-@InstallIn(SingletonComponent::class)
-interface ApiModule {
-    companion object {
-        @Provides
-        @Singleton
-        fun provideApolloClient(@ApplicationContext context: Context): ApolloClient = createApolloClient(context)
-    }
-
-    @Binds
-    fun TheaterRemoteSource(
-        theaterRemoteSource: TheaterRemoteSourceImpl,
-    ): TheaterRemoteSource
-
-    @Binds
-    fun MovieRemoteSource(
-        movieRemoteSource: MovieRemoteSourceImpl,
-    ): MovieRemoteSource
-
+interface MovieRepository {
+    suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date): List<Movie>
 }
+
+class MovieRepositoryImpl @Inject constructor(
+    private val movieRemoteSource: MovieRemoteSource,
+) : MovieRepository {
+    override suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date): List<Movie> {
+        return movieRemoteSource.getMovies(theaterIds = theaterIds, from = from, to = to).map { it.toMovie() }
+    }
+}
+
+private fun RemoteMovie.toMovie() = Movie(id = id, title = title, posterUrl = posterUrl)
+
+data class Movie(
+    val id: String,
+    val title: String,
+    val posterUrl: String?,
+)
+

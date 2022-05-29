@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.repository
+package org.jraf.android.cinetoday.domain.theater
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -32,28 +32,21 @@ import org.jraf.android.cinetoday.localstore.LocalTheater
 import org.jraf.android.cinetoday.localstore.TheaterLocalSource
 import javax.inject.Inject
 
-interface TheaterRepository {
-    suspend fun search(search: String): List<Theater>
-    suspend fun addToFavorites(theater: Theater)
-    suspend fun removeFromFavorites(theaterId: String)
-    fun getFavorites(): Flow<List<Theater>>
-}
-
-class TheaterRepositoryImpl @Inject constructor(
+class TheaterRepository @Inject constructor(
     private val theaterRemoteSource: TheaterRemoteSource,
     private val theaterLocalSource: TheaterLocalSource,
-) : TheaterRepository {
-    override suspend fun search(search: String): List<Theater> = theaterRemoteSource.searchTheaters(search).map { it.toTheater() }
+) {
+    suspend fun search(search: String): List<Theater> = theaterRemoteSource.searchTheaters(search).map { it.toTheater() }
 
-    override suspend fun addToFavorites(theater: Theater) {
+    suspend fun addToFavorites(theater: Theater) {
         theaterLocalSource.addFavoriteTheater(LocalTheater(id = theater.id, name = theater.name, posterUrl = theater.posterUrl, address = theater.address))
     }
 
-    override suspend fun removeFromFavorites(theaterId: String) {
+    suspend fun removeFromFavorites(theaterId: String) {
         theaterLocalSource.removeFavoriteTheater(theaterId)
     }
 
-    override fun getFavorites(): Flow<List<Theater>> {
+    fun getFavorites(): Flow<List<Theater>> {
         return theaterLocalSource.getFavoriteTheaters().map { list -> list.map { localTheater -> localTheater.toTheater() } }
     }
 }

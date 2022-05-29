@@ -5,12 +5,17 @@ plugins {
 
 dependencies {
     implementation(libs.apollo)
+    implementation(libs.apollo.normalizedCache)
+    implementation(libs.apollo.normalizedCache.sqlite)
 }
 
 apollo {
     packageName.set("org.jraf.android.cinetoday.api")
     generateAsInternal.set(true)
     codegenModels.set("responseBased")
+
+    mapScalar("DateTime", "java.util.Date", "org.jraf.android.cinetoday.api.apollo.DateTimeAdapter")
+    mapScalar("DateInterval", "kotlin.Long", "org.jraf.android.cinetoday.api.apollo.DateIntervalAdapter")
 
     introspection {
         endpointUrl.set("https://graph.allocine.fr/v1/mobile")
