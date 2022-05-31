@@ -3,7 +3,6 @@ name: Update GraphQL schema
 #on:
 #  schedule:
 #    - cron: "0 0 * * *"
-
 on:
   push:
     branches: [ master ]
