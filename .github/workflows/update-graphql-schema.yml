@@ -6,7 +6,7 @@ name: Update GraphQL schema
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   update:
