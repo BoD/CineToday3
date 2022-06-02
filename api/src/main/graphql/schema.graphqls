@@ -4950,6 +4950,11 @@ type Theater implements Node {
   poster: InternalImage
 
   """
+  The list of the images for this theater.
+  """
+  images("The amount of images to return." first: Int = 10, "The order of the images to return. If none provided the \"CMS_RANK\" order is used." order: [EntityImageSorting] = [RANK]): [InternalImage]
+
+  """
   The theater feeds.
   """
   feeds: [TheaterFeeds]
