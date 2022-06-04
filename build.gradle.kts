@@ -1,3 +1,7 @@
+plugins {
+    alias(libs.plugins.benManes.versions)
+}
+
 buildscript {
     repositories {
         google()
@@ -16,3 +20,5 @@ tasks {
         delete(rootProject.buildDir)
     }
 }
+
+// `./gradlew dependencyUpdates` to see new dependency versions

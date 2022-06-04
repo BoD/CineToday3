@@ -35,6 +35,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,9 +43,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Scaffold
+import androidx.wear.compose.material.SwipeToDismissBox
+import androidx.wear.compose.material.SwipeToDismissBoxState
+import androidx.wear.compose.material.SwipeToDismissValue
+import androidx.wear.compose.material.edgeSwipeToDismiss
+import androidx.wear.compose.material.rememberSwipeToDismissBoxState
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -69,7 +76,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen()
+            MainScreen(onDismiss = { ActivityCompat.finishAffinity(this) })
         }
 
 //        runBlocking {
@@ -90,24 +97,34 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MainScreen() {
+private fun MainScreen(onDismiss: () -> Unit = {}) {
     CineTodayTheme {
         Scaffold {
-            MainScreenContent()
+            val swipeToDismissBoxState = rememberSwipeToDismissBoxState()
+            SwipeToDismissBox(state = swipeToDismissBoxState) { bg ->
+                if (!bg) MainScreenContent(swipeToDismissBoxState = swipeToDismissBoxState)
+            }
+            LaunchedEffect(swipeToDismissBoxState.currentValue) {
+                if (swipeToDismissBoxState.currentValue == SwipeToDismissValue.Dismissed) {
+                    onDismiss()
+                }
+            }
         }
     }
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun MainScreenContent() {
+private fun MainScreenContent(swipeToDismissBoxState: SwipeToDismissBoxState) {
     val pagerState: PagerState = rememberPagerState()
     LaunchedEffect(Unit) {
         pagerState.scrollToPage(1)
     }
     HorizontalPager(
         count = PAGE_COUNT,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .edgeSwipeToDismiss(swipeToDismissBoxState),
         state = pagerState,
     ) { page ->
         when (page) {
@@ -124,7 +141,7 @@ private fun MainScreenContent() {
             override val selectedPage get() = pagerState.currentPage
         }
     }
-    val isScrollSettled = pagerState.currentPageOffset == 0F
+    val isScrollSettled by derivedStateOf { pagerState.currentPageOffset == 0F }
     var isPagerIndicatorVisible by remember { mutableStateOf(true) }
     val animationOffsetPx: Int = with(LocalDensity.current) { 4.dp.roundToPx() }
     AnimatedVisibility(

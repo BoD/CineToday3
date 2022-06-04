@@ -2,23 +2,24 @@
 kotlin = "1.6.21"
 agp = "7.2.0"
 apollo = "3.3.0"
-hilt = "2.38.1"
-coroutines = "1.6.1"
+hilt = "2.42"
+coroutines = "1.6.2"
 sqldelight = "1.5.3"
 timber = "5.0.1"
 junit = "4.13.2"
 androidx-activity = "1.5.0-rc01"
 androidx-lifecycle = "2.5.0-rc01"
-androidx-compose = "1.2.0-beta02"
+androidx-compose = "1.2.0-beta03"
 androidx-wear = "1.2.0-alpha02"
-androidx-wear-compose = "1.0.0-beta02"
+androidx-wear-compose = "1.0.0-beta03"
 coil = "2.1.0"
 accompanist = "0.24.9-beta"
+benManes-versions = "0.42.0"
 
 [plugins]
 apollo = { id = "com.apollographql.apollo3", version.ref = "apollo" }
 sqldelight = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }
-
+benManes-versions = { id = "com.github.ben-manes.versions", version.ref = "benManes-versions" }
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
