@@ -55,8 +55,8 @@ import org.jraf.android.cinetoday.ui.theater.item.TheaterItem
 import org.jraf.android.cinetoday.ui.theater.search.TheaterSearchActivity
 
 @Composable
-fun TheaterListScreen() {
-    val viewModel: TheaterListViewModel = viewModel()
+fun TheaterListScreen(viewModel: TheaterListViewModel = viewModel()) {
+    // TODO empty state
     val favoriteTheaterList by viewModel.favoriteTheaterList.collectAsState(emptyList())
     TheaterList(favoriteTheaterList)
 }
@@ -86,7 +86,7 @@ private fun TheaterList(favoriteTheaterList: List<Theater>) {
                 )
             }
         }
-        items(favoriteTheaterList) { theater ->
+        items(favoriteTheaterList, key = { it.id }) { theater ->
             TheaterItem(theater, onClick = {})
         }
     }

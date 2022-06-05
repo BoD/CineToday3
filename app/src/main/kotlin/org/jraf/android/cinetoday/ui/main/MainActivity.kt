@@ -58,41 +58,21 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import org.jraf.android.cinetoday.domain.theater.TheaterRepository
 import org.jraf.android.cinetoday.ui.movie.list.MovieListScreen
 import org.jraf.android.cinetoday.ui.settings.SettingsScreen
 import org.jraf.android.cinetoday.ui.theater.list.TheaterListScreen
 import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
-import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 private const val PAGE_COUNT = 3
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject
-    lateinit var theaterRepository: TheaterRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MainScreen(onDismiss = { ActivityCompat.finishAffinity(this) })
         }
-
-//        runBlocking {
-//            try {
-//                val theaters: List<Theater> = theaterRepository.search("nantes")
-//                logd(theaters)
-//                theaterRepository.addToFavorites(theaters[0])
-//                val favorites: List<Theater> = theaterRepository.getFavorites().first()
-//                logd("Favorites: $favorites")
-////                theaterRepository.removeFromFavorites(favorites[0].id)
-////                val favoritesAfter: List<Theater> = theaterRepository.getFavorites().first()
-////                logd("Favorites after: $favoritesAfter")
-//            } catch (e: Exception) {
-//                logd(e)
-//            }
-//        }
     }
 }
 

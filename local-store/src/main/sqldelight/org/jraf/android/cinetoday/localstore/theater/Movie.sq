@@ -7,3 +7,7 @@ CREATE TABLE Movie (
 insert:
 INSERT OR REPLACE INTO Movie (id, title, posterUrl) VALUES (?, ?, ?);
 
+selectAllMovies:
+SELECT
+*
+FROM Movie;

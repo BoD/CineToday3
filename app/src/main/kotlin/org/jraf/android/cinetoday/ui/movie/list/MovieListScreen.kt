@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -40,38 +39,23 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.Text
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import org.jraf.android.cinetoday.domain.movie.Movie
+import org.jraf.android.cinetoday.ui.common.loading.Loading
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 @Composable
-fun MovieListScreen() {
-    val viewModel: MovieListViewModel = viewModel()
-    val movieList by viewModel.movieList.collectAsState(emptyMap())
+fun MovieListScreen(viewModel: MovieListViewModel = viewModel()) {
+    val movieList by viewModel.movieList.collectAsState(emptyList())
     if (movieList.isEmpty()) {
-        Loading()
+        Loading(Modifier.fillMaxSize())
     } else {
-        // TODO
-        MovieList(movieList.values.flatten())
+        MovieList(movieList)
     }
-}
-
-@Composable
-private fun Loading() {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator()
-    }
-}
-
-@Preview(device = Devices.WEAR_OS_LARGE_ROUND)
-@Composable
-private fun LoadingPreview() {
-    Loading()
 }
 
 
@@ -114,4 +98,15 @@ private fun MovieList(movieList: List<Movie>) {
             Text(movie.title)
         }
     }
+}
+
+@Preview(device = Devices.WEAR_OS_LARGE_ROUND)
+@Composable
+private fun MovieListPreview() {
+    MovieList(
+        listOf(
+            Movie(id = "", title = "Titanic", posterUrl = null),
+            Movie(id = "", title = "Terminator 2", posterUrl = null),
+        )
+    )
 }

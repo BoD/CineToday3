@@ -22,29 +22,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.ui.movie.list
+package org.jraf.android.cinetoday.domain.movie
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import org.jraf.android.cinetoday.domain.movie.FetchAndSaveMoviesForTodayUseCase
-import org.jraf.android.cinetoday.domain.movie.GetMovieListUseCase
-import org.jraf.android.cinetoday.domain.movie.Movie
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
+import org.jraf.android.cinetoday.domain.theater.TheaterRepository
+import org.jraf.android.cinetoday.util.datetime.atMidnight
+import org.jraf.android.cinetoday.util.datetime.nextDay
+import java.util.Date
 import javax.inject.Inject
 
-@HiltViewModel
-class MovieListViewModel @Inject constructor(
-    fetchAndSaveMoviesForToday: FetchAndSaveMoviesForTodayUseCase,
-    getMovieList: GetMovieListUseCase,
-) : ViewModel() {
-    //    val movieList: Flow<Map<Theater, List<Movie>>> = getMovieListForToday(viewModelScope)
-    init {
-        viewModelScope.launch {
-            fetchAndSaveMoviesForToday(viewModelScope)
-        }
+class FetchAndSaveMoviesForTodayUseCase @Inject constructor(
+    private val theaterRepository: TheaterRepository,
+    private val movieRepository: MovieRepository,
+) {
+    suspend operator fun invoke(coroutineScope: CoroutineScope) {
+        val theaterIds = theaterRepository.getFavorites().first().map { it.id }.toSet()
+        val todayAtMidnight = Date().atMidnight()
+        val tomorrowAtMidnight = todayAtMidnight.nextDay()
+        movieRepository.fetchAndSaveMovies(
+            theaterIds = theaterIds,
+            from = todayAtMidnight,
+            to = tomorrowAtMidnight,
+            coroutineScope = coroutineScope,
+        )
     }
-
-    val movieList: Flow<List<Movie>> = getMovieList()
 }

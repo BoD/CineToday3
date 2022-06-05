@@ -24,32 +24,11 @@
  */
 package org.jraf.android.cinetoday.domain.movie
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import org.jraf.android.cinetoday.domain.theater.Theater
-import org.jraf.android.cinetoday.domain.theater.TheaterRepository
-import org.jraf.android.cinetoday.util.datetime.atMidnight
-import org.jraf.android.cinetoday.util.datetime.nextDay
-import java.util.Date
 import javax.inject.Inject
 
-class GetMovieListForTodayUseCase @Inject constructor(
-    private val theaterRepository: TheaterRepository,
+class GetMovieListUseCase @Inject constructor(
     private val movieRepository: MovieRepository,
 ) {
-    operator fun invoke(coroutineScope: CoroutineScope): Flow<Map<Theater, List<Movie>>> {
-        return theaterRepository.getFavorites().map { theaterList ->
-            val theaterById = theaterList.associateBy { it.id }
-
-            val todayAtMidnight = Date().atMidnight()
-            val tomorrowAtMidnight = todayAtMidnight.nextDay()
-            movieRepository.fetchMovies(
-                theaterIds = theaterList.map { it.id }.toSet(),
-                from = todayAtMidnight,
-                to = tomorrowAtMidnight,
-                coroutineScope = coroutineScope,
-            ).mapKeys { theaterById[it.key]!! }
-        }
-    }
+    operator fun invoke(): Flow<List<Movie>> = movieRepository.getMovieList()
 }

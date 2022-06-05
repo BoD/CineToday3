@@ -33,13 +33,13 @@ import java.util.Date
 import javax.inject.Inject
 
 interface MovieRemoteSource {
-    suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>>
+    suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>>
 }
 
 class MovieRemoteSourceImpl @Inject constructor(
     private val apolloClient: ApolloClient,
 ) : MovieRemoteSource {
-    override suspend fun getMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>> {
+    override suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>> {
         val result = mutableMapOf<String, List<RemoteMovie>>()
         val jobs = mutableListOf<Job>()
         for (theaterId in theaterIds) {

@@ -63,6 +63,7 @@ import androidx.wear.input.RemoteInputIntentHelper
 import androidx.wear.input.wearableExtender
 import dagger.hilt.android.AndroidEntryPoint
 import org.jraf.android.cinetoday.R
+import org.jraf.android.cinetoday.ui.common.loading.Loading
 import org.jraf.android.cinetoday.ui.theater.item.TheaterItem
 import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_API_LEVEL
@@ -92,9 +93,8 @@ private fun TheaterSearchScreen(afterTheaterAdded: () -> Unit) {
 }
 
 @Composable
-private fun TheaterSearchContent(afterTheaterAdded: () -> Unit) {
-    val viewModel: TheaterSearchViewModel = viewModel()
-    val searchResultTheaterList by viewModel.searchResultTheaterList.collectAsState(emptyList())
+private fun TheaterSearchContent(viewModel: TheaterSearchViewModel = viewModel(), afterTheaterAdded: () -> Unit) {
+    val searchResult by viewModel.searchResult.collectAsState(TheaterSearchViewModel.TheaterSearchResult.Results(emptyList()))
     val searchTerms by viewModel.searchTerms.collectAsState("")
     val keySearchTerms = "search_terms"
 
@@ -154,15 +154,27 @@ private fun TheaterSearchContent(afterTheaterAdded: () -> Unit) {
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
-        if (searchResultTheaterList.isEmpty() && hasEnteredSearchTerms) {
-            item {
-                Text(stringResource(R.string.theater_search_noResults), modifier = Modifier.padding(16.dp))
+
+        when (searchResult) {
+            TheaterSearchViewModel.TheaterSearchResult.Searching -> {
+                item {
+                    Loading()
+                }
             }
-        } else {
-            items(searchResultTheaterList) { theater ->
-                TheaterItem(theater, onClick = {
-                    viewModel.onTheaterClick(theater, afterTheaterAdded)
-                })
+            is TheaterSearchViewModel.TheaterSearchResult.Results -> {
+                val theaterList = (searchResult as TheaterSearchViewModel.TheaterSearchResult.Results).theaterList
+                if (theaterList.isEmpty() && hasEnteredSearchTerms) {
+                    item {
+                        Text(stringResource(R.string.theater_search_noResults), modifier = Modifier.padding(16.dp))
+                    }
+                } else {
+                    items(theaterList, key = { it.id }) { theater ->
+                        TheaterItem(theater, onClick = {
+                            viewModel.onTheaterClick(theater, afterTheaterAdded)
+                        })
+                    }
+                }
+
             }
         }
     }

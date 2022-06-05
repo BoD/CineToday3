@@ -37,6 +37,8 @@ import javax.inject.Inject
 interface MovieShowtimeLocalSource {
     suspend fun addMovieShowtimes(localMovieShowtimes: List<LocalMovieShowtime>)
     fun getMovieShowtimes(movieId: String): Flow<List<LocalMovieShowtime>>
+    fun getMovieList(): Flow<List<LocalMovie>>
+
 }
 
 class MovieShowtimeLocalSourceImpl @Inject constructor(
@@ -97,6 +99,18 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                     )
                 }
             }
+    }
+
+    override fun getMovieList(): Flow<List<LocalMovie>> {
+        return database.movieQueries.selectAllMovies().asFlow().mapToList().map { movieList ->
+            movieList.map { movie ->
+                LocalMovie(
+                    id = movie.id,
+                    title = movie.title,
+                    posterUrl = movie.posterUrl
+                )
+            }
+        }
     }
 }
 

@@ -27,9 +27,12 @@ package org.jraf.android.cinetoday.ui.theater.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.jraf.android.cinetoday.domain.theater.AddTheaterToFavoritesUseCase
 import org.jraf.android.cinetoday.domain.theater.SearchTheaterUseCase
@@ -43,11 +46,15 @@ class TheaterSearchViewModel @Inject constructor(
 ) : ViewModel() {
     val searchTerms = MutableStateFlow("")
 
-    val searchResultTheaterList: Flow<List<Theater>> = searchTerms.map { searchTerms ->
+    @OptIn(FlowPreview::class)
+    val searchResult: Flow<TheaterSearchResult> = searchTerms.flatMapConcat { searchTerms ->
         if (searchTerms.isBlank()) {
-            emptyList()
+            flowOf(TheaterSearchResult.Results(emptyList()))
         } else {
-            searchTheater(searchTerms)
+            flow<TheaterSearchResult> {
+                emit(TheaterSearchResult.Searching)
+                emit(TheaterSearchResult.Results(searchTheater(searchTerms)))
+            }
         }
     }
 
@@ -56,5 +63,10 @@ class TheaterSearchViewModel @Inject constructor(
             addTheaterToFavorites(theater)
             afterTheaterAdded()
         }
+    }
+
+    sealed interface TheaterSearchResult {
+        object Searching : TheaterSearchResult
+        data class Results(val theaterList: List<Theater>) : TheaterSearchResult
     }
 }

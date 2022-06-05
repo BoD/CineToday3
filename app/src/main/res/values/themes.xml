@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.CineToday" parent="@android:style/Theme.DeviceDefault">
+    <style name="Theme.CineToday" parent="@android:style/Theme.DeviceDefault" />
+
+    <style name="Theme.CineToday.Transparent" parent="@android:style/Theme.DeviceDefault">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
 </resources>

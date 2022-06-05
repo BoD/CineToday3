@@ -22,29 +22,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.ui.movie.list
+package org.jraf.android.cinetoday.ui.common.loading
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import org.jraf.android.cinetoday.domain.movie.FetchAndSaveMoviesForTodayUseCase
-import org.jraf.android.cinetoday.domain.movie.GetMovieListUseCase
-import org.jraf.android.cinetoday.domain.movie.Movie
-import javax.inject.Inject
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.wear.compose.material.CircularProgressIndicator
 
-@HiltViewModel
-class MovieListViewModel @Inject constructor(
-    fetchAndSaveMoviesForToday: FetchAndSaveMoviesForTodayUseCase,
-    getMovieList: GetMovieListUseCase,
-) : ViewModel() {
-    //    val movieList: Flow<Map<Theater, List<Movie>>> = getMovieListForToday(viewModelScope)
-    init {
-        viewModelScope.launch {
-            fetchAndSaveMoviesForToday(viewModelScope)
-        }
+@Composable
+fun Loading(modifier: Modifier = Modifier) {
+    Box(contentAlignment = Alignment.Center, modifier = modifier) {
+        CircularProgressIndicator()
     }
+}
 
-    val movieList: Flow<List<Movie>> = getMovieList()
+@Preview(device = Devices.WEAR_OS_LARGE_ROUND)
+@Composable
+private fun LoadingPreview() {
+    Loading(Modifier.fillMaxSize())
 }
