@@ -31,6 +31,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.jraf.android.cinetoday.localstore.theater.SelectByMovieId
+import org.jraf.android.cinetoday.util.datetime.timestampToLocalDate
+import org.jraf.android.cinetoday.util.datetime.toTimestamp
+import java.time.LocalDate
 import java.util.Date
 import javax.inject.Inject
 
@@ -51,7 +54,9 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                     database.movieQueries.insert(
                         id = localMovieShowtime.movie.id,
                         title = localMovieShowtime.movie.title,
-                        posterUrl = localMovieShowtime.movie.posterUrl
+                        posterUrl = localMovieShowtime.movie.posterUrl,
+                        releaseDate = localMovieShowtime.movie.releaseDate.toTimestamp(),
+                        weeklyTheatersCount = localMovieShowtime.movie.weeklyTheatersCount,
                     )
 
                     for (theaterIdToShowtime in localMovieShowtime.showtimes) {
@@ -89,11 +94,14 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                             languageVersion = selectByMovie.languageVersion,
                         )
                     }
+                    val firstMovie = selectByMovieList.first()
                     LocalMovieShowtime(
                         movie = LocalMovie(
                             id = movieId,
-                            title = selectByMovieList.first().title,
-                            posterUrl = selectByMovieList.first().posterUrl
+                            title = firstMovie.title,
+                            posterUrl = firstMovie.posterUrl,
+                            releaseDate = timestampToLocalDate(firstMovie.releaseDate),
+                            weeklyTheatersCount = firstMovie.weeklyTheatersCount,
                         ),
                         showtimes = showtimes
                     )
@@ -103,11 +111,13 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
 
     override fun getMovieList(): Flow<List<LocalMovie>> {
         return database.movieQueries.selectAllMovies().asFlow().mapToList().map { movieList ->
-            movieList.map { movie ->
+            movieList.map { sqlMovie ->
                 LocalMovie(
-                    id = movie.id,
-                    title = movie.title,
-                    posterUrl = movie.posterUrl
+                    id = sqlMovie.id,
+                    title = sqlMovie.title,
+                    posterUrl = sqlMovie.posterUrl,
+                    releaseDate = timestampToLocalDate(sqlMovie.releaseDate),
+                    weeklyTheatersCount = sqlMovie.weeklyTheatersCount,
                 )
             }
         }
@@ -123,6 +133,8 @@ data class LocalMovie(
     val id: String,
     val title: String,
     val posterUrl: String?,
+    val releaseDate: LocalDate,
+    val weeklyTheatersCount: Long,
 )
 
 data class LocalShowtime(

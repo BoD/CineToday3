@@ -59,7 +59,9 @@ data class RemoteMovie(
     val id: String,
     val title: String,
     val posterUrl: String?,
+    val releaseDate: String,
     val showtimes: List<RemoteShowtime>,
+    val weeklyTheatersCount: Long,
 )
 
 data class RemoteShowtime(
@@ -73,7 +75,9 @@ private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.toRemot
     id = movie.id,
     title = movie.title,
     posterUrl = movie.poster?.url,
-    showtimes = showtimes.mapNotNull { it?.toRemoteShowtime() }
+    releaseDate = movie.releases.first()!!.releaseDate.date,
+    showtimes = showtimes.mapNotNull { it?.toRemoteShowtime() },
+    weeklyTheatersCount = movie.weeklyTheatersCount.toLong(),
 )
 
 private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.Showtime.toRemoteShowtime() = RemoteShowtime(

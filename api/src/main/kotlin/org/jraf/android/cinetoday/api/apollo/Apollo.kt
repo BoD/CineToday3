@@ -26,8 +26,6 @@ package org.jraf.android.cinetoday.api.apollo
 
 import android.content.Context
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.cache.normalized.normalizedCache
-import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo3.network.http.LoggingInterceptor
 import org.jraf.android.cinetoday.util.logging.logd
 
@@ -47,7 +45,7 @@ private const val HEADER_AC_AUTH_TOKEN_VALUE =
     "fRCoWAfDyLs:APA91bF0V8MX1qMRDgG51FLWSZOYzec9vqTR74iWZdcrRUs-VeDF1LZoRmHcDhdNOr-7Z0WNnUi5TBTncvyRse4XbkpiEjvMgvVpBgAmeMMtW6wa8bKEcEUuXEw6xbW3ddhnrrpCYOrx"
 
 internal fun createApolloClient(context: Context): ApolloClient {
-    val sqlNormalizedCacheFactory = SqlNormalizedCacheFactory(context, "apollo.db")
+//    val sqlNormalizedCacheFactory = SqlNormalizedCacheFactory(context, "apollo.db")
 
     return ApolloClient.Builder()
         .serverUrl(GRAPHQL_URL)
@@ -61,6 +59,7 @@ internal fun createApolloClient(context: Context): ApolloClient {
         )
         // TODO Only enable in debug builds
         .addHttpInterceptor(LoggingInterceptor { logd(it) })
-        .normalizedCache(sqlNormalizedCacheFactory)
+        // TODO enable normalized cache, maybe
+//        .normalizedCache(sqlNormalizedCacheFactory)
         .build()
 }

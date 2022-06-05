@@ -24,6 +24,9 @@
  */
 package org.jraf.android.cinetoday.util.datetime
 
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset
 import java.util.Calendar
 import java.util.Date
 
@@ -40,3 +43,12 @@ fun Date.nextDay(): Date = Calendar.getInstance().apply {
     time = this@nextDay
     add(Calendar.DATE, 1)
 }.time
+
+fun timestampToLocalDate(timestamp: Long): LocalDate =
+    Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.UTC).toLocalDate()
+
+fun LocalDate.toTimestamp(): Long = atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+
+fun isoDateStringToLocalDate(isoDate: String): LocalDate = LocalDate.parse(isoDate)!!
+
+fun isoDateStringToTimestamp(isoDate: String): Long = isoDateStringToLocalDate(isoDate).toTimestamp()

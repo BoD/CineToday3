@@ -43,9 +43,9 @@ fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
                 }
             }
         }
-        releases(type: [RELEASED], country: FRANCE) {
-            releaseDate {
-                date
+        releases(type: [RELEASED], country: FRANCE) @nonnull {
+            releaseDate @nonnull {
+                date @nonnull
             }
         }
         genres
@@ -59,6 +59,7 @@ fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
             url
         }
         synopsis(long: true)
+        weeklyTheatersCount @nonnull
     }
     showtimes @nonnull {
         id @nonnull

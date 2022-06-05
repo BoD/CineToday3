@@ -26,6 +26,7 @@ package org.jraf.android.cinetoday.ui.movie.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,6 +46,7 @@ import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import org.jraf.android.cinetoday.domain.movie.Movie
 import org.jraf.android.cinetoday.ui.common.loading.Loading
+import java.time.LocalDate
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
@@ -93,20 +95,41 @@ private fun MovieList(movieList: List<Movie>) {
                 }
                 .fillMaxWidth(fraction = .7F)
                 .fillMaxHeight()
-                .background(color = Color(Random.nextLong()))
         ) {
-            Text(movie.title)
+            Movie(movie)
         }
     }
 }
+
+@Composable
+private fun Movie(movie: Movie) {
+    Column(Modifier
+        .fillMaxSize()
+        .background(color = Color(Random.nextLong()))
+    ) {
+        Text(movie.title)
+        Text(movie.releaseDate.toString())
+    }
+}
+
 
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable
 private fun MovieListPreview() {
     MovieList(
         listOf(
-            Movie(id = "", title = "Titanic", posterUrl = null),
-            Movie(id = "", title = "Terminator 2", posterUrl = null),
+            Movie(
+                id = "",
+                title = "Titanic",
+                posterUrl = null,
+                releaseDate = LocalDate.now(),
+            ),
+            Movie(
+                id = "",
+                title = "Terminator 2",
+                posterUrl = null,
+                releaseDate = LocalDate.now(),
+            ),
         )
     )
 }

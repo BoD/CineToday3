@@ -34,6 +34,8 @@ import org.jraf.android.cinetoday.localstore.LocalMovie
 import org.jraf.android.cinetoday.localstore.LocalMovieShowtime
 import org.jraf.android.cinetoday.localstore.LocalShowtime
 import org.jraf.android.cinetoday.localstore.MovieShowtimeLocalSource
+import org.jraf.android.cinetoday.util.datetime.isoDateStringToLocalDate
+import java.time.LocalDate
 import java.util.Date
 import javax.inject.Inject
 
@@ -74,14 +76,26 @@ class MovieRepository @Inject constructor(
 
 private fun RemoteShowtime.toLocalShowtime() = LocalShowtime(id = id, startsAt = startsAt, projection = projection, languageVersion = languageVersion)
 
-private fun RemoteMovie.toLocalMovie() = LocalMovie(id = id, title = title, posterUrl = posterUrl)
+private fun RemoteMovie.toLocalMovie() = LocalMovie(
+    id = id,
+    title = title,
+    posterUrl = posterUrl,
+    releaseDate = isoDateStringToLocalDate(releaseDate),
+    weeklyTheatersCount = weeklyTheatersCount,
+)
 
-private fun LocalMovie.toMovie() = Movie(id = id, title = title, posterUrl = posterUrl)
+private fun LocalMovie.toMovie() = Movie(
+    id = id,
+    title = title,
+    posterUrl = posterUrl,
+    releaseDate = releaseDate,
+)
 
 data class Movie(
     val id: String,
     val title: String,
     val posterUrl: String?,
+    val releaseDate: LocalDate,
 )
 
 data class Showtime(
