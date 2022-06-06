@@ -25,13 +25,33 @@
 package org.jraf.android.cinetoday
 
 import android.app.Application
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import dagger.hilt.android.HiltAndroidApp
 import org.jraf.android.cinetoday.util.logging.initLogging
 
 @HiltAndroidApp
-class CineTodayApplication: Application() {
+class CineTodayApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         initLogging()
+    }
+
+    override fun newImageLoader(): ImageLoader {
+        return ImageLoader.Builder(this)
+            .memoryCache {
+                MemoryCache.Builder(this)
+                    .maxSizePercent(0.5)
+                    .build()
+            }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(cacheDir.resolve("coil_image_cache"))
+                    .maxSizePercent(0.05)
+                    .build()
+            }
+            .build()
     }
 }

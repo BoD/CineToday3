@@ -24,9 +24,7 @@
  */
 package org.jraf.android.cinetoday.ui.movie.list
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,13 +32,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.wear.compose.material.Text
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -48,7 +48,6 @@ import org.jraf.android.cinetoday.domain.movie.Movie
 import org.jraf.android.cinetoday.ui.common.loading.Loading
 import java.time.LocalDate
 import kotlin.math.absoluteValue
-import kotlin.random.Random
 
 @Composable
 fun MovieListScreen(viewModel: MovieListViewModel = viewModel()) {
@@ -103,13 +102,16 @@ private fun MovieList(movieList: List<Movie>) {
 
 @Composable
 private fun Movie(movie: Movie) {
-    Column(Modifier
-        .fillMaxSize()
-        .background(color = Color(Random.nextLong()))
-    ) {
-        Text(movie.title)
-        Text(movie.releaseDate.toString())
-    }
+    AsyncImage(
+        modifier = Modifier
+            .fillMaxSize(),
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(movie.posterUrl)
+            .crossfade(true)
+            .build(),
+        contentScale = ContentScale.Crop,
+        contentDescription = null,
+    )
 }
 
 
