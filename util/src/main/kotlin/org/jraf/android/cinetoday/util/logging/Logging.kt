@@ -56,3 +56,8 @@ inline fun logd(throwable: Throwable, message: String) {
 inline fun logd(throwable: Throwable, any: Any) {
     Timber.d(throwable, any.toString())
 }
+
+inline fun logw(tag: String, message: String) {
+    Timber.tag(tag)
+    Timber.w(message)
+}

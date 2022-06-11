@@ -22,27 +22,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.ui.theme
+package org.jraf.android.cinetoday.util.bitmap
 
-import androidx.compose.ui.graphics.Color
-import androidx.wear.compose.material.Colors
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 
-private val Purple200 = Color(0xFFBB86FC)
-private val Purple500 = Color(0xFF6200EE)
-private val Purple700 = Color(0xFF3700B3)
-private val Teal200 = Color(0xFF03DAC5)
-private val Red400 = Color(0xFFCF6679)
-private val Red30 = Color(0xFF4D1410)
-
-val MovieDefaultBackground = Red30
-
-val CineTodayColors: Colors = Colors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200,
-    secondaryVariant = Teal200,
-    error = Red400,
-    onPrimary = Color.Black,
-    onSecondary = Color.Black,
-    onError = Color.Black
-)
+fun Drawable.toBitmap(): Bitmap? {
+    return if (this is BitmapDrawable) {
+        bitmap
+    } else {
+        null
+    }
+}

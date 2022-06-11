@@ -54,15 +54,25 @@ class CineTodayApplication : Application(), ImageLoaderFactory {
             .diskCache {
                 DiskCache.Builder()
                     .directory(cacheDir.resolve("coil_image_cache"))
-                    .maxSizePercent(0.05)
+                    .maxSizePercent(0.2)
                     .build()
             }
+            .respectCacheHeaders(false)
             // Crossfade
             .crossfade(true)
             // TODO: do this only in debug release builds
             .logger(DebugLogger())
             // Lower quality but lower memory impact too. Probably a good idea for watches.
             .allowRgb565(true)
+            // Resize image
+            .components {
+                add { chain ->
+                    val originalUrl = chain.request.data as String
+//                    val newUrl = "https://ce8eb4b9c.cloudimg.io/crop/${chain.size.width}x${chain.size.height}/twebp/${originalUrl}"
+                    val newUrl = "https://ce8eb4b9c.cloudimg.io/width/200/twebp/${originalUrl}"
+                    chain.proceed(chain.request.newBuilder().data(newUrl).build())
+                }
+            }
             .build()
     }
 }

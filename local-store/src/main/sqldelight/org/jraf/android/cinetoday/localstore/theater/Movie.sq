@@ -3,11 +3,29 @@ CREATE TABLE Movie (
     title TEXT NOT NULL,
     posterUrl TEXT,
     releaseDate INTEGER NOT NULL,
-    weeklyTheatersCount INTEGER NOT NULL
+    weeklyTheatersCount INTEGER NOT NULL,
+    colorDark INTEGER,
+    colorLight INTEGER
 );
 
 insert:
-INSERT OR REPLACE INTO Movie (id, title, posterUrl, releaseDate, weeklyTheatersCount) VALUES (?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO Movie (
+    id,
+    title,
+    posterUrl,
+    releaseDate,
+    weeklyTheatersCount,
+    colorDark,
+    colorLight
+) VALUES (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?
+);
 
 selectAllMovies:
 SELECT

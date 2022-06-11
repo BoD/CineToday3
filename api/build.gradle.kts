@@ -10,6 +10,7 @@ dependencies {
 
     // For poster prefetching
     implementation(libs.coil.compose)
+    implementation(libs.androidx.palette.ktx)
 }
 
 apollo {

@@ -66,6 +66,8 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                         posterUrl = localMovieShowtime.movie.posterUrl,
                         releaseDate = localMovieShowtime.movie.releaseDate.toTimestamp(),
                         weeklyTheatersCount = localMovieShowtime.movie.weeklyTheatersCount,
+                        colorDark = localMovieShowtime.movie.colorDark?.toLong(),
+                        colorLight = localMovieShowtime.movie.colorLight?.toLong(),
                     )
 
                     for (theaterIdToShowtime in localMovieShowtime.showtimes) {
@@ -111,6 +113,8 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                             posterUrl = firstMovie.posterUrl,
                             releaseDate = timestampToLocalDate(firstMovie.releaseDate),
                             weeklyTheatersCount = firstMovie.weeklyTheatersCount,
+                            colorDark = firstMovie.colorDark?.toInt(),
+                            colorLight = firstMovie.colorLight?.toInt(),
                         ),
                         showtimes = showtimes
                     )
@@ -127,6 +131,8 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                     posterUrl = sqlMovie.posterUrl,
                     releaseDate = timestampToLocalDate(sqlMovie.releaseDate),
                     weeklyTheatersCount = sqlMovie.weeklyTheatersCount,
+                    colorDark = sqlMovie.colorDark?.toInt(),
+                    colorLight = sqlMovie.colorLight?.toInt(),
                 )
             }
         }
@@ -144,6 +150,8 @@ data class LocalMovie(
     val posterUrl: String?,
     val releaseDate: LocalDate,
     val weeklyTheatersCount: Long,
+    val colorDark: Int?,
+    val colorLight: Int?,
 )
 
 data class LocalShowtime(

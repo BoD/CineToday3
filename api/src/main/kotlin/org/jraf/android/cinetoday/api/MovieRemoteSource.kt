@@ -25,6 +25,10 @@
 package org.jraf.android.cinetoday.api
 
 import android.content.Context
+import androidx.annotation.ColorInt
+import androidx.palette.graphics.Palette
+import androidx.palette.graphics.Target
+import androidx.palette.graphics.get
 import coil.imageLoader
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -32,15 +36,21 @@ import com.apollographql.apollo3.ApolloClient
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import org.jraf.android.cinetoday.util.bitmap.toBitmap
 import org.jraf.android.cinetoday.util.logging.logd
+import org.jraf.android.cinetoday.util.logging.logw
 import java.util.Date
 import javax.inject.Inject
+import kotlin.collections.set
+import kotlin.coroutines.resume
 
 interface MovieRemoteSource {
     suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>>
-    fun preloadMoviePoster(moviePosterUrl: String)
 }
 
 class MovieRemoteSourceImpl @Inject constructor(
@@ -49,26 +59,54 @@ class MovieRemoteSourceImpl @Inject constructor(
 ) : MovieRemoteSource {
     override suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>> {
         val result = mutableMapOf<String, List<RemoteMovie>>()
-        val jobs = mutableListOf<Job>()
+        val moviesForTheaterJobs = mutableListOf<Job>()
         for (theaterId in theaterIds) {
-            jobs += coroutineScope.launch {
-                result[theaterId] = apolloClient
+            moviesForTheaterJobs += coroutineScope.launch {
+                val movieNodes: List<MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node> = apolloClient
                     .query(MovieWithShowtimesListQuery(theaterId = theaterId, from = from, to = to))
                     .execute()
-                    .dataAssertNoErrors.movieShowtimeList.edges.mapNotNull { it?.node?.toRemoteMovie() }
+                    .dataAssertNoErrors.movieShowtimeList.edges
+                    .filterNotNull() // GraphQL . . .
+                    .map { it.node }
+
+                result[theaterId] = movieNodes.map { movieNode ->
+                    async {
+                        val palette = movieNode.movie.poster?.url?.let { downloadMoviePosterAndComputePalette(it) }
+                        val colorDark = palette?.get(Target.DARK_VIBRANT)?.rgb
+                        val colorLight = palette?.get(Target.LIGHT_MUTED)?.rgb
+                        movieNode.toRemoteMovie(colorDark = colorDark, colorLight = colorLight)
+                    }
+                }.awaitAll()
             }
         }
-        jobs.joinAll()
+        moviesForTheaterJobs.joinAll()
         return result
     }
 
-    override fun preloadMoviePoster(moviePosterUrl: String) {
-        logd("Preloading movie poster: $moviePosterUrl")
-        val request = ImageRequest.Builder(context)
-            .data(moviePosterUrl)
-            .memoryCachePolicy(CachePolicy.DISABLED)
-            .build()
-        context.imageLoader.enqueue(request)
+    private suspend fun downloadMoviePosterAndComputePalette(moviePosterUrl: String): Palette? {
+        logd("Downloading movie poster: $moviePosterUrl")
+        return suspendCancellableCoroutine { continuation ->
+            val request = ImageRequest.Builder(context)
+                .data(moviePosterUrl)
+                // Disable hardware bitmaps as Palette needs to read the image's pixels
+                .allowHardware(false)
+                .memoryCachePolicy(CachePolicy.DISABLED)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .listener(
+                    onSuccess = { _, result ->
+                        logd("MovieRemoteSourceImpl", "Generating palette for poster: $moviePosterUrl")
+                        val bitmap = result.drawable.toBitmap()!!
+                        val palette = Palette.from(bitmap).generate()
+                        continuation.resume(palette)
+                    },
+                    onError = { _, result ->
+                        logw("MovieRemoteSourceImpl", "Could not load movie poster moviePosterUrl=$moviePosterUrl result=$result")
+                        continuation.resume(null)
+                    }
+                )
+                .build()
+            context.imageLoader.enqueue(request)
+        }
     }
 }
 
@@ -79,6 +117,9 @@ data class RemoteMovie(
     val releaseDate: String,
     val showtimes: List<RemoteShowtime>,
     val weeklyTheatersCount: Long,
+
+    @ColorInt val colorDark: Int?,
+    @ColorInt val colorLight: Int?,
 )
 
 data class RemoteShowtime(
@@ -88,13 +129,15 @@ data class RemoteShowtime(
     val languageVersion: String?,
 )
 
-private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.toRemoteMovie() = RemoteMovie(
+private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.toRemoteMovie(colorDark: Int?, colorLight: Int?) = RemoteMovie(
     id = movie.id,
     title = movie.title,
     posterUrl = movie.poster?.url,
     releaseDate = movie.releases.first()!!.releaseDate.date,
     showtimes = showtimes.mapNotNull { it?.toRemoteShowtime() },
     weeklyTheatersCount = movie.weeklyTheatersCount.toLong(),
+    colorDark = colorDark,
+    colorLight = colorLight,
 )
 
 private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.Showtime.toRemoteShowtime() = RemoteShowtime(

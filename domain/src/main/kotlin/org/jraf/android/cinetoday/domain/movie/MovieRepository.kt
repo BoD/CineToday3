@@ -63,17 +63,13 @@ class MovieRepository @Inject constructor(
                 localMovieShowtimes += localMovieShowtime
             }
         }
+        movieShowtimeLocalSource.deleteAll()
         movieShowtimeLocalSource.addMovieShowtimes(localMovieShowtimes)
     }
 
     suspend fun fetchAndSaveMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope) {
-        val movies = fetchMovies(theaterIds, from, to, coroutineScope)
-        movieShowtimeLocalSource.deleteAll()
-        saveMoviesWithShowtimes(movies)
-        val moviePosters: List<String> = movies.values.flatten().map { it.posterUrl }.filterNotNull().distinct()
-        for (moviePoster in moviePosters) {
-            movieRemoteSource.preloadMoviePoster(moviePoster)
-        }
+        val moviesByTheater: Map<String, List<RemoteMovie>> = fetchMovies(theaterIds, from, to, coroutineScope)
+        saveMoviesWithShowtimes(moviesByTheater)
     }
 
     fun getMovieList(): Flow<List<Movie>> = movieShowtimeLocalSource.getMovieList().map { movieList -> movieList.map { localMovie -> localMovie.toMovie() } }
@@ -87,6 +83,8 @@ private fun RemoteMovie.toLocalMovie() = LocalMovie(
     posterUrl = posterUrl,
     releaseDate = isoDateStringToLocalDate(releaseDate),
     weeklyTheatersCount = weeklyTheatersCount,
+    colorDark = colorDark,
+    colorLight = colorLight,
 )
 
 private fun LocalMovie.toMovie() = Movie(
@@ -94,6 +92,8 @@ private fun LocalMovie.toMovie() = Movie(
     title = title,
     posterUrl = posterUrl,
     releaseDate = releaseDate,
+    colorDark = colorDark,
+    colorLight = colorLight,
 )
 
 data class Movie(
@@ -101,6 +101,8 @@ data class Movie(
     val title: String,
     val posterUrl: String?,
     val releaseDate: LocalDate,
+    val colorDark: Int?,
+    val colorLight: Int?,
 )
 
 data class Showtime(
