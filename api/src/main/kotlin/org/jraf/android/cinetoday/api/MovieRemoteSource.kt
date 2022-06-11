@@ -24,19 +24,27 @@
  */
 package org.jraf.android.cinetoday.api
 
+import android.content.Context
+import coil.imageLoader
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.apollographql.apollo3.ApolloClient
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import org.jraf.android.cinetoday.util.logging.logd
 import java.util.Date
 import javax.inject.Inject
 
 interface MovieRemoteSource {
     suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>>
+    fun preloadMoviePoster(moviePosterUrl: String)
 }
 
 class MovieRemoteSourceImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val apolloClient: ApolloClient,
 ) : MovieRemoteSource {
     override suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>> {
@@ -52,6 +60,15 @@ class MovieRemoteSourceImpl @Inject constructor(
         }
         jobs.joinAll()
         return result
+    }
+
+    override fun preloadMoviePoster(moviePosterUrl: String) {
+        logd("Preloading movie poster: $moviePosterUrl")
+        val request = ImageRequest.Builder(context)
+            .data(moviePosterUrl)
+            .memoryCachePolicy(CachePolicy.DISABLED)
+            .build()
+        context.imageLoader.enqueue(request)
     }
 }
 

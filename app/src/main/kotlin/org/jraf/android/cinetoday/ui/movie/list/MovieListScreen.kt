@@ -34,13 +34,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -103,12 +101,8 @@ private fun MovieList(movieList: List<Movie>) {
 @Composable
 private fun Movie(movie: Movie) {
     AsyncImage(
-        modifier = Modifier
-            .fillMaxSize(),
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(movie.posterUrl)
-            .crossfade(true)
-            .build(),
+        modifier = Modifier.fillMaxSize(),
+        model = movie.posterUrl,
         contentScale = ContentScale.Crop,
         contentDescription = null,
     )

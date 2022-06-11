@@ -68,7 +68,12 @@ class MovieRepository @Inject constructor(
 
     suspend fun fetchAndSaveMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope) {
         val movies = fetchMovies(theaterIds, from, to, coroutineScope)
+        movieShowtimeLocalSource.deleteAll()
         saveMoviesWithShowtimes(movies)
+        val moviePosters: List<String> = movies.values.flatten().map { it.posterUrl }.filterNotNull().distinct()
+        for (moviePoster in moviePosters) {
+            movieRemoteSource.preloadMoviePoster(moviePoster)
+        }
     }
 
     fun getMovieList(): Flow<List<Movie>> = movieShowtimeLocalSource.getMovieList().map { movieList -> movieList.map { localMovie -> localMovie.toMovie() } }

@@ -7,3 +7,6 @@ CREATE TABLE Showtime (
 
 insert:
 INSERT OR REPLACE INTO Showtime (id, startsAt, projection, languageVersion) VALUES (?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM Showtime;

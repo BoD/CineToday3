@@ -32,6 +32,11 @@ fun initLogging() {
     Timber.plant(Timber.DebugTree())
 }
 
+inline fun logd(tag: String, message: String) {
+    Timber.tag(tag)
+    Timber.d(message)
+}
+
 inline fun logd(message: String) {
     Timber.d(message)
 }

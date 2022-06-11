@@ -14,3 +14,6 @@ SELECT
 *
 FROM Movie
 ORDER BY releaseDate DESC, weeklyTheatersCount DESC;
+
+deleteAll:
+DELETE FROM Movie;

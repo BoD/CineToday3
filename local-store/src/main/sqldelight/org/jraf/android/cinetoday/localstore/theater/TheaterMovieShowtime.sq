@@ -1,0 +1,25 @@
+CREATE TABLE TheaterMovieShowtime (
+    movieId TEXT NOT NULL,
+    showtimeId TEXT NOT NULL,
+    theaterId TEXT NOT NULL,
+    FOREIGN KEY(movieId) REFERENCES Movie(id),
+    FOREIGN KEY(showtimeId) REFERENCES Showtime(id),
+    -- Deleting a Theater should delete any associated TheaterMovieShowtimes
+    FOREIGN KEY(theaterId) REFERENCES Theater(id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO TheaterMovieShowtime (movieId, showtimeId, theaterId) VALUES (?, ?, ?);
+
+selectByMovieId:
+SELECT
+Movie.*, Movie.id AS movieId, Showtime.*, Showtime.id AS showtimeId, Theater.id AS theaterId
+FROM TheaterMovieShowtime
+JOIN Movie ON TheaterMovieShowtime.movieId = Movie.id
+JOIN Showtime ON TheaterMovieShowtime.showtimeId = Showtime.id
+JOIN Theater ON TheaterMovieShowtime.theaterId = Theater.id
+WHERE Movie.id = ?
+ORDER BY Theater.id;
+
+deleteAll:
+DELETE FROM TheaterMovieShowtime;

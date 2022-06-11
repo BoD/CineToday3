@@ -58,7 +58,7 @@ internal fun createApolloClient(context: Context): ApolloClient {
             HEADER_AC_AUTH_TOKEN_VALUE
         )
         // TODO Only enable in debug builds
-        .addHttpInterceptor(LoggingInterceptor { logd(it) })
+        .addHttpInterceptor(LoggingInterceptor { logd("ApolloClient", it) })
         // TODO enable normalized cache, maybe
 //        .normalizedCache(sqlNormalizedCacheFactory)
         .build()

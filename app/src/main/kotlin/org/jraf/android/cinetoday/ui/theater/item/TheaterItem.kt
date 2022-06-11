@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +44,6 @@ import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import org.jraf.android.cinetoday.R
 import org.jraf.android.cinetoday.domain.theater.Theater
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_API_LEVEL
@@ -86,10 +84,7 @@ fun TheaterItem(theater: Theater, onClick: () -> Unit) {
                 }
             } else {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(theater.posterUrl)
-                        .crossfade(true)
-                        .build(),
+                    model = theater.posterUrl,
                     contentScale = ContentScale.Crop,
                     contentDescription = null,
                     modifier = Modifier

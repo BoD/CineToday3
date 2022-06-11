@@ -7,6 +7,9 @@ dependencies {
     implementation(libs.apollo)
     implementation(libs.apollo.normalizedCache)
     implementation(libs.apollo.normalizedCache.sqlite)
+
+    // For poster prefetching
+    implementation(libs.coil.compose)
 }
 
 apollo {

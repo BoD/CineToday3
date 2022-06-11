@@ -38,15 +38,24 @@ import java.util.Date
 import javax.inject.Inject
 
 interface MovieShowtimeLocalSource {
+    suspend fun deleteAll()
     suspend fun addMovieShowtimes(localMovieShowtimes: List<LocalMovieShowtime>)
     fun getMovieShowtimes(movieId: String): Flow<List<LocalMovieShowtime>>
     fun getMovieList(): Flow<List<LocalMovie>>
-
 }
 
 class MovieShowtimeLocalSourceImpl @Inject constructor(
     private val database: Database,
 ) : MovieShowtimeLocalSource {
+    override suspend fun deleteAll() {
+        withContext(Dispatchers.IO) {
+            database.transaction {
+                database.theaterMovieShowtimeQueries.deleteAll()
+                database.movieQueries.deleteAll()
+            }
+        }
+    }
+
     override suspend fun addMovieShowtimes(localMovieShowtimes: List<LocalMovieShowtime>) {
         withContext(Dispatchers.IO) {
             database.transaction {
@@ -68,7 +77,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                             languageVersion = showtime.languageVersion,
                         )
 
-                        database.movieShowtimeQueries.insert(
+                        database.theaterMovieShowtimeQueries.insert(
                             movieId = localMovieShowtime.movie.id,
                             showtimeId = showtime.id,
                             theaterId = theaterIdToShowtime.key,
@@ -80,7 +89,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
     }
 
     override fun getMovieShowtimes(movieId: String): Flow<List<LocalMovieShowtime>> {
-        return database.movieShowtimeQueries.selectByMovieId(id = movieId)
+        return database.theaterMovieShowtimeQueries.selectByMovieId(id = movieId)
             .asFlow()
             .mapToList()
             .map { selectByMovieList ->
