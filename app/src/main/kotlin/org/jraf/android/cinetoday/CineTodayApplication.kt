@@ -68,8 +68,14 @@ class CineTodayApplication : Application(), ImageLoaderFactory {
             .components {
                 add { chain ->
                     val originalUrl = chain.request.data as String
-//                    val newUrl = "https://ce8eb4b9c.cloudimg.io/crop/${chain.size.width}x${chain.size.height}/twebp/${originalUrl}"
-                    val newUrl = "https://ce8eb4b9c.cloudimg.io/width/200/twebp/${originalUrl}"
+                    val newUrl =
+                        if (chain.size.width > 200) {
+                            // Movie poster
+                            "https://ce8eb4b9c.cloudimg.io/width/200/twebp/${originalUrl}"
+                        } else {
+                            // Theater logo
+                            "https://ce8eb4b9c.cloudimg.io/crop/${chain.size.width}x${chain.size.height}/twebp/${originalUrl}"
+                        }
                     chain.proceed(chain.request.newBuilder().data(newUrl).build())
                 }
             }
