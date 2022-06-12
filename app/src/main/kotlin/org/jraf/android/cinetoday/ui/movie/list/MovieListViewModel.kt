@@ -25,10 +25,8 @@
 package org.jraf.android.cinetoday.ui.movie.list
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import org.jraf.android.cinetoday.domain.movie.FetchAndSaveMoviesForTodayUseCase
 import org.jraf.android.cinetoday.domain.movie.GetMovieListUseCase
 import org.jraf.android.cinetoday.domain.movie.Movie
@@ -41,9 +39,9 @@ class MovieListViewModel @Inject constructor(
 ) : ViewModel() {
     //    val movieList: Flow<Map<Theater, List<Movie>>> = getMovieListForToday(viewModelScope)
     init {
-        viewModelScope.launch {
-            fetchAndSaveMoviesForToday(viewModelScope)
-        }
+//        viewModelScope.launch {
+//            fetchAndSaveMoviesForToday(viewModelScope)
+//        }
     }
 
     val movieList: Flow<List<Movie>> = getMovieList()

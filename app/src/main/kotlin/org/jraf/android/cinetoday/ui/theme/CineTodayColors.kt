@@ -34,7 +34,9 @@ private val Teal200 = Color(0xFF03DAC5)
 private val Red400 = Color(0xFFCF6679)
 private val Red30 = Color(0xFF4D1410)
 
-val MovieDefaultBackground = Red30
+object CineTodayColor {
+    val MovieDefaultBackground = Red30
+}
 
 val CineTodayColors: Colors = Colors(
     primary = Purple200,
@@ -46,3 +48,4 @@ val CineTodayColors: Colors = Colors(
     onSecondary = Color.Black,
     onError = Color.Black
 )
+

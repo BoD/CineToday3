@@ -26,6 +26,7 @@ package org.jraf.android.cinetoday.ui.movie.list
 
 import android.animation.ArgbEvaluator
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -36,25 +37,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Text
+import coil.compose.SubcomposeAsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import org.jraf.android.cinetoday.domain.movie.Movie
 import org.jraf.android.cinetoday.ui.common.loading.Loading
-import org.jraf.android.cinetoday.ui.theme.MovieDefaultBackground
+import org.jraf.android.cinetoday.ui.theme.CineTodayColor
 import java.time.LocalDate
 import kotlin.math.absoluteValue
 
@@ -80,8 +88,8 @@ private fun MovieList(movieList: List<Movie>) {
         val movieA = if (offset >= 0) movieList[currentPage] else movieList[currentPage - 1]
         val movieB = if (offset > 0) movieList[currentPage + 1] else movieList[currentPage]
 
-        val colorA = movieA.colorDark ?: MovieDefaultBackground.toArgb()
-        val colorB = movieB.colorDark ?: MovieDefaultBackground.toArgb()
+        val colorA = movieA.colorDark ?: CineTodayColor.MovieDefaultBackground.toArgb()
+        val colorB = movieB.colorDark ?: CineTodayColor.MovieDefaultBackground.toArgb()
 
         val fraction = if (offset >= 0) offset else offset + 1
         val resultColor = argbEvaluator.evaluate(fraction, colorA, colorB) as Int
@@ -105,7 +113,7 @@ private fun MovieList(movieList: List<Movie>) {
 
         val pageOffset = calculateCurrentOffsetForPage(page).absoluteValue
         val scale = lerp(
-            start = 0.85f,
+            start = 0.90f,
             stop = 1f,
             fraction = 1f - pageOffset.coerceIn(0f, 1f)
         ) * scaleFactor
@@ -145,21 +153,67 @@ private fun MovieList(movieList: List<Movie>) {
 
 @Composable
 private fun Movie(movie: Movie) {
-    AsyncImage(
+    SubcomposeAsyncImage(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .padding(2.dp),
         model = movie.posterUrl,
+        loading = { NoPosterMovie(movie) },
+        error = { NoPosterMovie(movie) },
         contentScale = ContentScale.Crop,
         contentDescription = null,
     )
 }
 
+@Composable
+private fun NoPosterMovie(movie: Movie) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            painter = noPosterBrushPainter,
+            contentDescription = movie.title
+        )
+        Text(
+            modifier = Modifier.padding(4.dp),
+            text = movie.title,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.title2,
+            maxLines = 6,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+private val noPosterBrushPainter = BrushPainter(Brush.linearGradient(
+    0.0f to Color.DarkGray,
+    0.3f to CineTodayColor.MovieDefaultBackground,
+    1.0f to Color.Black,
+))
+
+
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable
 private fun MoviePreview() {
     Movie(
+        Movie(
+            id = "",
+            title = "Titanic",
+            posterUrl = null,
+            releaseDate = LocalDate.now(),
+            colorDark = 0xFF80000000.toInt(),
+            colorLight = 0xFFFF000000.toInt(),
+        ),
+    )
+}
+
+@Preview(device = Devices.WEAR_OS_LARGE_ROUND)
+@Composable
+private fun NoPosterMoviePreview() {
+    NoPosterMovie(
         Movie(
             id = "",
             title = "Titanic",
