@@ -424,7 +424,7 @@ type Url {
 """
 An Allociné internal image. It has some properties on top of the url, like the file size and its id.
 """
-type InternalImage implements Node Image {
+type InternalImage implements Node & Image {
   """
   The id of the image
   """
@@ -8736,7 +8736,7 @@ type ReleaseSpecialOpsFlags {
 """
 An Allociné release for a series.
 """
-type SeasonRelease implements Node ReleaseInterface {
+type SeasonRelease implements Node & ReleaseInterface {
   """
   The id of the release.
   """
@@ -9119,7 +9119,7 @@ type Broadcast {
 """
 An Allociné release for a series.
 """
-type SeriesRelease implements Node ReleaseInterface {
+type SeriesRelease implements Node & ReleaseInterface {
   """
   The id of the release.
   """
@@ -11242,7 +11242,7 @@ enum MovieReleaseType {
 """
 An Allociné release for a movie.
 """
-type MovieRelease implements Node ReleaseInterface {
+type MovieRelease implements Node & ReleaseInterface {
   """
   The id of the release.
   """
