@@ -2433,6 +2433,11 @@ type Person implements Node {
   videos("The amount of videos to return." first: Int = 10, "The order of the videos to return. If none provided the \"RANK\" order is used." order: [EntityVideoSorting] = [RANK], type: [VideoType]): [Video]
 
   """
+  The last video related to the person if it exists, else the last movie related video (ordered by descending production date)
+  """
+  lastVideo: Video
+
+  """
   The total amount of videos this person has.
   """
   videosCount: Int
