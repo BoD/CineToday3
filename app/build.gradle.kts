@@ -74,20 +74,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.ui.util)
-//    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.icons.core)
 
     implementation(libs.androidx.wear.input)
     implementation(libs.androidx.wear.compose.foundation)
     implementation(libs.androidx.wear.compose.material)
-
-//    implementation("com.google.android.gms:play-services-wearable:17.1.0")
-
-    implementation(libs.accompanist.pager)
-
-    implementation(libs.coil.compose)
-
-    implementation(projects.domain)
 }
 
 kapt {
@@ -99,3 +90,5 @@ hilt {
     // See https://dagger.dev/hilt/gradle-setup#aggregating-task
     enableAggregatingTask = true
 }
+
+// `SIGNING_STORE_PATH=/path/to/keystore.keystore SIGNING_STORE_PASSWORD=storepwd SIGNING_KEY_ALIAS=alias SIGNING_KEY_PASSWORD=keypwd ./gradlew :app:assembleRelease` to build a release

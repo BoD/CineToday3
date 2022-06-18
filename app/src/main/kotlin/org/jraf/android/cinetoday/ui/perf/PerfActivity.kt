@@ -22,47 +22,71 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.ui.theater.list
+package org.jraf.android.cinetoday.ui.perf
 
-import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Chip
+import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.ListHeader
+import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.items
+import dagger.hilt.android.AndroidEntryPoint
 import org.jraf.android.cinetoday.R
-import org.jraf.android.cinetoday.domain.theater.Theater
-import org.jraf.android.cinetoday.ui.theater.item.TheaterItem
-import org.jraf.android.cinetoday.ui.theater.search.TheaterSearchActivity
+import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
 
-@Composable
-fun TheaterListScreen(viewModel: TheaterListViewModel = viewModel()) {
-    // TODO empty state
-    val favoriteTheaterList by viewModel.favoriteTheaterList.collectAsState(emptyList())
-    TheaterList(favoriteTheaterList)
+@AndroidEntryPoint
+class PerfActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            PerfScreen()
+        }
+    }
 }
 
 @Composable
-private fun TheaterList(favoriteTheaterList: List<Theater>) {
+private fun PerfScreen() {
+    CineTodayTheme {
+        Scaffold {
+            TheaterList()
+        }
+    }
+}
+
+data class Theater(val id: String, val name: String)
+
+private val theaters = List(42) {
+    Theater("$it", "Theater $it")
+}
+
+@Composable
+private fun TheaterList() {
     ScalingLazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -72,9 +96,8 @@ private fun TheaterList(favoriteTheaterList: List<Theater>) {
             }
         }
         item {
-            val context = LocalContext.current
             Button(
-                onClick = { context.startActivity(Intent(context, TheaterSearchActivity::class.java)) },
+                onClick = { },
                 modifier = Modifier.padding(PaddingValues(bottom = 16.dp)),
             ) {
                 Icon(
@@ -86,19 +109,40 @@ private fun TheaterList(favoriteTheaterList: List<Theater>) {
                 )
             }
         }
-        items(favoriteTheaterList, key = { it.id }) { theater ->
+        items(theaters, key = { it.id }) { theater ->
             TheaterItem(theater, onClick = {})
         }
     }
 }
 
-@Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable
-private fun TheaterListPreview() {
-    TheaterList(
-        listOf(
-            Theater("1", "Theater 1", posterUrl = null, address = "19 avenue de Choisy 75013 Paris"),
-        )
-    )
+private fun TheaterItem(theater: Theater, onClick: () -> Unit) {
+    Chip(
+        modifier = Modifier.fillMaxWidth(),
+        colors = ChipDefaults.secondaryChipColors(),
+        label = {
+            Text(theater.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        },
+        secondaryLabel = {
+            Text(theater.name, overflow = TextOverflow.Ellipsis)
+        },
+        icon = {
+            Box(
+                modifier = Modifier
+                    .size(ChipDefaults.LargeIconSize)
+                    .clip(CircleShape)
+                    .background(color = MaterialTheme.colors.primary),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    tint = MaterialTheme.colors.onPrimary,
+                    painter = painterResource(id = R.drawable.ic_theater_48dp),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(ChipDefaults.SmallIconSize)
+                        .wrapContentSize(align = Alignment.Center)
+                )
+            }
+        },
+        onClick = onClick)
 }
-

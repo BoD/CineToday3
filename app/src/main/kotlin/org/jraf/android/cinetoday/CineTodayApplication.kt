@@ -25,61 +25,7 @@
 package org.jraf.android.cinetoday
 
 import android.app.Application
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.size.Dimension
-import coil.util.DebugLogger
 import dagger.hilt.android.HiltAndroidApp
-import org.jraf.android.cinetoday.util.logging.initLogging
 
 @HiltAndroidApp
-class CineTodayApplication : Application(), ImageLoaderFactory {
-    override fun onCreate() {
-        super.onCreate()
-        initLogging()
-    }
-
-    /**
-     * Coil image loader configuration.
-     */
-    override fun newImageLoader(): ImageLoader {
-        return ImageLoader.Builder(this)
-            // Caching
-            .memoryCache {
-                MemoryCache.Builder(this)
-                    .maxSizePercent(0.5)
-                    .build()
-            }
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(cacheDir.resolve("coil_image_cache"))
-                    .maxSizePercent(0.2)
-                    .build()
-            }
-            .respectCacheHeaders(false)
-            // Crossfade
-            .crossfade(true)
-            // TODO: do this only in debug release builds
-            .logger(DebugLogger())
-            // Lower quality but lower memory impact too. Probably a good idea for watches.
-            .allowRgb565(true)
-            // Resize image
-            .components {
-                add { chain ->
-                    val originalUrl = chain.request.data as String
-                    val newUrl =
-                        if (chain.size.width is Dimension.Undefined || (chain.size.width as Dimension.Pixels).px > 200) {
-                            // Movie poster
-                            "https://ce8eb4b9c.cloudimg.io/width/200/twebp/${originalUrl}"
-                        } else {
-                            // Theater logo
-                            "https://ce8eb4b9c.cloudimg.io/crop/${chain.size.width}x${chain.size.height}/twebp/${originalUrl}"
-                        }
-                    chain.proceed(chain.request.newBuilder().data(newUrl).build())
-                }
-            }
-            .build()
-    }
-}
+class CineTodayApplication : Application()
