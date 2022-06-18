@@ -48,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -66,12 +67,6 @@ import org.jraf.android.cinetoday.R
 import org.jraf.android.cinetoday.ui.common.loading.Loading
 import org.jraf.android.cinetoday.ui.theater.item.TheaterItem
 import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_API_LEVEL
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_BACKGROUND_COLOR_BLACK
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_HEIGHT_DP
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_WIDTH_DP
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_SHOW_BACKGROUND
-import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_UI_MODE
 
 @AndroidEntryPoint
 class TheaterSearchActivity : ComponentActivity() {
@@ -180,16 +175,8 @@ private fun TheaterSearchContent(viewModel: TheaterSearchViewModel = viewModel()
     }
 }
 
-@Preview(
-    widthDp = WEAR_PREVIEW_DEVICE_WIDTH_DP,
-    heightDp = WEAR_PREVIEW_DEVICE_HEIGHT_DP,
-    apiLevel = WEAR_PREVIEW_API_LEVEL,
-    uiMode = WEAR_PREVIEW_UI_MODE,
-    backgroundColor = WEAR_PREVIEW_BACKGROUND_COLOR_BLACK,
-    showBackground = WEAR_PREVIEW_SHOW_BACKGROUND
-)
-
+@Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable
-private fun MainScreenPreview() {
+private fun TheaterSearchScreenPreview() {
     TheaterSearchScreen(afterTheaterAdded = {})
 }

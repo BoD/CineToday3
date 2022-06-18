@@ -22,33 +22,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.ui.movie.list
+package org.jraf.android.cinetoday.ui.movie.details
 
-import android.os.Build
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import org.jraf.android.cinetoday.domain.movie.FetchAndSaveMoviesForTodayUseCase
 import org.jraf.android.cinetoday.domain.movie.GetMovieListUseCase
-import org.jraf.android.cinetoday.domain.movie.Movie
-import org.jraf.android.cinetoday.util.logging.logd
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(
+class MovieDetailsViewModel @Inject constructor(
     fetchAndSaveMoviesForToday: FetchAndSaveMoviesForTodayUseCase,
     getMovieList: GetMovieListUseCase,
 ) : ViewModel() {
-    //    val movieList: Flow<Map<Theater, List<Movie>>> = getMovieListForToday(viewModelScope)
-    init {
-        viewModelScope.launch {
-            fetchAndSaveMoviesForToday(viewModelScope)
-        }
-
-        logd("Model=${Build.MODEL} ${Build.BOARD} ${Build.BRAND} ${Build.DEVICE} ${Build.HARDWARE} ${Build.ID} ${Build.MANUFACTURER} ${Build.PRODUCT} ${Build.SERIAL} ${Build.TAGS} ${Build.TYPE} ${Build.USER}")
-    }
-
-    val movieList: Flow<List<Movie>> = getMovieList()
 }

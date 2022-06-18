@@ -9,11 +9,20 @@ android {
     compileSdk = 32
 
     defaultConfig {
-        applicationId = "org.jraf.android.cinetoday"
+        applicationId = "org.jraf.android.cinetoday3"
         minSdk = 26
         targetSdk = 32
         versionCode = 1
         versionName = "1.0"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("SIGNING_STORE_PATH") ?: ".")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        }
     }
 
     buildTypes {
@@ -23,7 +32,9 @@ android {
 
         getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 

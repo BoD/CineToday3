@@ -29,6 +29,7 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import coil.size.Dimension
 import coil.util.DebugLogger
 import dagger.hilt.android.HiltAndroidApp
 import org.jraf.android.cinetoday.util.logging.initLogging
@@ -69,7 +70,7 @@ class CineTodayApplication : Application(), ImageLoaderFactory {
                 add { chain ->
                     val originalUrl = chain.request.data as String
                     val newUrl =
-                        if (chain.size.width > 200) {
+                        if (chain.size.width is Dimension.Undefined || (chain.size.width as Dimension.Pixels).px > 200) {
                             // Movie poster
                             "https://ce8eb4b9c.cloudimg.io/width/200/twebp/${originalUrl}"
                         } else {
