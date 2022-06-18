@@ -33,5 +33,11 @@ SELECT
 FROM Movie
 ORDER BY releaseDate DESC, weeklyTheatersCount DESC;
 
+selectMovieById:
+SELECT
+*
+FROM Movie
+WHERE id = ?;
+
 deleteAll:
 DELETE FROM Movie;

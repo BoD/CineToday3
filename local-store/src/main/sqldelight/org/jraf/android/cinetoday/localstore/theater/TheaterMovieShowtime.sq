@@ -13,7 +13,7 @@ INSERT OR REPLACE INTO TheaterMovieShowtime (movieId, showtimeId, theaterId) VAL
 
 selectByMovieId:
 SELECT
-Movie.*, Movie.id AS movieId, Showtime.*, Showtime.id AS showtimeId, Theater.id AS theaterId
+Movie.*, Movie.id AS movieId, Showtime.*, Showtime.id AS showtimeId, Theater.id AS theaterId, Theater.name AS theaterName
 FROM TheaterMovieShowtime
 JOIN Movie ON TheaterMovieShowtime.movieId = Movie.id
 JOIN Showtime ON TheaterMovieShowtime.showtimeId = Showtime.id

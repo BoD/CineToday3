@@ -25,9 +25,11 @@
 package org.jraf.android.cinetoday.ui.movie.list
 
 import android.animation.ArgbEvaluator
+import android.content.Intent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,6 +48,7 @@ import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -62,6 +65,7 @@ import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import org.jraf.android.cinetoday.domain.movie.Movie
 import org.jraf.android.cinetoday.ui.common.loading.Loading
+import org.jraf.android.cinetoday.ui.movie.details.MovieDetailsActivity
 import org.jraf.android.cinetoday.ui.theme.CineTodayColor
 import java.time.LocalDate
 import kotlin.math.absoluteValue
@@ -128,6 +132,7 @@ private fun MovieList(movieList: List<Movie>) {
             fraction = 1f - pageOffset.coerceIn(0f, 1f)
         )
 
+        val context = LocalContext.current
         Box(
             modifier = Modifier
                 .graphicsLayer {
@@ -137,6 +142,12 @@ private fun MovieList(movieList: List<Movie>) {
                 }
                 .fillMaxWidth(fraction = .7F)
                 .fillMaxHeight()
+                .clickable {
+                    context.startActivity(
+                        Intent(context, MovieDetailsActivity::class.java)
+                            .putExtra(MovieDetailsActivity.EXTRA_MOVIE_ID, movie.id)
+                    )
+                }
         ) {
             Movie(movie)
 
@@ -206,6 +217,7 @@ private fun MoviePreview() {
             releaseDate = LocalDate.now(),
             colorDark = 0xFF80000000.toInt(),
             colorLight = 0xFFFF000000.toInt(),
+            showtimes = emptyList(),
         ),
     )
 }
@@ -221,6 +233,7 @@ private fun NoPosterMoviePreview() {
             releaseDate = LocalDate.now(),
             colorDark = 0xFF80000000.toInt(),
             colorLight = 0xFFFF000000.toInt(),
+            showtimes = emptyList(),
         ),
     )
 }
@@ -238,6 +251,7 @@ private fun MovieListPreview() {
                 releaseDate = LocalDate.now(),
                 colorDark = 0xFF80000000.toInt(),
                 colorLight = 0xFFFF000000.toInt(),
+                showtimes = emptyList(),
             ),
             Movie(
                 id = "",
@@ -246,6 +260,7 @@ private fun MovieListPreview() {
                 releaseDate = LocalDate.now(),
                 colorDark = 0xFF80000000.toInt(),
                 colorLight = 0xFFFF000000.toInt(),
+                showtimes = emptyList(),
             ),
         )
     )

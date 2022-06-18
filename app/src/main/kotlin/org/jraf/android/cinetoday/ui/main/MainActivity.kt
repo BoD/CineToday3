@@ -41,6 +41,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -58,6 +59,7 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import org.jraf.android.cinetoday.ui.common.loading.ClipIfRound
 import org.jraf.android.cinetoday.ui.movie.list.MovieListScreen
 import org.jraf.android.cinetoday.ui.settings.SettingsScreen
 import org.jraf.android.cinetoday.ui.theater.list.TheaterListScreen
@@ -96,6 +98,8 @@ private fun MainScreen(onDismiss: () -> Unit = {}) {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun MainScreenContent(swipeToDismissBoxState: SwipeToDismissBoxState) {
+    val isRound = LocalConfiguration.current.isScreenRound
+
     val pagerState: PagerState = rememberPagerState()
     LaunchedEffect(Unit) {
         pagerState.scrollToPage(1)
@@ -109,7 +113,7 @@ private fun MainScreenContent(swipeToDismissBoxState: SwipeToDismissBoxState) {
     ) { page ->
         when (page) {
             0 -> TheaterListScreen()
-            1 -> MovieListScreen()
+            1 -> ClipIfRound(isRound) { MovieListScreen() }
             2 -> SettingsScreen()
         }
     }
@@ -141,4 +145,5 @@ private fun MainScreenContent(swipeToDismissBoxState: SwipeToDismissBoxState) {
         isPagerIndicatorVisible = true
     }
 }
+
 

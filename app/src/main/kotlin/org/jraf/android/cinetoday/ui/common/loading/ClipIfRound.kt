@@ -22,18 +22,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.ui.movie.details
+package org.jraf.android.cinetoday.ui.common.loading
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import org.jraf.android.cinetoday.domain.movie.GetMovieWithShowtimesUseCase
-import javax.inject.Inject
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 
-@HiltViewModel
-class MovieDetailsViewModel @Inject constructor(
-    getMovieWithShowtimes: GetMovieWithShowtimesUseCase,
-    savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-    val movie = getMovieWithShowtimes(savedStateHandle.get(MovieDetailsActivity.EXTRA_MOVIE_ID)!!)
+@Composable
+fun ClipIfRound(isRound: Boolean, content: @Composable () -> Unit) {
+    if (isRound) {
+        Box(Modifier.clip(CircleShape)) {
+            content()
+        }
+    } else {
+        content()
+    }
 }

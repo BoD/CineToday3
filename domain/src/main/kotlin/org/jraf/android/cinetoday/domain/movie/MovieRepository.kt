@@ -73,9 +73,20 @@ class MovieRepository @Inject constructor(
     }
 
     fun getMovieList(): Flow<List<Movie>> = movieShowtimeLocalSource.getMovieList().map { movieList -> movieList.map { localMovie -> localMovie.toMovie() } }
+
+    fun getMovieWithShowtimes(id: String): Flow<Movie> =
+        movieShowtimeLocalSource.getMovieWithShowtimes(id).map { localMovieShowtimes -> localMovieShowtimes.toMovie() }
 }
 
-private fun RemoteShowtime.toLocalShowtime() = LocalShowtime(id = id, startsAt = startsAt, projection = projection, languageVersion = languageVersion)
+
+private fun RemoteShowtime.toLocalShowtime() = LocalShowtime(
+    id = id,
+    theaterId = "", // Unused
+    theaterName = "", // Unused
+    startsAt = startsAt,
+    projection = projection,
+    languageVersion = languageVersion,
+)
 
 private fun RemoteMovie.toLocalMovie() = LocalMovie(
     id = id,
@@ -94,7 +105,28 @@ private fun LocalMovie.toMovie() = Movie(
     releaseDate = releaseDate,
     colorDark = colorDark,
     colorLight = colorLight,
+    showtimes = emptyList(),
 )
+
+private fun LocalMovieShowtime.toMovie() = Movie(
+    id = movie.id,
+    title = movie.title,
+    posterUrl = movie.posterUrl,
+    releaseDate = movie.releaseDate,
+    colorDark = movie.colorDark,
+    colorLight = movie.colorLight,
+    showtimes = showtimes.map { it.value.toShowtime() }
+)
+
+private fun LocalShowtime.toShowtime() = Showtime(
+    id = id,
+    theaterId = theaterId,
+    theaterName = theaterName,
+    startsAt = startsAt,
+    projection = projection,
+    languageVersion = languageVersion,
+)
+
 
 data class Movie(
     val id: String,
@@ -103,10 +135,13 @@ data class Movie(
     val releaseDate: LocalDate,
     val colorDark: Int?,
     val colorLight: Int?,
+    val showtimes: List<Showtime>,
 )
 
 data class Showtime(
     val id: String,
+    val theaterId: String,
+    val theaterName: String,
     val startsAt: Date,
     val projection: List<String>,
     val languageVersion: String?,

@@ -34,6 +34,8 @@
         </activity>
 
         <activity android:name=".ui.theater.search.TheaterSearchActivity" />
+
+        <activity android:name=".ui.movie.details.MovieDetailsActivity" />
     </application>
 
 </manifest>

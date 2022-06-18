@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import org.jraf.android.cinetoday.localstore.theater.Movie
 import org.jraf.android.cinetoday.localstore.theater.SelectByMovieId
 import org.jraf.android.cinetoday.util.datetime.timestampToLocalDate
 import org.jraf.android.cinetoday.util.datetime.toTimestamp
@@ -40,7 +41,7 @@ import javax.inject.Inject
 interface MovieShowtimeLocalSource {
     suspend fun deleteAll()
     suspend fun addMovieShowtimes(localMovieShowtimes: List<LocalMovieShowtime>)
-    fun getMovieShowtimes(movieId: String): Flow<List<LocalMovieShowtime>>
+    fun getMovieWithShowtimes(movieId: String): Flow<LocalMovieShowtime>
     fun getMovieList(): Flow<List<LocalMovie>>
 }
 
@@ -90,7 +91,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
         }
     }
 
-    override fun getMovieShowtimes(movieId: String): Flow<List<LocalMovieShowtime>> {
+    override fun getMovieWithShowtimes(movieId: String): Flow<LocalMovieShowtime> {
         return database.theaterMovieShowtimeQueries.selectByMovieId(id = movieId)
             .asFlow()
             .mapToList()
@@ -100,6 +101,8 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                     val showtimes: Map<String, LocalShowtime> = selectByMovieList.associate { selectByMovie ->
                         selectByMovie.theaterId to LocalShowtime(
                             id = selectByMovie.showtimeId,
+                            theaterId = selectByMovie.theaterId,
+                            theaterName = selectByMovie.theaterName,
                             startsAt = Date(selectByMovie.startsAt),
                             projection = selectByMovie.projection.split(","),
                             languageVersion = selectByMovie.languageVersion,
@@ -119,25 +122,29 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                         showtimes = showtimes
                     )
                 }
+                    .first()
             }
+
     }
 
     override fun getMovieList(): Flow<List<LocalMovie>> {
         return database.movieQueries.selectAllMovies().asFlow().mapToList().map { movieList ->
             movieList.map { sqlMovie ->
-                LocalMovie(
-                    id = sqlMovie.id,
-                    title = sqlMovie.title,
-                    posterUrl = sqlMovie.posterUrl,
-                    releaseDate = timestampToLocalDate(sqlMovie.releaseDate),
-                    weeklyTheatersCount = sqlMovie.weeklyTheatersCount,
-                    colorDark = sqlMovie.colorDark?.toInt(),
-                    colorLight = sqlMovie.colorLight?.toInt(),
-                )
+                sqlMovie.toLocalMovie()
             }
         }
     }
 }
+
+private fun Movie.toLocalMovie() = LocalMovie(
+    id = id,
+    title = title,
+    posterUrl = posterUrl,
+    releaseDate = timestampToLocalDate(releaseDate),
+    weeklyTheatersCount = weeklyTheatersCount,
+    colorDark = colorDark?.toInt(),
+    colorLight = colorLight?.toInt(),
+)
 
 data class LocalMovieShowtime(
     val movie: LocalMovie,
@@ -156,6 +163,8 @@ data class LocalMovie(
 
 data class LocalShowtime(
     val id: String,
+    val theaterId: String,
+    val theaterName: String,
     val startsAt: Date,
     val projection: List<String>,
     val languageVersion: String?,
