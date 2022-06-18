@@ -45,6 +45,7 @@ import org.jraf.android.cinetoday.util.bitmap.toBitmap
 import org.jraf.android.cinetoday.util.logging.logd
 import org.jraf.android.cinetoday.util.logging.logw
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.collections.set
 import kotlin.coroutines.resume
@@ -144,8 +145,12 @@ private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.toRemot
     colorDark = colorDark,
     colorLight = colorLight,
     directors = movie.credits.edges.mapNotNull { it?.node?.person?.stringValue },
-    genres = movie.genres.mapNotNull { it?.name },
-    actors = movie.cast.edges.mapNotNull { it?.node?.actor?.stringValue },
+    genres = movie.genres.mapNotNull { it?.name?.replace('_', ' ')?.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase(Locale.ROOT) else c.toString() } },
+    actors = movie.cast.edges.mapNotNull {
+        it?.node?.actor?.stringValue
+            ?: it?.node?.originalVoiceActor?.stringValue
+            ?: it?.node?.voiceActor?.stringValue
+    },
     synopsis = movie.synopsis,
     runtimeMinutes = movie.runtime.toInt(),
     originalTitle = movie.originalTitle

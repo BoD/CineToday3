@@ -35,5 +35,5 @@ class MovieDetailsViewModel @Inject constructor(
     getMovieWithShowtimes: GetMovieWithShowtimesUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    val movie = getMovieWithShowtimes(savedStateHandle.get(MovieDetailsActivity.EXTRA_MOVIE_ID)!!)
+    val movie = getMovieWithShowtimes(savedStateHandle[MovieDetailsActivity.EXTRA_MOVIE_ID]!!)
 }

@@ -31,7 +31,9 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Typography
 import org.jraf.android.cinetoday.R
 
-private val RobotoCondensed = FontFamily(Font(R.font.roboto_condensed))
+object CineTodayTheme {
+    val RobotoCondensed = FontFamily(Font(R.font.roboto_condensed))
+}
 
 @Composable
 fun CineTodayTheme(
@@ -39,7 +41,7 @@ fun CineTodayTheme(
 ) {
     MaterialTheme(
         colors = CineTodayColors,
-        typography = Typography().let { it.copy(body1 = it.body1.copy(fontFamily = RobotoCondensed)) },
+        typography = Typography().let { it.copy(body1 = it.body1.copy(fontFamily = CineTodayTheme.RobotoCondensed)) },
         content = content
     )
 }

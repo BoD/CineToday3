@@ -101,7 +101,7 @@ private fun MovieDetailsContent(movie: Movie) {
             horizontal = horizontalPadding.dp,
             vertical = verticalPadding.dp,
         ),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item {
             Text(
@@ -124,7 +124,7 @@ private fun MovieDetailsContent(movie: Movie) {
                 text = movie.genres,
                 style = MaterialTheme.typography.caption1,
                 fontStyle = FontStyle.Italic,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
 
@@ -140,7 +140,7 @@ private fun MovieDetailsContent(movie: Movie) {
             Text(
                 text = movie.synopsis,
                 style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Start,
             )
         }
 

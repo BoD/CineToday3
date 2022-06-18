@@ -37,7 +37,13 @@ fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
         cast(first: 5) @nonnull {
             edges @nonnull {
                 node @nonnull {
-                    actor @nonnull {
+                    actor {
+                        stringValue @nonnull
+                    }
+                    originalVoiceActor {
+                        stringValue @nonnull
+                    }
+                    voiceActor {
                         stringValue @nonnull
                     }
                 }

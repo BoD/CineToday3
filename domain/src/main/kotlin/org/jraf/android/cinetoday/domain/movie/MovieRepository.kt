@@ -24,6 +24,7 @@
  */
 package org.jraf.android.cinetoday.domain.movie
 
+import android.text.Html
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -97,7 +98,7 @@ private fun RemoteMovie.toLocalMovie() = LocalMovie(
     colorDark = colorDark,
     colorLight = colorLight,
     directors = directors.joinToString(),
-    genres = genres.joinToString(" · "),
+    genres = genres.joinToString(),
     actors = actors.joinToString(),
     synopsis = synopsis,
     runtimeMinutes = runtimeMinutes.toLong(),
@@ -131,7 +132,7 @@ private fun LocalMovieShowtime.toMovie() = Movie(
     showtimes = showtimes.map { it.value.toShowtime() },
     genres = movie.genres,
     actors = movie.actors,
-    synopsis = movie.synopsis,
+    synopsis = Html.fromHtml(movie.synopsis, Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH).toString(),
     runtimeMinutes = movie.runtimeMinutes.toInt(),
     originalTitle = movie.originalTitle
 )
