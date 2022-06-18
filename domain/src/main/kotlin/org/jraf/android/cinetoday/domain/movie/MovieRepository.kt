@@ -96,6 +96,12 @@ private fun RemoteMovie.toLocalMovie() = LocalMovie(
     weeklyTheatersCount = weeklyTheatersCount,
     colorDark = colorDark,
     colorLight = colorLight,
+    directors = directors.joinToString(),
+    genres = genres.joinToString(" · "),
+    actors = actors.joinToString(),
+    synopsis = synopsis,
+    runtimeMinutes = runtimeMinutes.toLong(),
+    originalTitle = originalTitle,
 )
 
 private fun LocalMovie.toMovie() = Movie(
@@ -105,7 +111,13 @@ private fun LocalMovie.toMovie() = Movie(
     releaseDate = releaseDate,
     colorDark = colorDark,
     colorLight = colorLight,
+    directors = directors,
     showtimes = emptyList(),
+    genres = genres,
+    actors = actors,
+    synopsis = synopsis,
+    runtimeMinutes = runtimeMinutes.toInt(),
+    originalTitle = originalTitle,
 )
 
 private fun LocalMovieShowtime.toMovie() = Movie(
@@ -115,7 +127,13 @@ private fun LocalMovieShowtime.toMovie() = Movie(
     releaseDate = movie.releaseDate,
     colorDark = movie.colorDark,
     colorLight = movie.colorLight,
-    showtimes = showtimes.map { it.value.toShowtime() }
+    directors = movie.directors,
+    showtimes = showtimes.map { it.value.toShowtime() },
+    genres = movie.genres,
+    actors = movie.actors,
+    synopsis = movie.synopsis,
+    runtimeMinutes = movie.runtimeMinutes.toInt(),
+    originalTitle = movie.originalTitle
 )
 
 private fun LocalShowtime.toShowtime() = Showtime(
@@ -135,7 +153,13 @@ data class Movie(
     val releaseDate: LocalDate,
     val colorDark: Int?,
     val colorLight: Int?,
+    val directors: String,
     val showtimes: List<Showtime>,
+    val genres: String,
+    val actors: String,
+    val synopsis: String,
+    val runtimeMinutes: Int,
+    val originalTitle: String,
 )
 
 data class Showtime(
@@ -145,4 +169,20 @@ data class Showtime(
     val startsAt: Date,
     val projection: List<String>,
     val languageVersion: String?,
+)
+
+fun fakeMovie() = Movie(
+    id = "",
+    title = "Jurassic Park",
+    posterUrl = null,
+    releaseDate = LocalDate.now(),
+    colorDark = 0xFF000000.toInt(),
+    colorLight = 0xFF000000.toInt(),
+    showtimes = listOf(),
+    directors = "Steven Spielberg",
+    genres = "Thriller",
+    actors = "Sam Neill, Laura Dern, Jeff Goldblum, Richard Attenborough",
+    synopsis = "A wealthy entrepreneur is visiting his son's theme park, which is full of the undead. He spots a zombie and, unaware of its existence, attacks it. The zombie is killed, but the park is left in a state of disrepair. The park's director, John Hammond, has given the zombie a new name, and the zombie is now named Jurassic Park. The park is visited by a variety of visitors, including a beautiful, but eccentric, jurassic park ranger, Charles Bronson. The ranger is tasked with protecting the park from the dinosaurs, but the park's security is compromised when a dinosaur attack is thwarted by a young dinosaur named Colin, who is a trained hunter. The ranger must now protect the park from the growing number of dinosaurs, and the park's security is threatened by the arrival of a new dinosaur species. The park is plagued by a variety of dinosaurs, and the ranger must use his skills to save the park from these dinosaurs.",
+    runtimeMinutes = 120,
+    originalTitle = "Jurassic Park",
 )

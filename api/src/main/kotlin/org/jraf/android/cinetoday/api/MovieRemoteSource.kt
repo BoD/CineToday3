@@ -117,9 +117,14 @@ data class RemoteMovie(
     val releaseDate: String,
     val showtimes: List<RemoteShowtime>,
     val weeklyTheatersCount: Long,
-
+    val directors: List<String>,
     @ColorInt val colorDark: Int?,
     @ColorInt val colorLight: Int?,
+    val genres: List<String>,
+    val actors: List<String>,
+    val synopsis: String,
+    val runtimeMinutes: Int,
+    val originalTitle: String,
 )
 
 data class RemoteShowtime(
@@ -138,6 +143,12 @@ private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.toRemot
     weeklyTheatersCount = movie.weeklyTheatersCount.toLong(),
     colorDark = colorDark,
     colorLight = colorLight,
+    directors = movie.credits.edges.mapNotNull { it?.node?.person?.stringValue },
+    genres = movie.genres.mapNotNull { it?.name },
+    actors = movie.cast.edges.mapNotNull { it?.node?.actor?.stringValue },
+    synopsis = movie.synopsis,
+    runtimeMinutes = movie.runtime.toInt(),
+    originalTitle = movie.originalTitle
 )
 
 private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.Showtime.toRemoteShowtime() = RemoteShowtime(

@@ -69,6 +69,12 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                         weeklyTheatersCount = localMovieShowtime.movie.weeklyTheatersCount,
                         colorDark = localMovieShowtime.movie.colorDark?.toLong(),
                         colorLight = localMovieShowtime.movie.colorLight?.toLong(),
+                        directors = localMovieShowtime.movie.directors,
+                        genres = localMovieShowtime.movie.genres,
+                        actors = localMovieShowtime.movie.actors,
+                        synopsis = localMovieShowtime.movie.synopsis,
+                        runtimeMinutes = localMovieShowtime.movie.runtimeMinutes,
+                        originalTitle = localMovieShowtime.movie.originalTitle,
                     )
 
                     for (theaterIdToShowtime in localMovieShowtime.showtimes) {
@@ -118,6 +124,12 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                             weeklyTheatersCount = firstMovie.weeklyTheatersCount,
                             colorDark = firstMovie.colorDark?.toInt(),
                             colorLight = firstMovie.colorLight?.toInt(),
+                            directors = firstMovie.directors,
+                            genres = firstMovie.genres,
+                            actors = firstMovie.actors,
+                            synopsis = firstMovie.synopsis,
+                            runtimeMinutes = firstMovie.runtimeMinutes,
+                            originalTitle = firstMovie.originalTitle,
                         ),
                         showtimes = showtimes
                     )
@@ -144,6 +156,12 @@ private fun Movie.toLocalMovie() = LocalMovie(
     weeklyTheatersCount = weeklyTheatersCount,
     colorDark = colorDark?.toInt(),
     colorLight = colorLight?.toInt(),
+    directors = directors,
+    genres = genres,
+    actors = actors,
+    synopsis = synopsis,
+    runtimeMinutes = runtimeMinutes,
+    originalTitle = originalTitle,
 )
 
 data class LocalMovieShowtime(
@@ -159,6 +177,12 @@ data class LocalMovie(
     val weeklyTheatersCount: Long,
     val colorDark: Int?,
     val colorLight: Int?,
+    val directors: String,
+    val genres: String,
+    val actors: String,
+    val synopsis: String,
+    val runtimeMinutes: Long,
+    val originalTitle: String,
 )
 
 data class LocalShowtime(

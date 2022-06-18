@@ -24,21 +24,21 @@ fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
     movie @nonnull {
         id
         title @nonnull
-        originalTitle
-        credits(first: 3, activity: DIRECTOR) {
-            edges {
-                node {
-                    person {
-                        stringValue
+        originalTitle @nonnull
+        credits(first: 3, activity: DIRECTOR) @nonnull {
+            edges @nonnull {
+                node @nonnull {
+                    person @nonnull {
+                        stringValue @nonnull
                     }
                 }
             }
         }
-        cast(first: 5) {
-            edges {
-                node {
-                    actor {
-                        stringValue
+        cast(first: 5) @nonnull {
+            edges @nonnull {
+                node @nonnull {
+                    actor @nonnull {
+                        stringValue @nonnull
                     }
                 }
             }
@@ -48,8 +48,8 @@ fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
                 date @nonnull
             }
         }
-        genres
-        runtime
+        genres @nonnull
+        runtime @nonnull
         videos(type: [TRAILER], first: 1) {
             files(quality: [STANDARD]) {
                 url
@@ -58,7 +58,7 @@ fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
         poster {
             url
         }
-        synopsis(long: true)
+        synopsis(long: true) @nonnull
         weeklyTheatersCount @nonnull
     }
     showtimes @nonnull {

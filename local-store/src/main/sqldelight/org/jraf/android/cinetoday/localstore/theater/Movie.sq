@@ -5,7 +5,13 @@ CREATE TABLE Movie (
     releaseDate INTEGER NOT NULL,
     weeklyTheatersCount INTEGER NOT NULL,
     colorDark INTEGER,
-    colorLight INTEGER
+    colorLight INTEGER,
+    directors TEXT NOT NULL,
+    genres TEXT NOT NULL,
+    actors TEXT NOT NULL,
+    synopsis TEXT NOT NULL,
+    runtimeMinutes INTEGER NOT NULL,
+    originalTitle TEXT NOT NULL
 );
 
 insert:
@@ -16,8 +22,20 @@ INSERT OR REPLACE INTO Movie (
     releaseDate,
     weeklyTheatersCount,
     colorDark,
-    colorLight
+    colorLight,
+    directors,
+    genres,
+    actors,
+    synopsis,
+    runtimeMinutes,
+    originalTitle
 ) VALUES (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
     ?,
     ?,
     ?,
@@ -32,12 +50,6 @@ SELECT
 *
 FROM Movie
 ORDER BY releaseDate DESC, weeklyTheatersCount DESC;
-
-selectMovieById:
-SELECT
-*
-FROM Movie
-WHERE id = ?;
 
 deleteAll:
 DELETE FROM Movie;

@@ -22,27 +22,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.api.apollo
+package org.jraf.android.cinetoday.util.trig
 
-import com.apollographql.apollo3.api.Adapter
-import com.apollographql.apollo3.api.CustomScalarAdapters
-import com.apollographql.apollo3.api.json.JsonReader
-import com.apollographql.apollo3.api.json.JsonWriter
-import java.time.Duration
-import java.time.temporal.ChronoUnit
+import kotlin.math.sqrt
 
-object DateIntervalAdapter : Adapter<Long> {
-    override fun fromJson(reader: JsonReader, customScalarAdapters: CustomScalarAdapters): Long {
-        val isoDurationStr = reader.nextString()!!
-        return if (isoDurationStr.startsWith("P")) {
-            val duration = Duration.parse(isoDurationStr)
-            duration.get(ChronoUnit.SECONDS) / 60
-        } else {
-            isoDurationStr.toLong()
-        }
-    }
-
-    override fun toJson(writer: JsonWriter, customScalarAdapters: CustomScalarAdapters, value: Long) {
-        writer.value(value.toString())
-    }
+fun paddingForWidthFraction(width: Int, fraction: Float): Pair<Float, Float> {
+    val horizontalPadding: Float = width * (1 - fraction) / 2
+    val verticalPadding: Float = width / 2F * (1 - sqrt(1 - fraction * fraction))
+    return horizontalPadding to verticalPadding
 }

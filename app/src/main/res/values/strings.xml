@@ -8,4 +8,7 @@
     <string name="theater_search_placeholder">Name or city</string>
     <string name="theater_search_noResults">No results</string>
 
+    <string name="theater_details_directors">By %1$s</string>
+    <string name="theater_details_actors">With %1$s</string>
+
 </resources>

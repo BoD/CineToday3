@@ -40,6 +40,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,9 +51,12 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import dagger.hilt.android.AndroidEntryPoint
+import org.jraf.android.cinetoday.R
 import org.jraf.android.cinetoday.domain.movie.Movie
+import org.jraf.android.cinetoday.domain.movie.fakeMovie
+import org.jraf.android.cinetoday.ui.theme.CineTodayColor
 import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
-import java.time.LocalDate
+import org.jraf.android.cinetoday.util.trig.paddingForWidthFraction
 
 @AndroidEntryPoint
 class MovieDetailsActivity : ComponentActivity() {
@@ -83,18 +88,23 @@ private fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = viewModel()) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MovieDetailsContent(movie: Movie) {
+    val (horizontalPadding, verticalPadding) = paddingForWidthFraction(
+        width = LocalConfiguration.current.screenWidthDp,
+        fraction = WIDTH_FRACTION
+    )
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(movie.colorDark?.let { Color(it) } ?: CineTodayColor.MovieDefaultBackground),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(
-            horizontal = LocalConfiguration.current.screenWidthDp.dp * (1 - WIDTH_FRACTION) / 2,
-            vertical = LocalConfiguration.current.screenHeightDp.dp * .2F
+            horizontal = horizontalPadding.dp,
+            vertical = verticalPadding.dp,
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item {
             Text(
-                modifier = Modifier.background(Color.Red),
                 text = movie.title,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.title1
@@ -103,29 +113,45 @@ private fun MovieDetailsContent(movie: Movie) {
 
         item {
             Text(
-                modifier = Modifier.background(Color.Green),
-                text = "Ok",
+                text = stringResource(R.string.theater_details_directors, movie.directors),
+                style = MaterialTheme.typography.caption1,
                 textAlign = TextAlign.Center
             )
         }
-
-        stickyHeader {
-            Text(
-                modifier = Modifier.background(Color.Blue),
-                text = "Foobar",
-                textAlign = TextAlign.Center
-            )
-
-        }
-
 
         item {
             Text(
-                modifier = Modifier.background(Color.Yellow),
-                text = "Located off the coast of Costa Rica, the Jurassic World luxury resort provides a habitat for an array of genetically engineered dinosaurs, including the vicious and intelligent Indominus rex. When the massive creature escapes, it sets off a chain reaction that causes the other dinos to run amok. Now, it's up to a former military man and animal expert (Chris Pratt) to use his special skills to save two young brothers and the rest of the tourists from an all-out, prehistoric assault.",
+                text = movie.genres,
+                style = MaterialTheme.typography.caption1,
+                fontStyle = FontStyle.Italic,
                 textAlign = TextAlign.Center
             )
         }
+
+        item {
+            Text(
+                text = stringResource(R.string.theater_details_actors, movie.actors),
+                style = MaterialTheme.typography.caption1,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        item {
+            Text(
+                text = movie.synopsis,
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        //        stickyHeader {
+//            Text(
+//                text = "Foobar",
+//                textAlign = TextAlign.Center
+//            )
+//
+//        }
+
     }
 }
 
@@ -138,13 +164,5 @@ private fun MovieDetailsScreenPreview() {
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable
 private fun MovieDetailsContent() {
-    MovieDetailsContent(Movie(
-        id = "",
-        title = "Jurassic Park",
-        posterUrl = null,
-        releaseDate = LocalDate.now(),
-        colorDark = 0xFF000000.toInt(),
-        colorLight = 0xFF000000.toInt(),
-        showtimes = listOf()
-    ))
+    MovieDetailsContent(fakeMovie())
 }

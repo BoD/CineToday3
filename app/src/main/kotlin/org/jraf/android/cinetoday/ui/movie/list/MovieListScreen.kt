@@ -64,10 +64,10 @@ import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import org.jraf.android.cinetoday.domain.movie.Movie
+import org.jraf.android.cinetoday.domain.movie.fakeMovie
 import org.jraf.android.cinetoday.ui.common.loading.Loading
 import org.jraf.android.cinetoday.ui.movie.details.MovieDetailsActivity
 import org.jraf.android.cinetoday.ui.theme.CineTodayColor
-import java.time.LocalDate
 import kotlin.math.absoluteValue
 
 @Composable
@@ -210,15 +210,7 @@ private val noPosterBrushPainter = BrushPainter(Brush.linearGradient(
 @Composable
 private fun MoviePreview() {
     Movie(
-        Movie(
-            id = "",
-            title = "Titanic",
-            posterUrl = null,
-            releaseDate = LocalDate.now(),
-            colorDark = 0xFF80000000.toInt(),
-            colorLight = 0xFFFF000000.toInt(),
-            showtimes = emptyList(),
-        ),
+        fakeMovie(),
     )
 }
 
@@ -226,15 +218,7 @@ private fun MoviePreview() {
 @Composable
 private fun NoPosterMoviePreview() {
     NoPosterMovie(
-        Movie(
-            id = "",
-            title = "Titanic",
-            posterUrl = null,
-            releaseDate = LocalDate.now(),
-            colorDark = 0xFF80000000.toInt(),
-            colorLight = 0xFFFF000000.toInt(),
-            showtimes = emptyList(),
-        ),
+        fakeMovie(),
     )
 }
 
@@ -244,24 +228,8 @@ private fun NoPosterMoviePreview() {
 private fun MovieListPreview() {
     MovieList(
         listOf(
-            Movie(
-                id = "",
-                title = "Titanic",
-                posterUrl = null,
-                releaseDate = LocalDate.now(),
-                colorDark = 0xFF80000000.toInt(),
-                colorLight = 0xFFFF000000.toInt(),
-                showtimes = emptyList(),
-            ),
-            Movie(
-                id = "",
-                title = "Terminator 2",
-                posterUrl = null,
-                releaseDate = LocalDate.now(),
-                colorDark = 0xFF80000000.toInt(),
-                colorLight = 0xFFFF000000.toInt(),
-                showtimes = emptyList(),
-            ),
+            fakeMovie(),
+            fakeMovie(),
         )
     )
 }
