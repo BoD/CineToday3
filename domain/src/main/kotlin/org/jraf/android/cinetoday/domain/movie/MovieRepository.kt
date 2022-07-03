@@ -35,6 +35,7 @@ import org.jraf.android.cinetoday.localstore.LocalMovie
 import org.jraf.android.cinetoday.localstore.LocalMovieShowtime
 import org.jraf.android.cinetoday.localstore.LocalShowtime
 import org.jraf.android.cinetoday.localstore.MovieShowtimeLocalSource
+import org.jraf.android.cinetoday.util.datetime.formatHourMinute
 import org.jraf.android.cinetoday.util.datetime.isoDateStringToLocalDate
 import java.time.LocalDate
 import java.util.Date
@@ -56,7 +57,7 @@ class MovieRepository @Inject constructor(
                 val existingLocalMovieShowtime = localMovieShowtimes.find { it.movie.id == movie.id }
                 val localMovieShowtime = LocalMovieShowtime(
                     movie = movie.toLocalMovie(),
-                    showtimes = movie.showtimes.associate { theaterId to it.toLocalShowtime() } + (existingLocalMovieShowtime?.showtimes ?: emptyMap()),
+                    showtimes = movie.showtimes.map { it.toLocalShowtime(theaterId) } + (existingLocalMovieShowtime?.showtimes ?: emptyList()),
                 )
                 if (existingLocalMovieShowtime != null) {
                     localMovieShowtimes.remove(existingLocalMovieShowtime)
@@ -80,9 +81,9 @@ class MovieRepository @Inject constructor(
 }
 
 
-private fun RemoteShowtime.toLocalShowtime() = LocalShowtime(
+private fun RemoteShowtime.toLocalShowtime(theaterId: String) = LocalShowtime(
     id = id,
-    theaterId = "", // Unused
+    theaterId = theaterId,
     theaterName = "", // Unused
     startsAt = startsAt,
     projection = projection,
@@ -93,7 +94,7 @@ private fun RemoteMovie.toLocalMovie() = LocalMovie(
     id = id,
     title = title,
     posterUrl = posterUrl,
-    releaseDate = isoDateStringToLocalDate(releaseDate),
+    releaseDate = releaseDate?.let { isoDateStringToLocalDate(it) },
     weeklyTheatersCount = weeklyTheatersCount,
     colorDark = colorDark,
     colorLight = colorLight,
@@ -129,10 +130,10 @@ private fun LocalMovieShowtime.toMovie() = Movie(
     colorDark = movie.colorDark,
     colorLight = movie.colorLight,
     directors = movie.directors,
-    showtimes = showtimes.map { it.value.toShowtime() },
+    showtimes = showtimes.map(LocalShowtime::toShowtime),
     genres = movie.genres,
     actors = movie.actors,
-    synopsis = Html.fromHtml(movie.synopsis, Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH).toString(),
+    synopsis = movie.synopsis?.let { Html.fromHtml(it, Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH).toString() },
     runtimeMinutes = movie.runtimeMinutes.toInt(),
     originalTitle = movie.originalTitle
 )
@@ -151,17 +152,19 @@ data class Movie(
     val id: String,
     val title: String,
     val posterUrl: String?,
-    val releaseDate: LocalDate,
+    val releaseDate: LocalDate?,
     val colorDark: Int?,
     val colorLight: Int?,
     val directors: String,
     val showtimes: List<Showtime>,
     val genres: String,
     val actors: String,
-    val synopsis: String,
+    val synopsis: String?,
     val runtimeMinutes: Int,
     val originalTitle: String,
-)
+) {
+    val showtimesPerTheater: Map<String, List<Showtime>> by lazy { showtimes.groupBy { it.theaterName } }
+}
 
 data class Showtime(
     val id: String,
@@ -170,7 +173,17 @@ data class Showtime(
     val startsAt: Date,
     val projection: List<String>,
     val languageVersion: String?,
-)
+) {
+    fun isTooLate(): Boolean {
+        return Date().after(startsAt)
+    }
+
+    val startsAtFormatted: String by lazy { formatHourMinute(startsAt) }
+
+    val is3D: Boolean by lazy { projection.any { it.contains("3d", ignoreCase = true) } }
+    val isImax: Boolean by lazy { projection.any { it.contains("imax", ignoreCase = true) } }
+    val isDubbed: Boolean by lazy { languageVersion == "DUBBED" }
+}
 
 fun fakeMovie() = Movie(
     id = "",
@@ -179,7 +192,34 @@ fun fakeMovie() = Movie(
     releaseDate = LocalDate.now(),
     colorDark = 0xFF000000.toInt(),
     colorLight = 0xFF000000.toInt(),
-    showtimes = listOf(),
+    showtimes = listOf(
+        Showtime(
+            id = "id",
+            theaterId = "theaterId",
+            theaterName = "UGC Gobelins",
+            startsAt = Date(),
+            projection = listOf(),
+            languageVersion = "VF"
+        ),
+        Showtime(
+            id = "id",
+            theaterId = "theaterId",
+            theaterName = "UGC Gobelins",
+            startsAt = Date(),
+            projection = listOf("3D"),
+            languageVersion = "VF"
+        ),
+        Showtime(
+            id = "id",
+            theaterId = "theaterId",
+            theaterName = "UGC Gobelins",
+            startsAt = Date(),
+            projection = listOf("3D", "Imax"),
+            languageVersion = "VF"
+        )
+
+
+    ),
     directors = "Steven Spielberg",
     genres = "Thriller",
     actors = "Sam Neill, Laura Dern, Jeff Goldblum, Richard Attenborough",

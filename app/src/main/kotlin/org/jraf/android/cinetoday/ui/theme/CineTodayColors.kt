@@ -33,9 +33,14 @@ private val Purple700 = Color(0xFF3700B3)
 private val Teal200 = Color(0xFF03DAC5)
 private val Red400 = Color(0xFFCF6679)
 private val Red30 = Color(0xFF4D1410)
+private val LightGray = Color.LightGray
+private val White = Color.White
+
 
 object CineTodayColor {
     val MovieDefaultBackground = Red30
+    val ShowtimeTimeBackground = White
+    val ShowtimeTag = White
 }
 
 val CineTodayColors: Colors = Colors(

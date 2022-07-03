@@ -65,7 +65,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                         id = localMovieShowtime.movie.id,
                         title = localMovieShowtime.movie.title,
                         posterUrl = localMovieShowtime.movie.posterUrl,
-                        releaseDate = localMovieShowtime.movie.releaseDate.toTimestamp(),
+                        releaseDate = localMovieShowtime.movie.releaseDate?.toTimestamp(),
                         weeklyTheatersCount = localMovieShowtime.movie.weeklyTheatersCount,
                         colorDark = localMovieShowtime.movie.colorDark?.toLong(),
                         colorLight = localMovieShowtime.movie.colorLight?.toLong(),
@@ -77,8 +77,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                         originalTitle = localMovieShowtime.movie.originalTitle,
                     )
 
-                    for (theaterIdToShowtime in localMovieShowtime.showtimes) {
-                        val showtime = theaterIdToShowtime.value
+                    for (showtime in localMovieShowtime.showtimes) {
                         database.showtimeQueries.insert(
                             id = showtime.id,
                             startsAt = showtime.startsAt.time,
@@ -89,7 +88,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                         database.theaterMovieShowtimeQueries.insert(
                             movieId = localMovieShowtime.movie.id,
                             showtimeId = showtime.id,
-                            theaterId = theaterIdToShowtime.key,
+                            theaterId = showtime.theaterId,
                         )
                     }
                 }
@@ -104,8 +103,8 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
             .map { selectByMovieList ->
                 val showTimesByMovieId: Map<String, List<SelectByMovieId>> = selectByMovieList.groupBy { it.movieId }
                 showTimesByMovieId.map { (movieId, selectByMovieList) ->
-                    val showtimes: Map<String, LocalShowtime> = selectByMovieList.associate { selectByMovie ->
-                        selectByMovie.theaterId to LocalShowtime(
+                    val showtimes: List<LocalShowtime> = selectByMovieList.map { selectByMovie ->
+                        LocalShowtime(
                             id = selectByMovie.showtimeId,
                             theaterId = selectByMovie.theaterId,
                             theaterName = selectByMovie.theaterName,
@@ -120,7 +119,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
                             id = movieId,
                             title = firstMovie.title,
                             posterUrl = firstMovie.posterUrl,
-                            releaseDate = timestampToLocalDate(firstMovie.releaseDate),
+                            releaseDate = firstMovie.releaseDate?.let { timestampToLocalDate(it) },
                             weeklyTheatersCount = firstMovie.weeklyTheatersCount,
                             colorDark = firstMovie.colorDark?.toInt(),
                             colorLight = firstMovie.colorLight?.toInt(),
@@ -152,7 +151,7 @@ private fun Movie.toLocalMovie() = LocalMovie(
     id = id,
     title = title,
     posterUrl = posterUrl,
-    releaseDate = timestampToLocalDate(releaseDate),
+    releaseDate = releaseDate?.let { timestampToLocalDate(it) },
     weeklyTheatersCount = weeklyTheatersCount,
     colorDark = colorDark?.toInt(),
     colorLight = colorLight?.toInt(),
@@ -166,21 +165,21 @@ private fun Movie.toLocalMovie() = LocalMovie(
 
 data class LocalMovieShowtime(
     val movie: LocalMovie,
-    val showtimes: Map<String, LocalShowtime>,
+    val showtimes: List<LocalShowtime>,
 )
 
 data class LocalMovie(
     val id: String,
     val title: String,
     val posterUrl: String?,
-    val releaseDate: LocalDate,
+    val releaseDate: LocalDate?,
     val weeklyTheatersCount: Long,
     val colorDark: Int?,
     val colorLight: Int?,
     val directors: String,
     val genres: String,
     val actors: String,
-    val synopsis: String,
+    val synopsis: String?,
     val runtimeMinutes: Long,
     val originalTitle: String,
 )

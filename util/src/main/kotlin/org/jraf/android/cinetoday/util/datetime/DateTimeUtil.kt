@@ -24,6 +24,7 @@
  */
 package org.jraf.android.cinetoday.util.datetime
 
+import java.text.DateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -52,3 +53,5 @@ fun LocalDate.toTimestamp(): Long = atStartOfDay().toInstant(ZoneOffset.UTC).toE
 fun isoDateStringToLocalDate(isoDate: String): LocalDate = LocalDate.parse(isoDate)!!
 
 fun isoDateStringToTimestamp(isoDate: String): Long = isoDateStringToLocalDate(isoDate).toTimestamp()
+
+fun formatHourMinute(date: Date): String = DateFormat.getTimeInstance(DateFormat.SHORT).format(date)

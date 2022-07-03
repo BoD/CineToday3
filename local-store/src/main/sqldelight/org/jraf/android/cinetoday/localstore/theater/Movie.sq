@@ -2,14 +2,14 @@ CREATE TABLE Movie (
     id TEXT NOT NULL PRIMARY KEY,
     title TEXT NOT NULL,
     posterUrl TEXT,
-    releaseDate INTEGER NOT NULL,
+    releaseDate INTEGER,
     weeklyTheatersCount INTEGER NOT NULL,
     colorDark INTEGER,
     colorLight INTEGER,
     directors TEXT NOT NULL,
     genres TEXT NOT NULL,
     actors TEXT NOT NULL,
-    synopsis TEXT NOT NULL,
+    synopsis TEXT,
     runtimeMinutes INTEGER NOT NULL,
     originalTitle TEXT NOT NULL
 );

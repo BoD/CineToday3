@@ -29,15 +29,28 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -53,6 +66,7 @@ import androidx.wear.compose.material.Text
 import dagger.hilt.android.AndroidEntryPoint
 import org.jraf.android.cinetoday.R
 import org.jraf.android.cinetoday.domain.movie.Movie
+import org.jraf.android.cinetoday.domain.movie.Showtime
 import org.jraf.android.cinetoday.domain.movie.fakeMovie
 import org.jraf.android.cinetoday.ui.theme.CineTodayColor
 import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
@@ -92,10 +106,11 @@ private fun MovieDetailsContent(movie: Movie) {
         width = LocalConfiguration.current.screenWidthDp,
         fraction = WIDTH_FRACTION
     )
+    val backgroundColor = movie.colorDark?.let { Color(it) } ?: CineTodayColor.MovieDefaultBackground
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(movie.colorDark?.let { Color(it) } ?: CineTodayColor.MovieDefaultBackground),
+            .background(backgroundColor),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(
             horizontal = horizontalPadding.dp,
@@ -128,32 +143,119 @@ private fun MovieDetailsContent(movie: Movie) {
             )
         }
 
-        item {
-            Text(
-                text = stringResource(R.string.theater_details_actors, movie.actors),
-                style = MaterialTheme.typography.caption1,
-                textAlign = TextAlign.Center
-            )
+        if (movie.actors.isNotEmpty()) {
+            item {
+                Text(
+                    text = stringResource(R.string.theater_details_actors, movie.actors),
+                    style = MaterialTheme.typography.caption1,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
-        item {
-            Text(
-                text = movie.synopsis,
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Start,
-            )
+        movie.synopsis?.let { synopsis ->
+            item {
+                Text(
+                    text = synopsis,
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Start,
+                )
+            }
         }
 
-        //        stickyHeader {
-//            Text(
-//                text = "Foobar",
-//                textAlign = TextAlign.Center
-//            )
-//
-//        }
+        for ((theaterName, showtimes) in movie.showtimesPerTheater) {
+            stickyHeader {
+                Text(
+                    modifier = Modifier
+                        .background(backgroundColor)
+                        .fillMaxWidth()
+                        .padding(top = verticalPadding.dp),
+                    text = theaterName,
+                    style = MaterialTheme.typography.title2,
+                    textAlign = TextAlign.Center
+                )
 
+                // Fading edge
+                Spacer(Modifier
+                    .height(4.dp)
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                backgroundColor,
+                                Color.Transparent
+                            )
+                        )
+                    )
+                )
+            }
+            for (showtime in showtimes) {
+                item {
+                    Showtime(showtime)
+                }
+            }
+        }
     }
 }
+
+@Composable
+private fun Showtime(showtime: Showtime) {
+    Row(horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .let {
+                if (showtime.isTooLate()) {
+                    it.alpha(0.5f)
+                } else {
+                    it
+                }
+            }
+
+    ) {
+        ShowtimeTime(showtime)
+        if (showtime.isDubbed) {
+            ShowtimeTag(stringResource(R.string.theater_details_tag_dubbed))
+        }
+        if (showtime.is3D) {
+            ShowtimeTag(stringResource(R.string.theater_details_tag_3d))
+        }
+        if (showtime.isImax) {
+            ShowtimeTag(stringResource(R.string.theater_details_tag_imax))
+        }
+    }
+}
+
+@Composable
+private fun ShowtimeTime(showtime: Showtime) {
+    Text(
+        text = showtime.startsAtFormatted,
+        color = Color.Black,
+        style = MaterialTheme.typography.body1,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .background(
+                shape = RoundedCornerShape(corner = CornerSize(4.dp)),
+                color = CineTodayColor.ShowtimeTimeBackground
+            )
+            .padding(horizontal = 4.dp, vertical = 2.dp)
+    )
+}
+
+@Composable
+private fun ShowtimeTag(tag: String) {
+    Text(
+        text = tag,
+        color = CineTodayColor.ShowtimeTag,
+        style = MaterialTheme.typography.caption2,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .border(width = 1.dp, color = CineTodayColor.ShowtimeTag, shape = RoundedCornerShape(corner = CornerSize(4.dp)))
+            .padding(horizontal = 4.dp, vertical = 2.dp)
+            .fillMaxHeight()
+            .wrapContentHeight()
+    )
+}
+
 
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable

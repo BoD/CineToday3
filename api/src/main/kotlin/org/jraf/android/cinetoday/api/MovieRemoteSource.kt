@@ -68,11 +68,12 @@ class MovieRemoteSourceImpl @Inject constructor(
                     .execute()
                     .dataAssertNoErrors.movieShowtimeList.edges
                     .filterNotNull() // GraphQL . . .
+                    .filterNot { it.node.movie == null } // GraphQL . . .
                     .map { it.node }
 
                 result[theaterId] = movieNodes.map { movieNode ->
                     async {
-                        val palette = movieNode.movie.poster?.url?.let { downloadMoviePosterAndComputePalette(it) }
+                        val palette = movieNode.movie!!.poster?.url?.let { downloadMoviePosterAndComputePalette(it) }
                         val colorDark = palette?.get(Target.DARK_VIBRANT)?.rgb
                         val colorLight = palette?.get(Target.LIGHT_MUTED)?.rgb
                         movieNode.toRemoteMovie(colorDark = colorDark, colorLight = colorLight)
@@ -115,7 +116,7 @@ data class RemoteMovie(
     val id: String,
     val title: String,
     val posterUrl: String?,
-    val releaseDate: String,
+    val releaseDate: String?,
     val showtimes: List<RemoteShowtime>,
     val weeklyTheatersCount: Long,
     val directors: List<String>,
@@ -123,7 +124,7 @@ data class RemoteMovie(
     @ColorInt val colorLight: Int?,
     val genres: List<String>,
     val actors: List<String>,
-    val synopsis: String,
+    val synopsis: String?,
     val runtimeMinutes: Int,
     val originalTitle: String,
 )
@@ -136,10 +137,10 @@ data class RemoteShowtime(
 )
 
 private fun MovieWithShowtimesListQuery.Data.MovieShowtimeList.Edge.Node.toRemoteMovie(colorDark: Int?, colorLight: Int?) = RemoteMovie(
-    id = movie.id,
+    id = movie!!.id,
     title = movie.title,
     posterUrl = movie.poster?.url,
-    releaseDate = movie.releases.first()!!.releaseDate.date,
+    releaseDate = movie.releases.firstOrNull()?.releaseDate?.date,
     showtimes = showtimes.mapNotNull { it?.toRemoteShowtime() },
     weeklyTheatersCount = movie.weeklyTheatersCount.toLong(),
     colorDark = colorDark,

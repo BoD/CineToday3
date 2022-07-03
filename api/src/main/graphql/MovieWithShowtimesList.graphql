@@ -21,7 +21,7 @@ query MovieWithShowtimesList($theaterId: String!, $from: DateTime!, $to: DateTim
 }
 
 fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
-    movie @nonnull {
+    movie {
         id
         title @nonnull
         originalTitle @nonnull
@@ -64,7 +64,7 @@ fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
         poster {
             url
         }
-        synopsis(long: true) @nonnull
+        synopsis(long: true)
         weeklyTheatersCount @nonnull
     }
     showtimes @nonnull {

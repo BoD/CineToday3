@@ -61,7 +61,9 @@ fun TheaterItem(theater: Theater, onClick: () -> Unit) {
             Text(theater.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
         },
         secondaryLabel = {
-            Text(theater.address, overflow = TextOverflow.Ellipsis)
+            if (theater.address.isNotBlank()) {
+                Text(theater.address, overflow = TextOverflow.Ellipsis)
+            }
         },
         icon = {
             if (theater.posterUrl == null) {
