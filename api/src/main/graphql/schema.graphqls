@@ -12276,6 +12276,8 @@ enum SpecialOperationCode {
   VOD_HOME
 
   ROLLER_HOME
+
+  NOVELAS_HOME
 }
 
 """
