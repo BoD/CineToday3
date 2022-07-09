@@ -17,6 +17,7 @@ androidx-palette = "1.0.0"
 coil = "2.1.0"
 accompanist = "0.24.13-rc"
 benManes-versions = "0.42.0"
+kprefs = "1.6.0"
 
 [plugins]
 apollo = { id = "com.apollographql.apollo3", version.ref = "apollo" }
@@ -62,6 +63,8 @@ androidx-wear-compose-foundation = { group = "androidx.wear.compose", name = "co
 accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanist" }
 
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+kprefs = { group = "org.jraf", name = "kprefs", version.ref = "kprefs" }
 
 testing-junit = { group = "junit", name = "junit", version.ref = "junit" }
 

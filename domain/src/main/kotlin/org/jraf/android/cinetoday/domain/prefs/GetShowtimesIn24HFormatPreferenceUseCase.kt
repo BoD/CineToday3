@@ -22,23 +22,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.ui.movie.details
+package org.jraf.android.cinetoday.domain.prefs
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import org.jraf.android.cinetoday.domain.movie.GetMovieWithShowtimesUseCase
-import org.jraf.android.cinetoday.domain.movie.Movie
-import org.jraf.android.cinetoday.domain.prefs.GetShowtimesIn24HFormatPreferenceUseCase
 import javax.inject.Inject
 
-@HiltViewModel
-class MovieDetailsViewModel @Inject constructor(
-    getMovieWithShowtimes: GetMovieWithShowtimesUseCase,
-    getShowtimesIn24HFormatPreferenceUseCase: GetShowtimesIn24HFormatPreferenceUseCase,
-    savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-    val movie: Flow<Movie> = getMovieWithShowtimes(savedStateHandle[MovieDetailsActivity.EXTRA_MOVIE_ID]!!)
-    val showtimesIn24HFormat: Flow<Boolean> = getShowtimesIn24HFormatPreferenceUseCase()
+class GetShowtimesIn24HFormatPreferenceUseCase @Inject constructor(
+    private val preferenceRepository: PreferenceRepository,
+) {
+    operator fun invoke(): Flow<Boolean> = preferenceRepository.getShowtimesIn24HFormat()
 }

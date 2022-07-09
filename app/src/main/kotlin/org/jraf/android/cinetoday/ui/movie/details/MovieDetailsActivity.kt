@@ -91,17 +91,18 @@ private const val WIDTH_FRACTION = 0.8f
 @Composable
 private fun MovieDetailsScreen(viewModel: MovieDetailsViewModel = viewModel()) {
     CineTodayTheme {
-        Scaffold() {
+        Scaffold {
             val movie: Movie? by viewModel.movie.collectAsState(null)
             if (movie == null) return@Scaffold
-            MovieDetailsContent(movie!!)
+            val showtimesIn24HFormat by viewModel.showtimesIn24HFormat.collectAsState(false)
+            MovieDetailsContent(movie!!, showtimesIn24HFormat)
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MovieDetailsContent(movie: Movie) {
+private fun MovieDetailsContent(movie: Movie, showtimesIn24HFormat: Boolean) {
     val (horizontalPadding, verticalPadding) = paddingForWidthFraction(
         width = LocalConfiguration.current.screenWidthDp,
         fraction = WIDTH_FRACTION
@@ -191,7 +192,7 @@ private fun MovieDetailsContent(movie: Movie) {
             }
             for (showtime in showtimes) {
                 item {
-                    Showtime(showtime)
+                    Showtime(showtime, showtimesIn24HFormat)
                 }
             }
         }
@@ -199,7 +200,7 @@ private fun MovieDetailsContent(movie: Movie) {
 }
 
 @Composable
-private fun Showtime(showtime: Showtime) {
+private fun Showtime(showtime: Showtime, showtimesIn24HFormat: Boolean) {
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
             .height(IntrinsicSize.Min)
@@ -212,7 +213,7 @@ private fun Showtime(showtime: Showtime) {
             }
 
     ) {
-        ShowtimeTime(showtime)
+        ShowtimeTime(showtime, showtimesIn24HFormat)
         if (showtime.isDubbed) {
             ShowtimeTag(stringResource(R.string.theater_details_tag_dubbed))
         }
@@ -226,9 +227,9 @@ private fun Showtime(showtime: Showtime) {
 }
 
 @Composable
-private fun ShowtimeTime(showtime: Showtime) {
+private fun ShowtimeTime(showtime: Showtime, showtimesIn24HFormat: Boolean) {
     Text(
-        text = showtime.startsAtFormatted,
+        text = showtime.startsAtFormatted(showtimesIn24HFormat),
         color = Color.Black,
         style = MaterialTheme.typography.body1,
         textAlign = TextAlign.Center,
@@ -266,5 +267,5 @@ private fun MovieDetailsScreenPreview() {
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable
 private fun MovieDetailsContent() {
-    MovieDetailsContent(fakeMovie())
+    MovieDetailsContent(fakeMovie(), true)
 }

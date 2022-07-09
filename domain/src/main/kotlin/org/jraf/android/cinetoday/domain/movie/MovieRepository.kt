@@ -178,7 +178,9 @@ data class Showtime(
         return Date().after(startsAt)
     }
 
-    val startsAtFormatted: String by lazy { formatHourMinute(startsAt) }
+    fun startsAtFormatted(showtimesIn24HFormat: Boolean): String {
+        return formatHourMinute(startsAt, showtimesIn24HFormat)
+    }
 
     val is3D: Boolean by lazy { projection.any { it.contains("3d", ignoreCase = true) } }
     val isImax: Boolean by lazy { projection.any { it.contains("imax", ignoreCase = true) } }

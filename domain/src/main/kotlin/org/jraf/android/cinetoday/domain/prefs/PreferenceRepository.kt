@@ -22,23 +22,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.ui.movie.details
+package org.jraf.android.cinetoday.domain.prefs
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import org.jraf.android.cinetoday.domain.movie.GetMovieWithShowtimesUseCase
-import org.jraf.android.cinetoday.domain.movie.Movie
-import org.jraf.android.cinetoday.domain.prefs.GetShowtimesIn24HFormatPreferenceUseCase
+import org.jraf.android.kprefs.Prefs
 import javax.inject.Inject
 
-@HiltViewModel
-class MovieDetailsViewModel @Inject constructor(
-    getMovieWithShowtimes: GetMovieWithShowtimesUseCase,
-    getShowtimesIn24HFormatPreferenceUseCase: GetShowtimesIn24HFormatPreferenceUseCase,
-    savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-    val movie: Flow<Movie> = getMovieWithShowtimes(savedStateHandle[MovieDetailsActivity.EXTRA_MOVIE_ID]!!)
-    val showtimesIn24HFormat: Flow<Boolean> = getShowtimesIn24HFormatPreferenceUseCase()
+class PreferenceRepository @Inject constructor(@ApplicationContext context: Context) {
+    private val mainPrefs = Prefs(context)
+
+    private val showtimesIn24HFormatFlow: Flow<Boolean> by mainPrefs.BooleanFlow(false)
+    private var _showtimesIn24HFormat: Boolean by mainPrefs.Boolean(false)
+
+    fun getShowtimesIn24HFormat(): Flow<Boolean> = showtimesIn24HFormatFlow
+
+    fun setShowtimesIn24HFormat(value: Boolean) {
+        _showtimesIn24HFormat = value
+    }
 }

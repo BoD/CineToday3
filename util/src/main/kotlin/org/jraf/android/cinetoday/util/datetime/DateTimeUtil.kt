@@ -30,6 +30,7 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 fun Date.atMidnight(): Date = Calendar.getInstance().apply {
     time = this@atMidnight
@@ -54,4 +55,10 @@ fun isoDateStringToLocalDate(isoDate: String): LocalDate = LocalDate.parse(isoDa
 
 fun isoDateStringToTimestamp(isoDate: String): Long = isoDateStringToLocalDate(isoDate).toTimestamp()
 
-fun formatHourMinute(date: Date): String = DateFormat.getTimeInstance(DateFormat.SHORT).format(date)
+fun formatHourMinute(date: Date, showtimesIn24HFormat: Boolean): String {
+    return if (!showtimesIn24HFormat) {
+        DateFormat.getTimeInstance(DateFormat.SHORT).format(date)
+    } else {
+        DateFormat.getTimeInstance(DateFormat.SHORT, Locale.FRANCE).format(date)
+    }
+}
