@@ -24,6 +24,8 @@
  */
 package org.jraf.android.cinetoday.util.datetime
 
+import android.content.Context
+import org.jraf.android.cinetoday.util.R
 import java.text.DateFormat
 import java.time.Instant
 import java.time.LocalDate
@@ -61,4 +63,18 @@ fun formatHourMinute(date: Date, showtimesIn24HFormat: Boolean): String {
     } else {
         DateFormat.getTimeInstance(DateFormat.SHORT, Locale.FRANCE).format(date)
     }
+}
+
+context(Context)
+fun formatDurationHourMinute(durationMinutes: Int): String {
+    val hours = durationMinutes / 60
+    val minutes = durationMinutes % 60
+    val components = mutableListOf<String>()
+    if (hours > 0) {
+        components += "$hours ${getString(if (hours == 1) R.string.hour else R.string.hours)}"
+    }
+    if (minutes > 0) {
+        components += "$minutes ${getString(if (minutes == 1) R.string.minute else R.string.minutes)}"
+    }
+    return components.joinToString(" ")
 }

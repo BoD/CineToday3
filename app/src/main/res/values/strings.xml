@@ -10,6 +10,8 @@
 
     <string name="theater_details_directors">By %1$s</string>
     <string name="theater_details_actors">With %1$s</string>
+    <string name="theater_details_duration">Duration: %1$s</string>
+    <string name="theater_details_releaseYear">Released in %1$s</string>
 
     <string name="theater_details_tag_3d">3D</string>
     <string name="theater_details_tag_imax">IMAX</string>

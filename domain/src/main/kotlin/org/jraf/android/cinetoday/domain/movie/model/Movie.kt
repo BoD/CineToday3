@@ -24,6 +24,8 @@
  */
 package org.jraf.android.cinetoday.domain.movie.model
 
+import android.content.Context
+import org.jraf.android.cinetoday.util.datetime.formatDurationHourMinute
 import java.time.LocalDate
 import java.util.Date
 
@@ -42,7 +44,11 @@ data class Movie(
     val runtimeMinutes: Int,
     val originalTitle: String,
 ) {
+    context(Context)
+    fun runtimeFormatted(): String = formatDurationHourMinute(runtimeMinutes)
+
     val showtimesPerTheater: Map<String, List<Showtime>> by lazy { showtimes.groupBy { it.theaterName } }
+    val releaseYear: Int? = releaseDate?.year
 }
 
 fun fakeMovie() = Movie(

@@ -53,6 +53,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -71,6 +72,7 @@ import org.jraf.android.cinetoday.domain.movie.model.fakeMovie
 import org.jraf.android.cinetoday.ui.theme.CineTodayColor
 import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
 import org.jraf.android.cinetoday.util.trig.paddingForWidthFraction
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class MovieDetailsActivity : ComponentActivity() {
@@ -154,6 +156,18 @@ private fun MovieDetailsContent(movie: Movie, showtimesIn24HFormat: Boolean) {
             }
         }
 
+        movie.releaseYear?.let { releaseYear ->
+            if (releaseYear != LocalDate.now().year) {
+                item {
+                    Text(
+                        text = stringResource(R.string.theater_details_releaseYear, releaseYear),
+                        style = MaterialTheme.typography.caption2,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+
         movie.synopsis?.let { synopsis ->
             item {
                 Text(
@@ -162,6 +176,14 @@ private fun MovieDetailsContent(movie: Movie, showtimesIn24HFormat: Boolean) {
                     textAlign = TextAlign.Start,
                 )
             }
+        }
+
+        item {
+            Text(
+                text = stringResource(R.string.theater_details_duration, with(LocalContext.current) { movie.runtimeFormatted() }),
+                style = MaterialTheme.typography.caption2,
+                textAlign = TextAlign.Center
+            )
         }
 
         for ((theaterName, showtimes) in movie.showtimesPerTheater) {
