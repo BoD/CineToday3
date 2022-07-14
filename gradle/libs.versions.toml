@@ -1,9 +1,9 @@
 [versions]
 kotlin = "1.7.0"
 agp = "7.2.1"
-apollo = "3.3.2"
+apollo = "3.4.0"
 hilt = "2.42"
-coroutines = "1.6.3"
+coroutines = "1.6.4"
 sqldelight = "1.5.3"
 timber = "5.0.1"
 junit = "4.13.2"
