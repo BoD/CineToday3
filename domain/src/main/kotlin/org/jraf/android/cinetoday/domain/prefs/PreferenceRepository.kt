@@ -24,21 +24,9 @@
  */
 package org.jraf.android.cinetoday.domain.prefs
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import org.jraf.android.kprefs.Prefs
-import javax.inject.Inject
 
-class PreferenceRepository @Inject constructor(@ApplicationContext context: Context) {
-    private val mainPrefs = Prefs(context)
-
-    private val showtimesIn24HFormatFlow: Flow<Boolean> by mainPrefs.BooleanFlow(false)
-    private var _showtimesIn24HFormat: Boolean by mainPrefs.Boolean(false)
-
-    fun getShowtimesIn24HFormat(): Flow<Boolean> = showtimesIn24HFormatFlow
-
-    fun setShowtimesIn24HFormat(value: Boolean) {
-        _showtimesIn24HFormat = value
-    }
+interface PreferenceRepository {
+    fun getShowtimesIn24HFormat(): Flow<Boolean>
+    fun setShowtimesIn24HFormat(value: Boolean)
 }

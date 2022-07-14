@@ -31,16 +31,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-interface TheaterLocalSource {
-    suspend fun addFavoriteTheater(localTheater: LocalTheater)
-    suspend fun removeFavoriteTheater(id: String)
-    fun getFavoriteTheaters(): Flow<List<LocalTheater>>
-}
-
-class TheaterLocalSourceImpl @Inject constructor(
+class TheaterLocalDataSource @Inject constructor(
     private val database: Database,
-) : TheaterLocalSource {
-    override suspend fun addFavoriteTheater(localTheater: LocalTheater) {
+) {
+    suspend fun addFavoriteTheater(localTheater: LocalTheater) {
         withContext(Dispatchers.IO) {
             database.theaterQueries.insert(
                 id = localTheater.id,
@@ -51,18 +45,20 @@ class TheaterLocalSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun removeFavoriteTheater(id: String) {
+    suspend fun removeFavoriteTheater(id: String) {
         withContext(Dispatchers.IO) {
             database.theaterQueries.delete(id)
         }
     }
 
-    override fun getFavoriteTheaters(): Flow<List<LocalTheater>> {
+    fun getFavoriteTheaters(): Flow<List<LocalTheater>> {
         return database.theaterQueries.selectAll { id, name, posterUrl, address ->
-            LocalTheater(id = id,
+            LocalTheater(
+                id = id,
                 name = name,
                 posterUrl = posterUrl,
-                address = address)
+                address = address
+            )
         }
             .asFlow()
             .mapToList()

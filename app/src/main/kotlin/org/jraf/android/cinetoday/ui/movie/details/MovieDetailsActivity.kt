@@ -65,9 +65,9 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import dagger.hilt.android.AndroidEntryPoint
 import org.jraf.android.cinetoday.R
-import org.jraf.android.cinetoday.domain.movie.Movie
-import org.jraf.android.cinetoday.domain.movie.Showtime
-import org.jraf.android.cinetoday.domain.movie.fakeMovie
+import org.jraf.android.cinetoday.domain.movie.model.Movie
+import org.jraf.android.cinetoday.domain.movie.model.Showtime
+import org.jraf.android.cinetoday.domain.movie.model.fakeMovie
 import org.jraf.android.cinetoday.ui.theme.CineTodayColor
 import org.jraf.android.cinetoday.ui.theme.CineTodayTheme
 import org.jraf.android.cinetoday.util.trig.paddingForWidthFraction
@@ -177,17 +177,18 @@ private fun MovieDetailsContent(movie: Movie, showtimesIn24HFormat: Boolean) {
                 )
 
                 // Fading edge
-                Spacer(Modifier
-                    .height(4.dp)
-                    .fillMaxWidth()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                backgroundColor,
-                                Color.Transparent
+                Spacer(
+                    Modifier
+                        .height(4.dp)
+                        .fillMaxWidth()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    backgroundColor,
+                                    Color.Transparent
+                                )
                             )
                         )
-                    )
                 )
             }
             for (showtime in showtimes) {

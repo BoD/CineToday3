@@ -22,29 +22,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.domain.movie
+package org.jraf.android.cinetoday.domain.movie.usecase
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
-import org.jraf.android.cinetoday.domain.theater.TheaterRepository
-import org.jraf.android.cinetoday.util.datetime.atMidnight
-import org.jraf.android.cinetoday.util.datetime.nextDay
-import java.util.Date
+import kotlinx.coroutines.flow.Flow
+import org.jraf.android.cinetoday.domain.movie.MovieRepository
+import org.jraf.android.cinetoday.domain.movie.model.Movie
 import javax.inject.Inject
 
-class FetchAndSaveMoviesForTodayUseCase @Inject constructor(
-    private val theaterRepository: TheaterRepository,
+class GetMovieWithShowtimesUseCase @Inject constructor(
     private val movieRepository: MovieRepository,
 ) {
-    suspend operator fun invoke(coroutineScope: CoroutineScope) {
-        val theaterIds = theaterRepository.getFavorites().first().map { it.id }.toSet()
-        val todayAtMidnight = Date().atMidnight()
-        val tomorrowAtMidnight = todayAtMidnight.nextDay()
-        movieRepository.fetchAndSaveMovies(
-            theaterIds = theaterIds,
-            from = todayAtMidnight,
-            to = tomorrowAtMidnight,
-            coroutineScope = coroutineScope,
-        )
-    }
+    operator fun invoke(id: String): Flow<Movie> = movieRepository.getMovieWithShowtimes(id)
 }

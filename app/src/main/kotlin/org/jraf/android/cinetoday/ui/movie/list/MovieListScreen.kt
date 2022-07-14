@@ -63,8 +63,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
-import org.jraf.android.cinetoday.domain.movie.Movie
-import org.jraf.android.cinetoday.domain.movie.fakeMovie
+import org.jraf.android.cinetoday.domain.movie.model.Movie
+import org.jraf.android.cinetoday.domain.movie.model.fakeMovie
 import org.jraf.android.cinetoday.ui.common.loading.Loading
 import org.jraf.android.cinetoday.ui.movie.details.MovieDetailsActivity
 import org.jraf.android.cinetoday.ui.theme.CineTodayColor

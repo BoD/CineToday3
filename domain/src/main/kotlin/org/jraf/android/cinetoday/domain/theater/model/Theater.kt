@@ -22,13 +22,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.domain.prefs
+package org.jraf.android.cinetoday.domain.theater.model
 
-import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-
-class GetShowtimesIn24HFormatPreferenceUseCase @Inject constructor(
-    private val preferenceRepository: PreferenceRepository,
-) {
-    operator fun invoke(): Flow<Boolean> = preferenceRepository.getShowtimesIn24HFormat()
-}
+data class Theater(
+    val id: String,
+    val name: String,
+    val posterUrl: String?,
+    val address: String,
+)

@@ -34,9 +34,9 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import org.jraf.android.cinetoday.domain.theater.AddTheaterToFavoritesUseCase
-import org.jraf.android.cinetoday.domain.theater.SearchTheaterUseCase
-import org.jraf.android.cinetoday.domain.theater.Theater
+import org.jraf.android.cinetoday.domain.theater.model.Theater
+import org.jraf.android.cinetoday.domain.theater.usecase.AddTheaterToFavoritesUseCase
+import org.jraf.android.cinetoday.domain.theater.usecase.SearchTheaterUseCase
 import javax.inject.Inject
 
 @HiltViewModel

@@ -22,13 +22,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.domain.movie
+package org.jraf.android.cinetoday.domain.theater.usecase
 
-import kotlinx.coroutines.flow.Flow
+import org.jraf.android.cinetoday.domain.theater.TheaterRepository
+import org.jraf.android.cinetoday.domain.theater.model.Theater
 import javax.inject.Inject
 
-class GetMovieWithShowtimesUseCase @Inject constructor(
-    private val movieRepository: MovieRepository,
+class AddTheaterToFavoritesUseCase @Inject constructor(
+    private val theaterRepository: TheaterRepository,
 ) {
-    operator fun invoke(id: String): Flow<Movie> = movieRepository.getMovieWithShowtimes(id)
+    suspend operator fun invoke(theater: Theater) = theaterRepository.addToFavorites(theater)
 }
+

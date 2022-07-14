@@ -26,7 +26,6 @@ package org.jraf.android.cinetoday.api
 
 import android.content.Context
 import com.apollographql.apollo3.ApolloClient
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,15 +42,4 @@ interface ApiModule {
         @Singleton
         fun provideApolloClient(@ApplicationContext context: Context): ApolloClient = createApolloClient(context)
     }
-
-    @Binds
-    fun TheaterRemoteSource(
-        theaterRemoteSource: TheaterRemoteSourceImpl,
-    ): TheaterRemoteSource
-
-    @Binds
-    fun MovieRemoteSource(
-        movieRemoteSource: MovieRemoteSourceImpl,
-    ): MovieRemoteSource
-
 }

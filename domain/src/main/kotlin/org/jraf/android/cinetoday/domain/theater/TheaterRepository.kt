@@ -25,38 +25,11 @@
 package org.jraf.android.cinetoday.domain.theater
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import org.jraf.android.cinetoday.api.RemoteTheater
-import org.jraf.android.cinetoday.api.TheaterRemoteSource
-import org.jraf.android.cinetoday.localstore.LocalTheater
-import org.jraf.android.cinetoday.localstore.TheaterLocalSource
-import javax.inject.Inject
+import org.jraf.android.cinetoday.domain.theater.model.Theater
 
-class TheaterRepository @Inject constructor(
-    private val theaterRemoteSource: TheaterRemoteSource,
-    private val theaterLocalSource: TheaterLocalSource,
-) {
-    suspend fun search(search: String): List<Theater> = theaterRemoteSource.searchTheaters(search).map { it.toTheater() }
-
-    suspend fun addToFavorites(theater: Theater) {
-        theaterLocalSource.addFavoriteTheater(LocalTheater(id = theater.id, name = theater.name, posterUrl = theater.posterUrl, address = theater.address))
-    }
-
-    suspend fun removeFromFavorites(theaterId: String) {
-        theaterLocalSource.removeFavoriteTheater(theaterId)
-    }
-
-    fun getFavorites(): Flow<List<Theater>> {
-        return theaterLocalSource.getFavoriteTheaters().map { list -> list.map { localTheater -> localTheater.toTheater() } }
-    }
+interface TheaterRepository {
+    suspend fun search(search: String): List<Theater>
+    suspend fun addToFavorites(theater: Theater)
+    suspend fun removeFromFavorites(theaterId: String)
+    fun getFavorites(): Flow<List<Theater>>
 }
-
-private fun RemoteTheater.toTheater() = Theater(id = id, name = name, posterUrl = posterUrl, address = address)
-private fun LocalTheater.toTheater() = Theater(id = id, name = name, posterUrl = posterUrl, address = address)
-
-data class Theater(
-    val id: String,
-    val name: String,
-    val posterUrl: String?,
-    val address: String,
-)

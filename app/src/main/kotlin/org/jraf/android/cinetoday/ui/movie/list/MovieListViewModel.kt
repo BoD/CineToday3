@@ -24,16 +24,14 @@
  */
 package org.jraf.android.cinetoday.ui.movie.list
 
-import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.jraf.android.cinetoday.domain.movie.FetchAndSaveMoviesForTodayUseCase
-import org.jraf.android.cinetoday.domain.movie.GetMovieListUseCase
-import org.jraf.android.cinetoday.domain.movie.Movie
-import org.jraf.android.cinetoday.util.logging.logd
+import org.jraf.android.cinetoday.domain.movie.model.Movie
+import org.jraf.android.cinetoday.domain.movie.usecase.FetchAndSaveMoviesForTodayUseCase
+import org.jraf.android.cinetoday.domain.movie.usecase.GetMovieListUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +43,6 @@ class MovieListViewModel @Inject constructor(
         viewModelScope.launch {
             fetchAndSaveMoviesForToday(viewModelScope)
         }
-        logd("Model=${Build.MODEL} ${Build.BOARD} ${Build.BRAND} ${Build.DEVICE} ${Build.HARDWARE} ${Build.ID} ${Build.MANUFACTURER} ${Build.PRODUCT} ${Build.SERIAL} ${Build.TAGS} ${Build.TYPE} ${Build.USER}")
     }
 
     val movieList: Flow<List<Movie>> = getMovieList()

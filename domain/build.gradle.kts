@@ -3,7 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.api)
-    implementation(projects.localStore)
-    implementation(libs.kprefs)
+    // The domain module has no dependencies!
 }

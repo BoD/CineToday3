@@ -45,7 +45,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import coil.compose.AsyncImage
 import org.jraf.android.cinetoday.R
-import org.jraf.android.cinetoday.domain.theater.Theater
+import org.jraf.android.cinetoday.domain.theater.model.Theater
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_API_LEVEL
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_BACKGROUND_COLOR_BLACK
 import org.jraf.android.cinetoday.util.logging.WEAR_PREVIEW_DEVICE_WIDTH_DP

@@ -29,14 +29,10 @@ import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import javax.inject.Inject
 
-interface TheaterRemoteSource {
-    suspend fun searchTheaters(search: String): List<RemoteTheater>
-}
-
-class TheaterRemoteSourceImpl @Inject constructor(
+class TheaterRemoteDataSource @Inject constructor(
     private val apolloClient: ApolloClient,
-) : TheaterRemoteSource {
-    override suspend fun searchTheaters(search: String): List<RemoteTheater> {
+) {
+    suspend fun searchTheaters(search: String): List<RemoteTheater> {
         return apolloClient
             .query(TheaterSearchQuery(search))
             // No cache for search

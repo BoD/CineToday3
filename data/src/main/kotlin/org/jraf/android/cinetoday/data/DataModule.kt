@@ -22,14 +22,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.domain
+package org.jraf.android.cinetoday.data
 
+import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import org.jraf.android.cinetoday.data.movie.MovieRepositoryImpl
+import org.jraf.android.cinetoday.data.prefs.PreferenceRepositoryImpl
+import org.jraf.android.cinetoday.data.theater.TheaterRepositoryImpl
+import org.jraf.android.cinetoday.domain.movie.MovieRepository
+import org.jraf.android.cinetoday.domain.prefs.PreferenceRepository
+import org.jraf.android.cinetoday.domain.theater.TheaterRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface DomainModule {
+interface DataModule {
+    @Binds
+    fun TheaterRepository(
+        TheaterRepository: TheaterRepositoryImpl,
+    ): TheaterRepository
 
+    @Binds
+    fun MovieRepository(
+        MovieRepository: MovieRepositoryImpl,
+    ): MovieRepository
+
+    @Binds
+    fun PreferenceRepository(
+        PreferenceRepository: PreferenceRepositoryImpl,
+    ): PreferenceRepository
 }

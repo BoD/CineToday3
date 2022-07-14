@@ -22,22 +22,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.localstore
+package org.jraf.android.cinetoday.domain.movie.usecase
 
-import android.content.Context
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import org.jraf.android.cinetoday.domain.movie.MovieRepository
+import org.jraf.android.cinetoday.domain.movie.model.Movie
+import javax.inject.Inject
 
-@Module
-@InstallIn(SingletonComponent::class)
-interface LocalStoreModule {
-    companion object {
-        @Provides
-        @Singleton
-        fun provideSqldelightDatabase(@ApplicationContext context: Context): Database = createSqldelightDatabase(context)
-    }
+class GetMovieListUseCase @Inject constructor(
+    private val movieRepository: MovieRepository,
+) {
+    operator fun invoke(): Flow<List<Movie>> = movieRepository.getMovieList()
 }

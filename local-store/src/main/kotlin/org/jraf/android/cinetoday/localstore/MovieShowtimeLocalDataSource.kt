@@ -38,17 +38,10 @@ import java.time.LocalDate
 import java.util.Date
 import javax.inject.Inject
 
-interface MovieShowtimeLocalSource {
-    suspend fun deleteAll()
-    suspend fun addMovieShowtimes(localMovieShowtimes: List<LocalMovieShowtime>)
-    fun getMovieWithShowtimes(movieId: String): Flow<LocalMovieShowtime>
-    fun getMovieList(): Flow<List<LocalMovie>>
-}
-
-class MovieShowtimeLocalSourceImpl @Inject constructor(
+class MovieShowtimeLocalDataSource @Inject constructor(
     private val database: Database,
-) : MovieShowtimeLocalSource {
-    override suspend fun deleteAll() {
+) {
+    suspend fun deleteAll() {
         withContext(Dispatchers.IO) {
             database.transaction {
                 database.theaterMovieShowtimeQueries.deleteAll()
@@ -57,7 +50,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun addMovieShowtimes(localMovieShowtimes: List<LocalMovieShowtime>) {
+    suspend fun addMovieShowtimes(localMovieShowtimes: List<LocalMovieShowtime>) {
         withContext(Dispatchers.IO) {
             database.transaction {
                 for (localMovieShowtime in localMovieShowtimes) {
@@ -96,7 +89,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
         }
     }
 
-    override fun getMovieWithShowtimes(movieId: String): Flow<LocalMovieShowtime> {
+    fun getMovieWithShowtimes(movieId: String): Flow<LocalMovieShowtime> {
         return database.theaterMovieShowtimeQueries.selectByMovieId(id = movieId)
             .asFlow()
             .mapToList()
@@ -138,7 +131,7 @@ class MovieShowtimeLocalSourceImpl @Inject constructor(
 
     }
 
-    override fun getMovieList(): Flow<List<LocalMovie>> {
+    fun getMovieList(): Flow<List<LocalMovie>> {
         return database.movieQueries.selectAllMovies().asFlow().mapToList().map { movieList ->
             movieList.map { sqlMovie ->
                 sqlMovie.toLocalMovie()

@@ -28,9 +28,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import org.jraf.android.cinetoday.domain.movie.GetMovieWithShowtimesUseCase
-import org.jraf.android.cinetoday.domain.movie.Movie
-import org.jraf.android.cinetoday.domain.prefs.GetShowtimesIn24HFormatPreferenceUseCase
+import org.jraf.android.cinetoday.domain.movie.model.Movie
+import org.jraf.android.cinetoday.domain.movie.usecase.GetMovieWithShowtimesUseCase
+import org.jraf.android.cinetoday.domain.prefs.usecase.GetShowtimesIn24HFormatPreferenceUseCase
 import javax.inject.Inject
 
 @HiltViewModel

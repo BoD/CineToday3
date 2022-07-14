@@ -22,13 +22,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.domain.theater
+package org.jraf.android.cinetoday.domain.movie.model
 
-import javax.inject.Inject
+import org.jraf.android.cinetoday.util.datetime.formatHourMinute
+import java.util.Date
 
-class AddTheaterToFavoritesUseCase @Inject constructor(
-    private val theaterRepository: TheaterRepository,
+data class Showtime(
+    val id: String,
+    val theaterId: String,
+    val theaterName: String,
+    val startsAt: Date,
+    val projection: List<String>,
+    val languageVersion: String?,
 ) {
-    suspend operator fun invoke(theater: Theater) = theaterRepository.addToFavorites(theater)
-}
+    fun isTooLate(): Boolean {
+        return Date().after(startsAt)
+    }
 
+    fun startsAtFormatted(showtimesIn24HFormat: Boolean): String {
+        return formatHourMinute(startsAt, showtimesIn24HFormat)
+    }
+
+    val is3D: Boolean by lazy { projection.any { it.contains("3d", ignoreCase = true) } }
+    val isImax: Boolean by lazy { projection.any { it.contains("imax", ignoreCase = true) } }
+    val isDubbed: Boolean by lazy { languageVersion == "DUBBED" }
+}

@@ -87,6 +87,9 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    // This dependency is needed for Hilt to bind happily, but should never be accessed directly from the code.
+    // Instead, always use the Use Cases in the Domain module
+    implementation(projects.data)
     implementation(projects.domain)
 }
 

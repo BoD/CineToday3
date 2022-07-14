@@ -22,15 +22,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.domain.movie
+package org.jraf.android.cinetoday.domain.movie.usecase
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import org.jraf.android.cinetoday.domain.movie.model.Movie
+import kotlinx.coroutines.flow.first
+import org.jraf.android.cinetoday.domain.movie.MovieRepository
+import org.jraf.android.cinetoday.domain.theater.TheaterRepository
+import org.jraf.android.cinetoday.util.datetime.atMidnight
+import org.jraf.android.cinetoday.util.datetime.nextDay
 import java.util.Date
+import javax.inject.Inject
 
-interface MovieRepository {
-    suspend fun fetchAndSaveMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope)
-    fun getMovieList(): Flow<List<Movie>>
-    fun getMovieWithShowtimes(id: String): Flow<Movie>
+class FetchAndSaveMoviesForTodayUseCase @Inject constructor(
+    private val theaterRepository: TheaterRepository,
+    private val movieRepository: MovieRepository,
+) {
+    suspend operator fun invoke(coroutineScope: CoroutineScope) {
+        val theaterIds = theaterRepository.getFavorites().first().map { it.id }.toSet()
+        val todayAtMidnight = Date().atMidnight()
+        val tomorrowAtMidnight = todayAtMidnight.nextDay()
+        movieRepository.fetchAndSaveMovies(
+            theaterIds = theaterIds,
+            from = todayAtMidnight,
+            to = tomorrowAtMidnight,
+            coroutineScope = coroutineScope,
+        )
+    }
 }

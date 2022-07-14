@@ -22,22 +22,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.localstore
+package org.jraf.android.cinetoday.data.prefs
 
 import android.content.Context
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import org.jraf.android.cinetoday.domain.prefs.PreferenceRepository
+import org.jraf.android.kprefs.Prefs
+import javax.inject.Inject
 
-@Module
-@InstallIn(SingletonComponent::class)
-interface LocalStoreModule {
-    companion object {
-        @Provides
-        @Singleton
-        fun provideSqldelightDatabase(@ApplicationContext context: Context): Database = createSqldelightDatabase(context)
+class PreferenceRepositoryImpl @Inject constructor(@ApplicationContext context: Context) : PreferenceRepository {
+    private val mainPrefs = Prefs(context)
+
+    private val showtimesIn24HFormatFlow: Flow<Boolean> by mainPrefs.BooleanFlow(false)
+    private var _showtimesIn24HFormat: Boolean by mainPrefs.Boolean(false)
+
+    override fun getShowtimesIn24HFormat(): Flow<Boolean> = showtimesIn24HFormatFlow
+
+    override fun setShowtimesIn24HFormat(value: Boolean) {
+        _showtimesIn24HFormat = value
     }
 }

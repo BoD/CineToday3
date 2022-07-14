@@ -50,7 +50,7 @@ import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.items
 import org.jraf.android.cinetoday.R
-import org.jraf.android.cinetoday.domain.theater.Theater
+import org.jraf.android.cinetoday.domain.theater.model.Theater
 import org.jraf.android.cinetoday.ui.theater.item.TheaterItem
 import org.jraf.android.cinetoday.ui.theater.search.TheaterSearchActivity
 

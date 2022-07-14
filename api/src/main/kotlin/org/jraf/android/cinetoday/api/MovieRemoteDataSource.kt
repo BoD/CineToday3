@@ -50,15 +50,11 @@ import javax.inject.Inject
 import kotlin.collections.set
 import kotlin.coroutines.resume
 
-interface MovieRemoteSource {
-    suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>>
-}
-
-class MovieRemoteSourceImpl @Inject constructor(
+class MovieRemoteDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     private val apolloClient: ApolloClient,
-) : MovieRemoteSource {
-    override suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>> {
+) {
+    suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>> {
         val result = mutableMapOf<String, List<RemoteMovie>>()
         val moviesForTheaterJobs = mutableListOf<Job>()
         for (theaterId in theaterIds) {

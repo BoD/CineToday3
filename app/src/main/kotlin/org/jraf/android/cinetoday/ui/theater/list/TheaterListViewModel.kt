@@ -27,8 +27,8 @@ package org.jraf.android.cinetoday.ui.theater.list
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import org.jraf.android.cinetoday.domain.theater.GetTheaterFavoriteListUseCase
-import org.jraf.android.cinetoday.domain.theater.Theater
+import org.jraf.android.cinetoday.domain.theater.model.Theater
+import org.jraf.android.cinetoday.domain.theater.usecase.GetTheaterFavoriteListUseCase
 import javax.inject.Inject
 
 @HiltViewModel
