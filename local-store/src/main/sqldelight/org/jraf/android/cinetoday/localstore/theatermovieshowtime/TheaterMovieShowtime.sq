@@ -21,5 +21,12 @@ JOIN Theater ON TheaterMovieShowtime.theaterId = Theater.id
 WHERE Movie.id = ?
 ORDER BY Theater.id;
 
+selectAllMovies:
+SELECT
+DISTINCT Movie.*
+FROM TheaterMovieShowtime
+JOIN Movie ON TheaterMovieShowtime.movieId = Movie.id
+ORDER BY Movie.releaseDate DESC, Movie.weeklyTheatersCount DESC;
+
 deleteAll:
 DELETE FROM TheaterMovieShowtime;

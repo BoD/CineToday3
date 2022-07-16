@@ -35,12 +35,14 @@ private val Red400 = Color(0xFFCF6679)
 private val Red30 = Color(0xFF4D1410)
 private val LightGray = Color.LightGray
 private val White = Color.White
+private val LightGreen400 = Color(0xFF9CCC65)
 
 
 object CineTodayColor {
     val MovieDefaultBackground = Red30
     val ShowtimeTimeBackground = White
     val ShowtimeTag = White
+    val Confirm = LightGreen400
 }
 
 val CineTodayColors: Colors = Colors(

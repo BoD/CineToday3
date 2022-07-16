@@ -23,6 +23,11 @@
     <string name="settings_off">Off</string>
     <string name="settings_24HFormat">Show times in 24H</string>
     <string name="settings_about">About…</string>
+    <string name="theater_list_delete_title">Delete theater?</string>
+    <string name="theater_list_delete_message">Are you sure you want to delete %1$s?</string>
+    <string name="theater_list_delete_cancel">Cancel</string>
+    <string name="theater_list_delete_confirm">Confirm</string>
+    <string name="theater_list_delete_confirmation">Theater deleted</string>
 
 
 </resources>

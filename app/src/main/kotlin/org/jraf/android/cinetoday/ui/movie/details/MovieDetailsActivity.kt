@@ -171,7 +171,7 @@ private fun MovieDetailsContent(movie: Movie, showtimesIn24HFormat: Boolean) {
         movie.synopsis?.let { synopsis ->
             item {
                 Text(
-                    text = synopsis,
+                    text = synopsis.trim(),
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Start,
                 )

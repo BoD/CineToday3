@@ -59,6 +59,8 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.Vignette
+import androidx.wear.compose.material.VignettePosition
 import androidx.wear.compose.material.items
 import androidx.wear.input.RemoteInputIntentHelper
 import androidx.wear.input.wearableExtender
@@ -81,7 +83,9 @@ class TheaterSearchActivity : ComponentActivity() {
 @Composable
 private fun TheaterSearchScreen(afterTheaterAdded: () -> Unit) {
     CineTodayTheme {
-        Scaffold {
+        Scaffold(
+            vignette = { Vignette(vignettePosition = VignettePosition.TopAndBottom) },
+        ) {
             TheaterSearchContent(afterTheaterAdded = afterTheaterAdded)
         }
     }
@@ -113,9 +117,10 @@ private fun TheaterSearchContent(viewModel: TheaterSearchViewModel = viewModel()
         item {
             val placeHolder = stringResource(R.string.theater_search_placeholder)
             Column {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .border(shape = MaterialTheme.shapes.small, width = 1.dp, color = MaterialTheme.colors.primary)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(shape = MaterialTheme.shapes.small, width = 1.dp, color = MaterialTheme.colors.primary)
                 ) {
                     CompositionLocalProvider(LocalContentAlpha provides if (hasEnteredSearchTerms) ContentAlpha.high else ContentAlpha.medium) {
                         Text(

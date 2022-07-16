@@ -22,21 +22,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.localstore
+package org.jraf.android.cinetoday.domain.theater.usecase
 
-import android.content.Context
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.squareup.sqldelight.android.AndroidSqliteDriver
+import org.jraf.android.cinetoday.domain.theater.TheaterRepository
+import javax.inject.Inject
 
-fun createSqldelightDatabase(context: Context): Database {
-    val driver = AndroidSqliteDriver(Database.Schema, context, "cinetoday3.db",
-        // XXX This ensures the `ON DELETE CASCADE`s actually work!
-        // See https://github.com/cashapp/sqldelight/issues/1241#issuecomment-468030188
-        callback = object : AndroidSqliteDriver.Callback(Database.Schema) {
-            override fun onOpen(db: SupportSQLiteDatabase) {
-                db.execSQL("PRAGMA foreign_keys=ON;")
-            }
-        }
-    )
-    return Database(driver)
+class DeleteTheaterUseCase @Inject constructor(
+    private val theaterRepository: TheaterRepository,
+) {
+    suspend operator fun invoke(theaterId: String) = theaterRepository.removeFromFavorites(theaterId)
 }

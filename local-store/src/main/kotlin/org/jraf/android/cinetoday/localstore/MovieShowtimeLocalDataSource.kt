@@ -30,8 +30,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import org.jraf.android.cinetoday.localstore.theater.Movie
-import org.jraf.android.cinetoday.localstore.theater.SelectByMovieId
+import org.jraf.android.cinetoday.localstore.movie.Movie
+import org.jraf.android.cinetoday.localstore.theatermovieshowtime.SelectByMovieId
 import org.jraf.android.cinetoday.util.datetime.timestampToLocalDate
 import org.jraf.android.cinetoday.util.datetime.toTimestamp
 import java.time.LocalDate
@@ -132,7 +132,7 @@ class MovieShowtimeLocalDataSource @Inject constructor(
     }
 
     fun getMovieList(): Flow<List<LocalMovie>> {
-        return database.movieQueries.selectAllMovies().asFlow().mapToList().map { movieList ->
+        return database.theaterMovieShowtimeQueries.selectAllMovies().asFlow().mapToList().map { movieList ->
             movieList.map { sqlMovie ->
                 sqlMovie.toLocalMovie()
             }

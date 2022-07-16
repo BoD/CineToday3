@@ -25,15 +25,25 @@
 package org.jraf.android.cinetoday.ui.theater.list
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import org.jraf.android.cinetoday.domain.theater.model.Theater
+import org.jraf.android.cinetoday.domain.theater.usecase.DeleteTheaterUseCase
 import org.jraf.android.cinetoday.domain.theater.usecase.GetTheaterFavoriteListUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class TheaterListViewModel @Inject constructor(
     getTheaterFavoriteList: GetTheaterFavoriteListUseCase,
+    private val deleteTheater: DeleteTheaterUseCase,
 ) : ViewModel() {
     val favoriteTheaterList: Flow<List<Theater>> = getTheaterFavoriteList()
+
+    fun deleteTheater(deleteTheater: Theater) {
+        viewModelScope.launch {
+            deleteTheater(deleteTheater.id)
+        }
+    }
 }
