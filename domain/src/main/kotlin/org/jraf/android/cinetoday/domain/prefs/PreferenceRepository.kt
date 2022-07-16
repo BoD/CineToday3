@@ -29,4 +29,7 @@ import kotlinx.coroutines.flow.Flow
 interface PreferenceRepository {
     fun getShowtimesIn24HFormat(): Flow<Boolean>
     fun setShowtimesIn24HFormat(value: Boolean)
+
+    fun getNewReleasesNotifications(): Flow<Boolean>
+    fun setNewReleasesNotifications(value: Boolean)
 }

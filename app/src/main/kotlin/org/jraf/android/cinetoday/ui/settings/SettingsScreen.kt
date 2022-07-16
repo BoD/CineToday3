@@ -25,22 +25,136 @@
 package org.jraf.android.cinetoday.ui.settings
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.wear.compose.material.Chip
+import androidx.wear.compose.material.ChipDefaults
+import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.ListHeader
+import androidx.wear.compose.material.Scaffold
+import androidx.wear.compose.material.ScalingLazyColumn
+import androidx.wear.compose.material.ScalingLazyListState
 import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.TimeText
+import androidx.wear.compose.material.ToggleChip
+import androidx.wear.compose.material.ToggleChipDefaults
+import androidx.wear.compose.material.rememberScalingLazyListState
+import com.google.android.horologist.compose.layout.fadeAwayScalingLazyList
+import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import org.jraf.android.cinetoday.R
+
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
+@Composable
+fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
+    val scalingLazyListState = rememberScalingLazyListState()
+    val showtimesIn24HFormat by viewModel.showtimesIn24HFormat.collectAsState(true)
+    val newReleasesNotifications by viewModel.newReleasesNotifications.collectAsState(true)
+    Scaffold(
+        timeText = {
+            TimeText(Modifier.fadeAwayScalingLazyList { scalingLazyListState })
+        }
+    ) {
+        SettingsList(
+            scalingLazyListState = scalingLazyListState,
+            onShowtimesIn24HFormatChange = { value -> viewModel.setShowtimesIn24HFormat(value) },
+            newReleasesNotifications = newReleasesNotifications,
+            showtimesIn24HFormat = showtimesIn24HFormat,
+            onNewReleasesNotificationsChange = { value -> viewModel.setNewReleasesNotifications(value) }
+        )
+    }
+}
 
 @Composable
-fun SettingsScreen() {
-    Text("Settings", modifier = Modifier
-        .fillMaxSize()
-//        .background(Color.Green)
-    )
+private fun SettingsList(
+    scalingLazyListState: ScalingLazyListState,
+    showtimesIn24HFormat: Boolean,
+    newReleasesNotifications: Boolean,
+    onShowtimesIn24HFormatChange: (Boolean) -> Unit,
+    onNewReleasesNotificationsChange: (Boolean) -> Unit,
+) {
+    ScalingLazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        state = scalingLazyListState
+    ) {
+        item {
+            ListHeader {
+                Text(stringResource(R.string.settings_title))
+            }
+        }
+
+        item {
+            ToggleChip(
+                modifier = Modifier.fillMaxWidth(),
+                checked = newReleasesNotifications,
+                onCheckedChange = { onNewReleasesNotificationsChange(!newReleasesNotifications) },
+                label = {
+                    Text(stringResource(R.string.settings_notifications))
+                },
+                toggleControl = {
+                    // TODO have this animated somehow
+                    // See https://kotlinlang.slack.com/archives/C02GBABJUAF/p1657817096543849
+                    Icon(
+                        imageVector = ToggleChipDefaults.switchIcon(
+                            checked = newReleasesNotifications
+                        ),
+                        contentDescription = stringResource(if (newReleasesNotifications) R.string.settings_on else R.string.settings_off)
+                    )
+                }
+            )
+        }
+
+        item {
+            ToggleChip(
+                modifier = Modifier.fillMaxWidth(),
+                checked = showtimesIn24HFormat,
+                onCheckedChange = {
+                    onShowtimesIn24HFormatChange(!showtimesIn24HFormat)
+                },
+                label = {
+                    Text(stringResource(R.string.settings_24HFormat))
+                },
+                toggleControl = {
+                    Icon(
+                        imageVector = ToggleChipDefaults.switchIcon(
+                            checked = showtimesIn24HFormat
+                        ),
+                        contentDescription = stringResource(if (showtimesIn24HFormat) R.string.settings_on else R.string.settings_off)
+                    )
+                }
+            )
+        }
+
+        item {
+            Chip(
+                modifier = Modifier.fillMaxWidth(),
+                colors = ChipDefaults.secondaryChipColors(),
+                label = {
+                    Text(text = stringResource(R.string.settings_about))
+                },
+                onClick = {
+
+                }
+            )
+        }
+    }
 }
 
 @Preview(device = Devices.WEAR_OS_LARGE_ROUND)
 @Composable
-private fun SettingsScreenPreview() {
-    SettingsScreen()
+private fun SettingsListPreview() {
+    SettingsList(
+        scalingLazyListState = rememberScalingLazyListState(),
+        showtimesIn24HFormat = false,
+        newReleasesNotifications = true,
+        onShowtimesIn24HFormatChange = {},
+        onNewReleasesNotificationsChange = {})
 }

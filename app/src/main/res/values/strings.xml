@@ -17,4 +17,12 @@
     <string name="theater_details_tag_imax">IMAX</string>
     <string name="theater_details_tag_dubbed">VF</string>
 
+    <string name="settings_title">Settings</string>
+    <string name="settings_notifications">New releases notifications</string>
+    <string name="settings_on">On</string>
+    <string name="settings_off">Off</string>
+    <string name="settings_24HFormat">Show times in 24H</string>
+    <string name="settings_about">About…</string>
+
+
 </resources>

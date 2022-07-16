@@ -84,6 +84,7 @@ dependencies {
 //    implementation("com.google.android.gms:play-services-wearable:17.1.0")
 
     implementation(libs.accompanist.pager)
+    implementation(libs.horologist.compose.layout)
 
     implementation(libs.coil.compose)
 

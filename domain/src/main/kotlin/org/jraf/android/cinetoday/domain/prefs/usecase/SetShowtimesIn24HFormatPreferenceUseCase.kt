@@ -22,29 +22,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.data.prefs
+package org.jraf.android.cinetoday.domain.prefs.usecase
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.jraf.android.cinetoday.domain.prefs.PreferenceRepository
-import org.jraf.android.kprefs.Prefs
 import javax.inject.Inject
 
-class PreferenceRepositoryImpl @Inject constructor(@ApplicationContext context: Context) : PreferenceRepository {
-    private val mainPrefs = Prefs(context)
-
-    private val showtimesIn24HFormat: MutableStateFlow<Boolean> by mainPrefs.BooleanFlow(true)
-    private val newReleasesNotifications: MutableStateFlow<Boolean> by mainPrefs.BooleanFlow(true)
-
-    override fun getShowtimesIn24HFormat(): Flow<Boolean> = showtimesIn24HFormat
-    override fun setShowtimesIn24HFormat(value: Boolean) {
-        showtimesIn24HFormat.value = value
-    }
-
-    override fun getNewReleasesNotifications(): Flow<Boolean> = newReleasesNotifications
-    override fun setNewReleasesNotifications(value: Boolean) {
-        newReleasesNotifications.value = value
-    }
+class SetShowtimesIn24HFormatPreferenceUseCase @Inject constructor(
+    private val preferenceRepository: PreferenceRepository,
+) {
+    operator fun invoke(value: Boolean) = preferenceRepository.setShowtimesIn24HFormat(value)
 }

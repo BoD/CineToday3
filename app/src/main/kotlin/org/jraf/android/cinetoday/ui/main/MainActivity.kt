@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.PageIndicatorState
-import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.SwipeToDismissBox
 import androidx.wear.compose.material.SwipeToDismissBoxState
 import androidx.wear.compose.material.SwipeToDismissValue
@@ -81,15 +80,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun MainScreen(onDismiss: () -> Unit = {}) {
     CineTodayTheme {
-        Scaffold {
-            val swipeToDismissBoxState = rememberSwipeToDismissBoxState()
-            SwipeToDismissBox(state = swipeToDismissBoxState) { bg ->
-                if (!bg) MainScreenContent(swipeToDismissBoxState = swipeToDismissBoxState)
-            }
-            LaunchedEffect(swipeToDismissBoxState.currentValue) {
-                if (swipeToDismissBoxState.currentValue == SwipeToDismissValue.Dismissed) {
-                    onDismiss()
-                }
+        val swipeToDismissBoxState = rememberSwipeToDismissBoxState()
+        SwipeToDismissBox(state = swipeToDismissBoxState) { bg ->
+            if (!bg) MainScreenContent(swipeToDismissBoxState = swipeToDismissBoxState)
+        }
+        LaunchedEffect(swipeToDismissBoxState.currentValue) {
+            if (swipeToDismissBoxState.currentValue == SwipeToDismissValue.Dismissed) {
+                onDismiss()
             }
         }
     }
