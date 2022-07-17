@@ -22,18 +22,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jraf.android.cinetoday.domain.prefs
+package org.jraf.android.cinetoday.domain.movie.usecase
 
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDateTime
+import org.jraf.android.cinetoday.domain.movie.MovieRepository
+import javax.inject.Inject
 
-interface PreferenceRepository {
-    fun getShowtimesIn24HFormat(): Flow<Boolean>
-    fun setShowtimesIn24HFormat(value: Boolean)
-
-    fun getNewReleasesNotifications(): Flow<Boolean>
-    fun setNewReleasesNotifications(value: Boolean)
-
-    fun updateLastRefreshDate()
-    fun getLastRefreshDate(): Flow<LocalDateTime?>
+class IsFetchingMoviesUseCase @Inject constructor(
+    private val movieRepository: MovieRepository,
+) {
+    operator fun invoke(): Flow<Boolean> = movieRepository.isFetchingMovies()
 }

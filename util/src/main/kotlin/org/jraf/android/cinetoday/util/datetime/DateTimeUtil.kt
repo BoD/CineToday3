@@ -29,7 +29,11 @@ import org.jraf.android.cinetoday.util.R
 import java.text.DateFormat
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -49,9 +53,16 @@ fun Date.nextDay(): Date = Calendar.getInstance().apply {
 }.time
 
 fun timestampToLocalDate(timestamp: Long): LocalDate =
-    Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.UTC).toLocalDate()
+    Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.systemDefault()).toLocalDate()
 
-fun LocalDate.toTimestamp(): Long = atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+fun timestampToLocalDateTime(timestamp: Long): LocalDateTime =
+    Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.systemDefault()).toLocalDateTime()
+
+
+fun LocalDate.toTimestamp(): Long {
+    val systemOffset = OffsetDateTime.now().offset
+    return atStartOfDay().toInstant(systemOffset).toEpochMilli()
+}
 
 fun isoDateStringToLocalDate(isoDate: String): LocalDate = LocalDate.parse(isoDate)!!
 
@@ -77,4 +88,8 @@ fun formatDurationHourMinute(durationMinutes: Int): String {
         components += "$minutes ${getString(if (minutes == 1) R.string.minute else R.string.minutes)}"
     }
     return components.joinToString(" ")
+}
+
+fun formatLocalDateTime(localDateTime: LocalDateTime): String {
+    return localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
 }

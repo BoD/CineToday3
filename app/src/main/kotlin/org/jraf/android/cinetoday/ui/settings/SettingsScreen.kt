@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
+import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.Scaffold
@@ -50,13 +51,18 @@ import androidx.wear.compose.material.rememberScalingLazyListState
 import com.google.android.horologist.compose.layout.fadeAwayScalingLazyList
 import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
 import org.jraf.android.cinetoday.R
+import org.jraf.android.cinetoday.util.datetime.formatLocalDateTime
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
     val scalingLazyListState = rememberScalingLazyListState()
-    val showtimesIn24HFormat by viewModel.showtimesIn24HFormat.collectAsState(true)
-    val newReleasesNotifications by viewModel.newReleasesNotifications.collectAsState(true)
+    val showtimesIn24HFormat: Boolean by viewModel.showtimesIn24HFormat.collectAsState(true)
+    val newReleasesNotifications: Boolean by viewModel.newReleasesNotifications.collectAsState(true)
+    val isFetchingMovies: Boolean by viewModel.isFetchingMovies.collectAsState(false)
+    val lastRefreshDate: LocalDateTime? by viewModel.lastRefreshDate.collectAsState(null)
+
     Scaffold(
         timeText = {
             TimeText(Modifier.fadeAwayScalingLazyList { scalingLazyListState })
@@ -67,7 +73,10 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
             onShowtimesIn24HFormatChange = { value -> viewModel.setShowtimesIn24HFormat(value) },
             newReleasesNotifications = newReleasesNotifications,
             showtimesIn24HFormat = showtimesIn24HFormat,
-            onNewReleasesNotificationsChange = { value -> viewModel.setNewReleasesNotifications(value) }
+            onNewReleasesNotificationsChange = { value -> viewModel.setNewReleasesNotifications(value) },
+            isFetchingMovies = isFetchingMovies,
+            onRefreshNowClick = { viewModel.onRefreshNowClick() },
+            lastRefreshDate = lastRefreshDate,
         )
     }
 }
@@ -79,6 +88,9 @@ private fun SettingsList(
     newReleasesNotifications: Boolean,
     onShowtimesIn24HFormatChange: (Boolean) -> Unit,
     onNewReleasesNotificationsChange: (Boolean) -> Unit,
+    isFetchingMovies: Boolean,
+    onRefreshNowClick: () -> Unit,
+    lastRefreshDate: LocalDateTime?,
 ) {
     ScalingLazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -138,6 +150,32 @@ private fun SettingsList(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ChipDefaults.secondaryChipColors(),
                 label = {
+                    Text(text = stringResource(if (isFetchingMovies) R.string.settings_refreshing else R.string.settings_refreshNow))
+                },
+                secondaryLabel = if (isFetchingMovies) {
+                    null
+                } else {
+                    lastRefreshDate?.let { lastRefreshDate ->
+                        {
+                            Text(stringResource(R.string.settings_lastRefreshDate, formatLocalDateTime(lastRefreshDate)))
+                        }
+                    }
+                },
+                icon = if (!isFetchingMovies) {
+                    null
+                } else {
+                    { CircularProgressIndicator() }
+                },
+                onClick = onRefreshNowClick,
+                enabled = !isFetchingMovies,
+            )
+        }
+
+        item {
+            Chip(
+                modifier = Modifier.fillMaxWidth(),
+                colors = ChipDefaults.secondaryChipColors(),
+                label = {
                     Text(text = stringResource(R.string.settings_about))
                 },
                 onClick = {
@@ -156,5 +194,9 @@ private fun SettingsListPreview() {
         showtimesIn24HFormat = false,
         newReleasesNotifications = true,
         onShowtimesIn24HFormatChange = {},
-        onNewReleasesNotificationsChange = {})
+        onNewReleasesNotificationsChange = {},
+        isFetchingMovies = true,
+        onRefreshNowClick = {},
+        lastRefreshDate = null,
+    )
 }

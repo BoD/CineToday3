@@ -34,21 +34,25 @@ import org.jraf.android.cinetoday.data.theater.TheaterRepositoryImpl
 import org.jraf.android.cinetoday.domain.movie.MovieRepository
 import org.jraf.android.cinetoday.domain.prefs.PreferenceRepository
 import org.jraf.android.cinetoday.domain.theater.TheaterRepository
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataModule {
     @Binds
+    @Singleton
     fun TheaterRepository(
         TheaterRepository: TheaterRepositoryImpl,
     ): TheaterRepository
 
     @Binds
+    @Singleton
     fun MovieRepository(
         MovieRepository: MovieRepositoryImpl,
     ): MovieRepository
 
     @Binds
+    @Singleton
     fun PreferenceRepository(
         PreferenceRepository: PreferenceRepositoryImpl,
     ): PreferenceRepository

@@ -25,12 +25,18 @@
 package org.jraf.android.cinetoday.ui.settings
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import org.jraf.android.cinetoday.domain.movie.usecase.FetchAndSaveMoviesForTodayUseCase
+import org.jraf.android.cinetoday.domain.movie.usecase.IsFetchingMoviesUseCase
+import org.jraf.android.cinetoday.domain.prefs.usecase.GetLastRefreshDatePreferenceUseCase
 import org.jraf.android.cinetoday.domain.prefs.usecase.GetNewReleasesNotificationsPreferenceUseCase
 import org.jraf.android.cinetoday.domain.prefs.usecase.GetShowtimesIn24HFormatPreferenceUseCase
 import org.jraf.android.cinetoday.domain.prefs.usecase.SetNewReleasesNotificationsPreferenceUseCase
 import org.jraf.android.cinetoday.domain.prefs.usecase.SetShowtimesIn24HFormatPreferenceUseCase
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,12 +44,27 @@ class SettingsViewModel @Inject constructor(
     getShowtimesIn24HFormatPreference: GetShowtimesIn24HFormatPreferenceUseCase,
     private val setShowtimesIn24HFormatPreference: SetShowtimesIn24HFormatPreferenceUseCase,
 
-    getNewReleasesNotificationsPreferenceUseCase: GetNewReleasesNotificationsPreferenceUseCase,
-    private val setNewReleasesNotificationsPreferenceUseCase: SetNewReleasesNotificationsPreferenceUseCase,
+    getNewReleasesNotificationsPreference: GetNewReleasesNotificationsPreferenceUseCase,
+    private val setNewReleasesNotificationsPreference: SetNewReleasesNotificationsPreferenceUseCase,
+
+    private val fetchAndSaveMoviesForToday: FetchAndSaveMoviesForTodayUseCase,
+    _isFetchingMovies: IsFetchingMoviesUseCase,
+
+    private val getLastRefreshDatePreference: GetLastRefreshDatePreferenceUseCase,
 ) : ViewModel() {
     val showtimesIn24HFormat: Flow<Boolean> = getShowtimesIn24HFormatPreference()
     fun setShowtimesIn24HFormat(showtimesIn24HFormat: Boolean) = setShowtimesIn24HFormatPreference(showtimesIn24HFormat)
 
-    val newReleasesNotifications: Flow<Boolean> = getNewReleasesNotificationsPreferenceUseCase()
-    fun setNewReleasesNotifications(newReleasesNotifications: Boolean) = setNewReleasesNotificationsPreferenceUseCase(newReleasesNotifications)
+    val newReleasesNotifications: Flow<Boolean> = getNewReleasesNotificationsPreference()
+    fun setNewReleasesNotifications(newReleasesNotifications: Boolean) = setNewReleasesNotificationsPreference(newReleasesNotifications)
+
+    val isFetchingMovies: Flow<Boolean> = _isFetchingMovies()
+
+    fun onRefreshNowClick() {
+        viewModelScope.launch {
+            fetchAndSaveMoviesForToday(viewModelScope)
+        }
+    }
+
+    val lastRefreshDate: Flow<LocalDateTime?> = getLastRefreshDatePreference()
 }

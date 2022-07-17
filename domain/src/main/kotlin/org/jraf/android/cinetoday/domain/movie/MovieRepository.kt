@@ -33,4 +33,5 @@ interface MovieRepository {
     suspend fun fetchAndSaveMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope)
     fun getMovieList(): Flow<List<Movie>>
     fun getMovieWithShowtimes(id: String): Flow<Movie>
+    fun isFetchingMovies(): Flow<Boolean>
 }

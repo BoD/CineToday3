@@ -26,7 +26,9 @@ package org.jraf.android.cinetoday.data.movie
 
 import android.text.Html
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import org.jraf.android.cinetoday.api.MovieRemoteDataSource
 import org.jraf.android.cinetoday.api.RemoteMovie
@@ -34,6 +36,7 @@ import org.jraf.android.cinetoday.api.RemoteShowtime
 import org.jraf.android.cinetoday.domain.movie.MovieRepository
 import org.jraf.android.cinetoday.domain.movie.model.Movie
 import org.jraf.android.cinetoday.domain.movie.model.Showtime
+import org.jraf.android.cinetoday.domain.prefs.PreferenceRepository
 import org.jraf.android.cinetoday.localstore.LocalMovie
 import org.jraf.android.cinetoday.localstore.LocalMovieShowtime
 import org.jraf.android.cinetoday.localstore.LocalShowtime
@@ -45,7 +48,10 @@ import javax.inject.Inject
 class MovieRepositoryImpl @Inject constructor(
     private val movieRemoteDataSource: MovieRemoteDataSource,
     private val movieShowtimeLocalDataSource: MovieShowtimeLocalDataSource,
+    private val preferenceRepository: PreferenceRepository,
 ) : MovieRepository {
+    private val isFetchingMovies = MutableStateFlow(false)
+
     private suspend fun fetchMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope): Map<String, List<RemoteMovie>> {
         return movieRemoteDataSource
             .fetchMovies(theaterIds = theaterIds, from = from, to = to, coroutineScope = coroutineScope)
@@ -71,8 +77,15 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchAndSaveMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope) {
-        val moviesByTheater: Map<String, List<RemoteMovie>> = fetchMovies(theaterIds, from, to, coroutineScope)
-        saveMoviesWithShowtimes(moviesByTheater)
+        isFetchingMovies.value = true
+        try {
+            delay(4000)
+            val moviesByTheater: Map<String, List<RemoteMovie>> = fetchMovies(theaterIds, from, to, coroutineScope)
+            saveMoviesWithShowtimes(moviesByTheater)
+        } finally {
+            isFetchingMovies.value = false
+            preferenceRepository.updateLastRefreshDate()
+        }
     }
 
     override fun getMovieList(): Flow<List<Movie>> =
@@ -80,6 +93,8 @@ class MovieRepositoryImpl @Inject constructor(
 
     override fun getMovieWithShowtimes(id: String): Flow<Movie> =
         movieShowtimeLocalDataSource.getMovieWithShowtimes(id).map { localMovieShowtimes -> localMovieShowtimes.toMovie() }
+
+    override fun isFetchingMovies(): Flow<Boolean> = isFetchingMovies
 }
 
 

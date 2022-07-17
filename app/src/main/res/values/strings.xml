@@ -28,6 +28,9 @@
     <string name="theater_list_delete_cancel">Cancel</string>
     <string name="theater_list_delete_confirm">Confirm</string>
     <string name="theater_list_delete_confirmation">Theater deleted</string>
+    <string name="settings_refreshNow">Refresh now</string>
+    <string name="settings_refreshing">Refreshing…</string>
+    <string name="settings_lastRefreshDate">Last refresh: %1$s</string>
 
 
 </resources>

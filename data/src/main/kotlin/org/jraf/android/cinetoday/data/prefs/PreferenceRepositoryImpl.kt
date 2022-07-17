@@ -28,8 +28,11 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import org.jraf.android.cinetoday.domain.prefs.PreferenceRepository
+import org.jraf.android.cinetoday.util.datetime.timestampToLocalDateTime
 import org.jraf.android.kprefs.Prefs
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class PreferenceRepositoryImpl @Inject constructor(@ApplicationContext context: Context) : PreferenceRepository {
@@ -37,6 +40,7 @@ class PreferenceRepositoryImpl @Inject constructor(@ApplicationContext context: 
 
     private val showtimesIn24HFormat: MutableStateFlow<Boolean> by mainPrefs.BooleanFlow(true)
     private val newReleasesNotifications: MutableStateFlow<Boolean> by mainPrefs.BooleanFlow(true)
+    private val lastRefreshDate: MutableStateFlow<Long?> by mainPrefs.LongFlow()
 
     override fun getShowtimesIn24HFormat(): Flow<Boolean> = showtimesIn24HFormat
     override fun setShowtimesIn24HFormat(value: Boolean) {
@@ -46,5 +50,13 @@ class PreferenceRepositoryImpl @Inject constructor(@ApplicationContext context: 
     override fun getNewReleasesNotifications(): Flow<Boolean> = newReleasesNotifications
     override fun setNewReleasesNotifications(value: Boolean) {
         newReleasesNotifications.value = value
+    }
+
+    override fun updateLastRefreshDate() {
+        lastRefreshDate.value = System.currentTimeMillis()
+    }
+
+    override fun getLastRefreshDate(): Flow<LocalDateTime?> = lastRefreshDate.map { lastRefreshDate ->
+        lastRefreshDate?.let { timestamp -> timestampToLocalDateTime(timestamp) }
     }
 }
