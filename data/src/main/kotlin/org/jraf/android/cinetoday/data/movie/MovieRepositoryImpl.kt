@@ -26,7 +26,6 @@ package org.jraf.android.cinetoday.data.movie
 
 import android.text.Html
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -42,6 +41,7 @@ import org.jraf.android.cinetoday.localstore.LocalMovieShowtime
 import org.jraf.android.cinetoday.localstore.LocalShowtime
 import org.jraf.android.cinetoday.localstore.MovieShowtimeLocalDataSource
 import org.jraf.android.cinetoday.util.datetime.isoDateStringToLocalDate
+import org.jraf.android.cinetoday.util.logging.logd
 import java.util.Date
 import javax.inject.Inject
 
@@ -77,9 +77,12 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchAndSaveMovies(theaterIds: Set<String>, from: Date, to: Date, coroutineScope: CoroutineScope) {
+        if (isFetchingMovies.value) {
+            logd("Already fetching movies: skipping")
+            return
+        }
         isFetchingMovies.value = true
         try {
-            delay(4000)
             val moviesByTheater: Map<String, List<RemoteMovie>> = fetchMovies(theaterIds, from, to, coroutineScope)
             saveMoviesWithShowtimes(moviesByTheater)
         } finally {

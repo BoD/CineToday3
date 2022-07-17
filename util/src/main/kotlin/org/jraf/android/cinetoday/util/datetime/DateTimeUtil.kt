@@ -46,6 +46,14 @@ fun Date.atMidnight(): Date = Calendar.getInstance().apply {
     this[Calendar.MILLISECOND] = 0
 }.time
 
+fun Date.at8(): Date = Calendar.getInstance().apply {
+    time = this@at8
+    this[Calendar.HOUR_OF_DAY] = 8
+    this[Calendar.MINUTE] = 0
+    this[Calendar.SECOND] = 0
+    this[Calendar.MILLISECOND] = 0
+}.time
+
 
 fun Date.nextDay(): Date = Calendar.getInstance().apply {
     time = this@nextDay
@@ -92,4 +100,10 @@ fun formatDurationHourMinute(durationMinutes: Int): String {
 
 fun formatLocalDateTime(localDateTime: LocalDateTime): String {
     return localDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+}
+
+fun minutesUntilTomorrowAt8(): Long {
+    val now = Date()
+    val tomorrowAt8 = now.atMidnight().nextDay().at8()
+    return (tomorrowAt8.time - now.time) / 1000 / 60
 }

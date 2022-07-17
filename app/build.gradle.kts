@@ -88,6 +88,10 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
+
     // This dependency is needed for Hilt to bind happily, but should never be accessed directly from the code.
     // Instead, always use the Use Cases in the Domain module
     implementation(projects.data)

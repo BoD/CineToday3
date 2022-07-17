@@ -25,6 +25,8 @@
 package org.jraf.android.cinetoday
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
@@ -33,12 +35,16 @@ import coil.size.Dimension
 import coil.util.DebugLogger
 import dagger.hilt.android.HiltAndroidApp
 import org.jraf.android.cinetoday.util.logging.initLogging
+import org.jraf.android.cinetoday.work.scheduleLoadMoviesWorker
+import javax.inject.Inject
 
 @HiltAndroidApp
-class CineTodayApplication : Application(), ImageLoaderFactory {
+class CineTodayApplication : Application(), ImageLoaderFactory, Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         initLogging()
+
+        scheduleLoadMoviesWorker(this)
     }
 
     /**
@@ -82,4 +88,16 @@ class CineTodayApplication : Application(), ImageLoaderFactory {
             }
             .build()
     }
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    /**
+     * WorkManager + Hilt configuration.
+     * See https://developer.android.com/training/dependency-injection/hilt-jetpack#workmanager
+     */
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

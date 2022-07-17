@@ -6,5 +6,6 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.api)
     implementation(projects.localStore)
+
     implementation(libs.kprefs)
 }
