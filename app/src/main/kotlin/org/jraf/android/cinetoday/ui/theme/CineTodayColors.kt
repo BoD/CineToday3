@@ -27,32 +27,27 @@ package org.jraf.android.cinetoday.ui.theme
 import androidx.compose.ui.graphics.Color
 import androidx.wear.compose.material.Colors
 
-private val Purple200 = Color(0xFFBB86FC)
-private val Purple500 = Color(0xFF6200EE)
-private val Purple700 = Color(0xFF3700B3)
-private val Teal200 = Color(0xFF03DAC5)
-private val Red400 = Color(0xFFCF6679)
-private val Red30 = Color(0xFF4D1410)
-private val LightGray = Color.LightGray
-private val White = Color.White
-private val LightGreen400 = Color(0xFF9CCC65)
+private val CineTodayRedAccent = Color(0xFFFF8880)
+private val CineTodayRed500 = Color(0xFFF44336)
+private val CineTodayRed30 = Color(0xFF4D1410)
+private val CineTodayLightGreen400 = Color(0xFF9CCC65)
+private val CineTodayWhite = Color.White
+private val CineTodayBlack = Color.Black
 
 
 object CineTodayColor {
-    val MovieDefaultBackground = Red30
-    val ShowtimeTimeBackground = White
-    val ShowtimeTag = White
-    val Confirm = LightGreen400
+    val MovieDefaultBackground = CineTodayRed30
+    val ShowtimeTimeBackground = CineTodayWhite
+    val ShowtimeTag = CineTodayWhite
+    val Confirm = CineTodayLightGreen400
 }
 
 val CineTodayColors: Colors = Colors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200,
-    secondaryVariant = Teal200,
-    error = Red400,
-    onPrimary = Color.Black,
-    onSecondary = Color.Black,
-    onError = Color.Black
+    primary = CineTodayRed500,
+    primaryVariant = CineTodayRed500,
+    secondary = CineTodayRedAccent,
+    secondaryVariant = CineTodayRedAccent,
+    error = CineTodayRedAccent,
+    onPrimary = CineTodayBlack,
 )
 
