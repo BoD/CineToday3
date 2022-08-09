@@ -3388,7 +3388,7 @@ type News implements Node {
   """
   The pages of the news. This is were the readable content is stored.
   """
-  pages: [NewsPage!]
+  pages("When provided, will only select the given page" number: Int): [NewsPage!]
 
   """
   The slides of the news.
