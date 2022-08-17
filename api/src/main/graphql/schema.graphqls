@@ -103,7 +103,7 @@ type Query {
   """
   A list of news Allocine.
   """
-  newsList(after: String, "The amount of news to display." first: Int = 10, before: String, last: Int, "A global id you want the news to be related to. (Like Movie:1234, Series:1234, ... in base64 encoded)" parentId: String, "Order news list." order: [NewsSorting] = [LATEST_PUBLICATION], "Add sponsored news in the list." insertSponsored: Boolean = false, "Filter news by operation target type." operation: [SpecialOperationCode], "Filter news by categories." category: [NewsCategory], "Exclude news by categories." excludeCategory: [NewsCategory], "Filter news by universes." universe: [NewsUniverse], "Exclude news by universe." excludeUniverse: [NewsUniverse], "Filter news by types." type: [NewsType], "Exclude news by id." excludeId: [Int], "Exclude news by types." excludeType: [NewsType], "Filter news by entities linked." relatedType: [NewsRelatedType], "Filter folder news." isFolder: Boolean, "Does the news has an advice for children audience ?" forChildren: Boolean, "When provided, return only news tagged with these providers" svodProviders: [SvodProviders!], "When provided, return only the news written by one of the authors." authors: [String!], "When provided, will only select news that were published after this date." publishedFrom: DateTime, "When provided, return only the news not related to this tag." excludeTag: [String!], "When provided, return only the news who related to this tag." tag: [String!]): newsConnection
+  newsList(after: String, "The amount of news to display." first: Int = 10, before: String, last: Int, "A global id you want the news to be related to. (Like Movie:1234, Series:1234, ... in base64 encoded)" parentId: String, "Order news list." order: [NewsSorting] = [LATEST_PUBLICATION], "Add sponsored news in the list." insertSponsored: Boolean = false, "Filter news by operation target type." operation: [SpecialOperationCode], "Filter news by categories." category: [NewsCategory], "Exclude news by categories." excludeCategory: [NewsCategory], "Filter news by universes." universe: [NewsUniverse], "Exclude news by universe." excludeUniverse: [NewsUniverse], "Filter news by types." type: [NewsType], "Exclude news by id." excludeId: [Int], "Exclude news by types." excludeType: [NewsType], "Filter news by entities linked." relatedType: [NewsRelatedType], "Filter folder news." isFolder: Boolean, "Does the news has an advice for children audience ?" forChildren: Boolean, "When provided, return only news tagged with these providers" svodProviders: [SvodProviders!], "When provided, return only the news written by one of the authors." authors: [String!], "When provided, will only select news that were published after this date." publishedFrom: DateTime, "When provided, will only select news that were published before this date." publishedTo: DateTime, "When provided, return only the news not related to this tag." excludeTag: [String!], "When provided, return only the news who related to this tag." tag: [String!]): newsConnection
 
   """
   Fetches an object given its ID
@@ -10347,6 +10347,11 @@ enum MovieSorting {
   Movies sorted by the sum of the views on their video (TEASER and TRAILER).
   """
   VIDEOS_VIEWS_COUNT
+
+  """
+  Movies having a release with a release date will be sorted first.
+  """
+  HAS_RELEASE_FIRST
 }
 
 """
