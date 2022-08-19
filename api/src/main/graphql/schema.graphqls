@@ -10349,9 +10349,9 @@ enum MovieSorting {
   VIDEOS_VIEWS_COUNT
 
   """
-  Movies having a release with a release date will be sorted first.
+  Movies having a release with a past release date will be sorted first.
   """
-  HAS_RELEASE_FIRST
+  HAS_PAST_RELEASE_FIRST
 }
 
 """
