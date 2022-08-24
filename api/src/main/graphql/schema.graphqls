@@ -1087,6 +1087,8 @@ enum CountryCode {
 
   USA
 
+  USSR
+
   UZBEKISTAN
 
   VANUATU
@@ -1098,6 +1100,8 @@ enum CountryCode {
   WEST_GERMANY
 
   YEMEN
+
+  YUGOSLAVIA
 
   ZAIRE
 
