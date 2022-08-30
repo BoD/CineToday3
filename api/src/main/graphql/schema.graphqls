@@ -11347,6 +11347,11 @@ type EditorialReview implements Node {
   body: String
 
   """
+  The content of the editorial review on json format.
+  """
+  body_json: BodyJson
+
+  """
   The rating of the editorial review.
   """
   rating: Rating
