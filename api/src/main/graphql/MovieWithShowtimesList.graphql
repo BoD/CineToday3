@@ -6,14 +6,14 @@ query MovieWithShowtimesList($theaterId: String!, $from: DateTime!, $to: DateTim
         first: 50
         displayPreview: false
         order: [REVERSE_RELEASE_DATE, WEEKLY_POPULARITY]
-    ) @nonnull {
+    ) {
         totalCount
         pageInfo {
             hasNextPage
             endCursor
         }
-        edges @nonnull {
-            node @nonnull {
+        edges {
+            node {
                 ...MovieWithShowtimesFragment
             }
         }
@@ -23,39 +23,39 @@ query MovieWithShowtimesList($theaterId: String!, $from: DateTime!, $to: DateTim
 fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
     movie {
         id
-        title @nonnull
-        originalTitle @nonnull
-        credits(first: 3, activity: DIRECTOR) @nonnull {
-            edges @nonnull {
-                node @nonnull {
-                    person @nonnull {
-                        stringValue @nonnull
+        title
+        originalTitle
+        credits(first: 3, activity: DIRECTOR) {
+            edges {
+                node {
+                    person {
+                        stringValue
                     }
                 }
             }
         }
-        cast(first: 5) @nonnull {
-            edges @nonnull {
-                node @nonnull {
+        cast(first: 5) {
+            edges {
+                node {
                     actor {
-                        stringValue @nonnull
+                        stringValue
                     }
                     originalVoiceActor {
-                        stringValue @nonnull
+                        stringValue
                     }
                     voiceActor {
-                        stringValue @nonnull
+                        stringValue
                     }
                 }
             }
         }
-        releases(type: [RELEASED], country: FRANCE) @nonnull {
-            releaseDate @nonnull {
-                date @nonnull
+        releases(type: [RELEASED], country: FRANCE) {
+            releaseDate {
+                date
             }
         }
-        genres @nonnull
-        runtime @nonnull
+        genres
+        runtime
         videos(type: [TRAILER], first: 1) {
             files(quality: [STANDARD]) {
                 url
@@ -65,11 +65,11 @@ fragment MovieWithShowtimesFragment on MovieShowtimeLeaf {
             url
         }
         synopsis(long: true)
-        weeklyTheatersCount @nonnull
+        weeklyTheatersCount
     }
-    showtimes @nonnull {
-        id @nonnull
-        startsAt @nonnull
+    showtimes {
+        id
+        startsAt
         projection
         diffusionVersion
     }

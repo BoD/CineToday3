@@ -1,7 +1,7 @@
 // See https://docs.gradle.org/current/userguide/platforms.html
 enableFeaturePreview("VERSION_CATALOGS")
 
-// For some reason, this doesn't work
+// Use the project's global version catalog in this module
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
