@@ -3591,9 +3591,9 @@ enum NewsUniverse {
 
   SOUNDTRACK
 
-  GENERIC_IVORY_COAST
-
   GENERIC_TVACTU
+
+  GENERIC_IVORY_COAST
 }
 
 """
@@ -12306,6 +12306,8 @@ enum SpecialOperationCode {
   ROLLER_HOME
 
   NOVELAS_HOME
+
+  IMAX_HOME
 }
 
 """
