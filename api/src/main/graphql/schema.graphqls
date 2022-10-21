@@ -3811,6 +3811,11 @@ type NewsData {
   Differents fields for seo purposes.
   """
   seo: SeoNews
+
+  """
+  Differents fields for tracking purposes.
+  """
+  tracking: TrackingData
 }
 
 """
@@ -3821,6 +3826,26 @@ type SeoNews {
   Information to know if the entity is hidden.
   """
   hidden: Boolean
+}
+
+"""
+Differents fields for tracking purposes.
+"""
+type TrackingData {
+  """
+  VgWort tracking data.
+  """
+  vgwort: TrackingDataVgwort
+}
+
+"""
+WgWort tracking data.
+"""
+type TrackingDataVgwort {
+  """
+  VgWort public key.
+  """
+  public: String
 }
 
 """
