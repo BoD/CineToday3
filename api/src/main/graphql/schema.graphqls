@@ -9644,7 +9644,7 @@ type FestivalEdition implements Node {
   """
   The news related to this edition.
   """
-  news(after: String, "The amount of news to return." first: Int = 10, before: String, last: Int, "The order of the news to return. If none provided the \"LATEST_PUBLICATION\" order is used." order: [NewsSorting] = [LATEST_PUBLICATION], "If provided, will only return the news that match that category. If many categories are provided, every news that match at least one type will be included." category: [NewsCategory] = []): newsConnection
+  news(after: String, "The amount of news to return." first: Int = 10, before: String, last: Int, "The order of the news to return. If none provided the \"LATEST_PUBLICATION\" order is used." order: [NewsSorting] = [LATEST_PUBLICATION], "If provided, will only return the news that match that category. If many categories are provided, every news that match at least one type will be included." category: [NewsCategory] = [], "A global id you want the news to be related to. (Like Movie:1234, Series:1234, ... in base64 encoded)" parentId: String, "If provided, will only return the news that match that type. If many types are provided, every news that match at least one type will be included." type: [NewsType] = []): newsConnection
 
   """
   The list of the images for this festival edition.
