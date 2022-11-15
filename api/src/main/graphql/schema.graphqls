@@ -9505,6 +9505,11 @@ type Festival implements Node {
   awards: [FestivalAward]
 
   """
+  The paginated awards of the festival.
+  """
+  awardsList(after: String, "The amount of awards to return." first: Int = 10, before: String, last: Int, "The order of the awards to return." order: [AwardsSorting] = [ID_ASC]): FestivalAwardConnection
+
+  """
   The list of the news related to this festival.
   """
   news(after: String, "The amount of news to return." first: Int = 10, before: String, last: Int, "The order of the news to return. If none provided the \"LATEST_PUBLICATION\" order is used." order: [NewsSorting] = [LATEST_PUBLICATION], "If provided, will only return the news that match that category. If many categories are provided, every news that match at least one type will be included." category: [NewsCategory] = []): newsConnection
@@ -9776,6 +9781,53 @@ type FestivalAward {
   The selections in this festival award
   """
   selections("If true will include only the winners. Does nothing by default." hasWon: Boolean = null, "The amount of selections to return." first: Int = 50): [FestivalSelection]
+}
+
+"""
+Sorting criteria for Award
+"""
+enum AwardsSorting {
+  """
+  Award sorted by id asc.
+  """
+  ID_ASC
+
+  """
+  Award sorted by id desc.
+  """
+  ID_DESC
+}
+
+"""
+A connection to a list of items.
+"""
+type FestivalAwardConnection {
+  totalCount: Int
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  Information to aid in pagination.
+  """
+  edges: [FestivalAwardEdge]
+}
+
+"""
+An edge in a connection.
+"""
+type FestivalAwardEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: FestivalAward
+
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
 }
 
 """
