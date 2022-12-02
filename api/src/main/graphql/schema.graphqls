@@ -329,6 +329,16 @@ type Publication {
   endsAt: DateTime
 
   """
+  The original date at which the publication starts.
+  """
+  originalStartsAt: DateTime
+
+  """
+  The original date at which the publication ends.
+  """
+  originalEndsAt: DateTime
+
+  """
   An object of range between two dates.
   """
   publicationRange: [DateTimeRange]
