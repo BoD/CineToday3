@@ -9014,6 +9014,11 @@ type SeriesFlags {
   hasOnlineRelease: Boolean
 
   """
+  True if the series has at least one news.
+  """
+  hasNews: Boolean
+
+  """
   True if the series has bluray or dvd.
   """
   hasPhysicalProduct: Boolean
@@ -11651,6 +11656,11 @@ type MovieFlags {
   True if the movie is approved by the 'club 300'.
   """
   isClub300Approved: Boolean
+
+  """
+  True if the movie has at least one news with tag 'club 300'.
+  """
+  hasClub300News: Boolean
 
   """
   True if the movie has at least one news.
