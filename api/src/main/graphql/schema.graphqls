@@ -9675,6 +9675,8 @@ type FestivalEdition implements Node {
   The list of the images for this festival edition.
   """
   images("The amount of images to return." first: Int = 10, "The order of the images to return. If none provided the \"RANK\" order is used." order: [EntityImageSorting] = [RANK], "If true will also include videos from festival edition." withChildren: Boolean = false): [InternalImage]
+
+  juries: [FestivalJury]
 }
 
 """
@@ -9741,6 +9743,24 @@ type newsEdge {
   A cursor for use in pagination.
   """
   cursor: String!
+}
+
+type FestivalJury {
+  """
+  Role on the festival (!!! still in development, data can be incomplete !!!)
+  """
+  role: String
+
+  """
+  The person that is part of the jury.
+  """
+  person: Person
+
+  festival: Festival
+
+  edition: FestivalEdition
+
+  competition: FestivalCompetition
 }
 
 """
