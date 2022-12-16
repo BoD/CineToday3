@@ -1527,7 +1527,7 @@ type Movie implements Node {
   """
   The list of the news related to this movie.
   """
-  news("The amount of news to return." first: Int = 10, "The order of the news to return. If none provided the \"LATEST_PUBLICATION\" order is used." order: [NewsSorting] = [LATEST_PUBLICATION], "If provided, will only return the news that match that category. If many categories are provided, every news that match at least one type will be included." category: [NewsCategory] = []): [News]
+  news("The amount of news to return." first: Int = 10, "The order of the news to return. If none provided the \"LATEST_PUBLICATION\" order is used." order: [NewsSorting] = [LATEST_PUBLICATION], "If provided, will only return the news that match that category. If many categories are provided, every news that match at least one type will be included." category: [NewsCategory] = [], "When provided, return only the news related to this tag." tag: [String!] = []): [News]
 
   """
   The total amount of news this movie has.
@@ -10676,51 +10676,53 @@ input MovieFlagsType {
 }
 
 enum SvodProviders {
-  OCS
-
-  NETFLIX
-
-  CANALPLAY
+  ADN
 
   AMAZON_PRIME
 
-  DISNEY
-
   APPLE_TV
 
-  MY_CANAL
+  BENSHI
 
-  SFR_PLAY
+  CANALPLAY
+
+  DISNEY
 
   FILMO_TV
 
   GLOBO_PLAY
 
-  SKY
-
   HBO
-
-  MOVISTAR
-
-  SALTO
 
   HBO_GO
 
-  MADELEN
-
-  BENSHI
-
   JOYN
 
-  TV_NOW
-
-  STARZ_PLAY
+  MADELEN
 
   MAGENTA_TV
 
-  ADN
+  MOVISTAR
 
   MUBI
+
+  MY_CANAL
+
+  NETFLIX
+
+  OCS
+
+  SALTO
+
+  SFR_PLAY
+
+  STARZ_PLAY
+
+  SKY
+
+  TV_NOW
+
+  UNIVERS_CINE
 }
 
 enum SvodFlags {
