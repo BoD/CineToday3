@@ -9677,6 +9677,11 @@ type FestivalEdition implements Node {
   images("The amount of images to return." first: Int = 10, "The order of the images to return. If none provided the \"RANK\" order is used." order: [EntityImageSorting] = [RANK], "If true will also include videos from festival edition." withChildren: Boolean = false): [InternalImage]
 
   juries: [FestivalJury]
+
+  """
+  The list of videos related to this festival edition.
+  """
+  videos(after: String, first: Int = 10, before: String, last: Int): videosConnection
 }
 
 """
@@ -9791,6 +9796,40 @@ type FestivalCompetition {
   The selections in this festival competition
   """
   selections("If true will include only the winners. Does nothing by default." hasWon: Boolean = null, "The amount of selections to return." first: Int = 50): [FestivalSelection]
+}
+
+"""
+A connection to a list of items.
+"""
+type videosConnection {
+  totalCount: Int
+
+  backlink("A custom label set by backoffice." label: String): Backlink
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  Information to aid in pagination.
+  """
+  edges: [videosEdge]
+}
+
+"""
+An edge in a connection.
+"""
+type videosEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: Video
+
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
 }
 
 """
@@ -13888,40 +13927,6 @@ enum VideoSpecialFilter {
   Select some video from movies or series that do have a SVOD release.
   """
   SVOD_RELEASED_ENTITIES
-}
-
-"""
-A connection to a list of items.
-"""
-type videosConnection {
-  totalCount: Int
-
-  backlink("A custom label set by backoffice." label: String): Backlink
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  Information to aid in pagination.
-  """
-  edges: [videosEdge]
-}
-
-"""
-An edge in a connection.
-"""
-type videosEdge {
-  """
-  The item at the end of the edge.
-  """
-  node: Video
-
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
 }
 
 enum MovieRecommendationAlgo {
