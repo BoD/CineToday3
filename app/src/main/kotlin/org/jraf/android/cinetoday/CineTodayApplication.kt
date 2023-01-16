@@ -78,10 +78,10 @@ class CineTodayApplication : Application(), ImageLoaderFactory, Configuration.Pr
                     val newUrl =
                         if (chain.size.width is Dimension.Undefined || (chain.size.width as Dimension.Pixels).px > 200) {
                             // Movie poster
-                            "https://JRAF.org/resize?image_url=${originalUrl}&width=200&image_format=webp"
+                            "http://server.jraf.org:8000/resize?image_url=${originalUrl}&width=200&image_format=webp"
                         } else {
                             // Theater logo
-                            "https://JRAF.org/resize?image_url=${originalUrl}&width=${chain.size.width}&height=${chain.size.height}&image_format=webp&scale_type=crop"
+                            "http://server.jraf.org:8000/resize?image_url=${originalUrl}&width=${chain.size.width}&height=${chain.size.height}&image_format=webp&scale_type=crop"
                         }
                     chain.proceed(chain.request.newBuilder().data(newUrl).build())
                 }
