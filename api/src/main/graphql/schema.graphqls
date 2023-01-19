@@ -1440,6 +1440,11 @@ type Movie implements Node {
   synopsis("If true will return the full synopsis." long: Boolean = false, "If true will strip the content." strip: Boolean = false): String
 
   """
+  The synopsis of the movie, on json format.
+  """
+  synopsis_json: BodyJson
+
+  """
   The image of the movie.
   """
   poster: InternalImage
@@ -1930,6 +1935,21 @@ enum Language {
   ZANSKARI
 
   ZULU
+}
+
+"""
+An object containing all the informations needed to display a body_json
+"""
+type BodyJson {
+  """
+  The body_json field itself.
+  """
+  body: Json
+
+  """
+  The related entities of the body_json
+  """
+  relatedEntities: [Node]
 }
 
 enum Genre {
@@ -2440,6 +2460,11 @@ type Person implements Node {
   The biography of this person, can be short or long (short by default).
   """
   biography("If true will return the full biography." long: Boolean = false): String
+
+  """
+  The biography of this person on json format.
+  """
+  biography_json: BodyJson
 
   """
   The list of nationalities to which this person is related to.
@@ -3538,21 +3563,6 @@ type NewsPage {
   The video attached to this news. This is the player that appears at the top of the news on the website.
   """
   video: Video
-}
-
-"""
-An object containing all the informations needed to display a body_json
-"""
-type BodyJson {
-  """
-  The body_json field itself.
-  """
-  body: Json
-
-  """
-  The related entities of the body_json
-  """
-  relatedEntities: [Node]
 }
 
 """
@@ -6628,6 +6638,11 @@ type Series implements Node {
   synopsis("If true will return the full synopsis." long: Boolean = false, "If true will strip the content." strip: Boolean = false): String
 
   """
+  The synopsis of the serie, on json format.
+  """
+  synopsis_json: BodyJson
+
+  """
   The keywords of the series.
   """
   keywords: String
@@ -9681,7 +9696,7 @@ type FestivalEdition implements Node {
   """
   The list of videos related to this festival edition.
   """
-  videos(after: String, first: Int = 10, before: String, last: Int): videosConnection
+  videos(after: String, first: Int = 10, before: String, last: Int, "The order of the videos to return. If none provided the \"RANK\" order is used." order: [EntityVideoSorting] = [RANK], type: [VideoType]): videosConnection
 }
 
 """
