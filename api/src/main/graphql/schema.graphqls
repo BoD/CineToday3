@@ -44,7 +44,12 @@ type Query {
   """
   Selected movies, series and persons for a festival and an edition.
   """
-  festivalSelection("The id of the festival." id: String, "The internal id of the festival." internalId: String): FestivalSelection
+  festivalSelection("The id of the festival." id: String): FestivalSelection
+
+  """
+  Retrieves a list of festival awards
+  """
+  award("The id of the festival.  (Festival:1234 in base64 encoded)" id: String, "The amount of awards to display." first: Int = 10, "offset encoded" after: String): FestivalAward
 
   """
   Get an image of an entity.
@@ -8229,6 +8234,8 @@ enum FacetFieldValue {
 
   THEME
 
+  THEME_TAG
+
   PHYSICAL_PRODUCT
 }
 
@@ -9875,6 +9882,11 @@ type FestivalAward {
   The selections in this festival award
   """
   selections("If true will include only the winners. Does nothing by default." hasWon: Boolean = null, "The amount of selections to return." first: Int = 50): [FestivalSelection]
+
+  """
+  WIP - The selections for this award.
+  """
+  selection(after: String, "The amount of entries to return." first: Int = 5, before: String, last: Int, "It's an entity id in base64. If provided, will only return the selection where the entity is present." entity: String = null, "If true will include only the winners. Does nothing by default." hasWon: Boolean = null): FestivalSelectionConnection
 }
 
 """
@@ -14637,6 +14649,23 @@ type ThemeFacet implements FacetValue {
   The age which type match.
   """
   theme: Tag
+}
+
+type ThemeTagFacet implements FacetValue {
+  """
+  The aggregation value name.
+  """
+  key: String!
+
+  """
+  The aggregation value count.
+  """
+  doc_count: Int!
+
+  """
+  The theme Tag3D which type match.
+  """
+  theme_tag: CustomType
 }
 
 type PhysicalProductFacet implements FacetValue {
