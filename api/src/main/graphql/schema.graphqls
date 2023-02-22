@@ -7981,6 +7981,11 @@ enum ProductSorting {
   Products sorted by release date with the older products first.
   """
   OLDEST
+
+  """
+  Products sorted by min price in offers list.
+  """
+  MIN_PRICE
 }
 
 """
