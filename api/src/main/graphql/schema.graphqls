@@ -3375,6 +3375,12 @@ enum NewsCategory {
 
   VIDEO_GAMES_FEATURE
 
+  SERIES_DID_YOU_KNOW
+
+  SERIES_QUIZ
+
+  SERIES_STREAMING
+
   EMISSIONS_MAGS
 
   TELEREALITE
@@ -7983,7 +7989,7 @@ enum ProductSorting {
   OLDEST
 
   """
-  Products sorted by min price in offers list.
+  Products sorted by offers lowest price first.
   """
   MIN_PRICE
 }
