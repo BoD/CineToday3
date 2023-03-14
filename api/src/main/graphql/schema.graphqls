@@ -3381,6 +3381,8 @@ enum NewsCategory {
 
   SERIES_STREAMING
 
+  ON_TV
+
   EMISSIONS_MAGS
 
   TELEREALITE
