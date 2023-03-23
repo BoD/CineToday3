@@ -2268,6 +2268,11 @@ type MovieData {
   moviepilot: String
 
   """
+  IMDb ID.
+  """
+  imdb: String
+
+  """
   An advice of the redaction.
   """
   recommendation: Recommendation
