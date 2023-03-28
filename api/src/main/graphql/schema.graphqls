@@ -4112,6 +4112,11 @@ type Profile {
   Email has been validated by the user.
   """
   isEmailValidated: Boolean
+
+  """
+  Check if CGU are validated
+  """
+  isCguValidated: Boolean
 }
 
 type UserSharingPreferences {
