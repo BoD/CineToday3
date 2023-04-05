@@ -5173,6 +5173,28 @@ enum Accessibility {
   SENSORY_FRIENDLY
 
   SUBTITLED
+
+  AUDIO_LOOP_CINEMA
+
+  AUDIO_LOOP_PATRON
+
+  TWAVOX
+
+  FIDELIO
+
+  DOLBY_ACCESSIBILITY
+
+  SONY_ACCESSIBILITY
+
+  SENNHEISER_ACCESSIBILITY
+
+  CINE_CONNECT_SENNHEISER_ACCESSIBILITY
+
+  LISTEN_EVERYWHERE
+
+  GRETA
+
+  AUTISM_FRIENDLY
 }
 
 """
@@ -6675,7 +6697,7 @@ type Series implements Node {
   """
   The paginated seasons of the series.
   """
-  seasons(after: String, "The amount of seasons to return." first: Int = 10, before: String, last: Int, "When provided, will only select seasons with the choosen status." status: [Status], "The order of the seasons to return." order: [SeasonSorting] = [NUMBER_ASC]): seasonsConnection
+  seasons(after: String, "The amount of seasons to return." first: Int = 10, before: String, last: Int, "When provided, will only select seasons with the choosen status." status: [Status], "Technical flags about series season to have rapid information" flags: SeriesSeasonFlags, "The order of the seasons to return." order: [SeasonSorting] = [NUMBER_ASC]): seasonsConnection
 
   """
   The people playing on this series based on current season.
@@ -6936,6 +6958,16 @@ enum Status {
   the series is being produced.
   """
   TO_COME
+}
+
+"""
+Technical flags about series season to have rapid information
+"""
+input SeriesSeasonFlags {
+  """
+  True if the season has vod/vodest.
+  """
+  has_vod_product: Boolean
 }
 
 """
@@ -9030,7 +9062,7 @@ enum ReleaseTagFlag {
 }
 
 """
-Technical flags about movie to have rapid information
+Technical flags about series to have rapid information
 """
 type SeriesFlags {
   """
@@ -12412,6 +12444,11 @@ type Showtime implements Node {
   True if showtime is displayed in theater in the first outing week of movie.
   """
   isWeeklyMovieOuting: Boolean
+
+  """
+  Showtime accessibility features
+  """
+  accessibility: [Accessibility]
 
   """
   The projection format.
