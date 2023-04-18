@@ -5266,6 +5266,8 @@ enum Experience {
   TRADITIONAL_AUDITORIUM
 
   TREMOR_FX
+
+  E_4D_EMOTION
 }
 
 """
