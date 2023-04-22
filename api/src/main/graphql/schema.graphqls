@@ -246,6 +246,8 @@ type Query {
   deletedEntity("The id of the entity (For exemple 'Movie:1234' or 'Series:5678' encoded in base64)." id: String): DeletedEntity
 
   author("The id of the author. (Author:1234 in base64 encoded)" id: String, "The internal id of the author." internalId: Int): Author
+
+  showtime("The id of the showtime. (Showtime:1234 in base64 encoded)" id: String, "The internal id of the showtime." internalId: BigInt): ShowtimeWithParentsId
 }
 
 """
@@ -14067,6 +14069,130 @@ type DeletedEntity {
   the date when the entity was deleted.
   """
   createdAt: DateTime
+}
+
+type ShowtimeWithParentsId implements Node {
+  """
+  The id of the showtime.
+  """
+  id: ID!
+
+  """
+  The internal id of the showtime.
+  """
+  internalId: BigInt
+
+  """
+  The start date of the showtime (the hour is about the theater).
+  """
+  startsAt: DateTime
+
+  """
+  The theater screens related to this showtime.
+  """
+  screen: TheaterScreen
+
+  stringValue: String
+
+  """
+  The diffusion version.
+  """
+  diffusionVersion: ShowtimeVersion
+
+  """
+  The comforts available in showtime
+  """
+  comfort: [Comfort]
+
+  """
+  !!! WARNING - The data in this endpoint are sensible and not accurate. You should not use them as long as this warning is present !!! The services available in showtime
+  """
+  service: [TheaterService]
+
+  """
+  The experience of the showtime
+  """
+  experience: [Experience]
+
+  """
+  The projection of the showtime
+  """
+  projection: [Projection]
+
+  """
+  The picture of the showtime
+  """
+  picture: [Picture]
+
+  """
+  The language of the showtime
+  """
+  languages: [Language]
+
+  """
+  The diffusion sound of the showtime
+  """
+  sound: [Sound]
+
+  """
+  The delay between the indicated start date of the showtime and the actual beginning of the projection.
+  """
+  timeBeforeStart: DateInterval
+
+  """
+  Technical information about the showtime.
+  """
+  data: ShowtimeData
+
+  """
+  Technical information about the showtime.
+  """
+  tags("Filter the tags." filter: [TagsFilterType!]): [String!]!
+
+  """
+  True if showtime is preview.
+  """
+  isPreview: Boolean
+
+  """
+  True if showtime is link on movies that is not in theater in the two showtime week but have showtime in future.
+  """
+  isFutureReleaseSoon: Boolean
+
+  """
+  True if showtime is displayed in theater in the first outing week of movie.
+  """
+  isWeeklyMovieOuting: Boolean
+
+  """
+  Showtime accessibility features
+  """
+  accessibility: [Accessibility]
+
+  """
+  The projection format.
+  """
+  format: ProjectionFormat @deprecated(reason: "Use projection instead.")
+
+  """
+  The projection techno.
+  """
+  techno: [TechnoFlag] @deprecated(reason: "Use experience instead.")
+
+  """
+  The projection language.
+  """
+  version: Language @deprecated(reason: "This field is not longer used. Use diffusionVersion to have real version.")
+
+  """
+  The movies broadcasted in the theater.
+  """
+  movie: Movie
+
+  """
+  The theaters where the movie is showing.
+  """
+  theater: Theater
 }
 
 type Mutation {
