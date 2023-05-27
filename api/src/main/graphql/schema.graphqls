@@ -7164,6 +7164,11 @@ type Season implements Node {
   """
   synopsis("If true will return the full synopsis." long: Boolean = false, "If true will strip the content." strip: Boolean = false): String
 
+  """
+  The synopsis of the season, on json format.
+  """
+  synopsis_json: BodyJson
+
   releaseFlags: ReleaseFlags
 
   """
@@ -7247,6 +7252,11 @@ type Episode implements Node {
   The synopsis of the episode, can be short or long (short by default).
   """
   synopsis("If true will return the full synopsis." long: Boolean = false, "If true will strip the content." strip: Boolean = false): String
+
+  """
+  The synopsis of the episode, on json format.
+  """
+  synopsis_json: BodyJson
 
   """
   The number of the episode in its season
