@@ -1564,7 +1564,7 @@ type Movie implements Node {
   """
   The list of the user reviews of this Movie.
   """
-  userReviews(after: String, "The amount of users reviews to display." first: Int = 10, before: String, last: Int, "Only includes reviews that were written after this date." from: DateTime, "Only includes reviews that were written before this date." to: DateTime, "Filters the reviews by positive or negative sentiment." sentiment: ReviewSentimentFilter = BOTH, "Only includes reviews for rating equals to X or X,5." rating: ReviewRating, "A filter on reviews statuses" statuses: [ReviewStatus!], "The order to apply to the reviews." order: [ReviewSorting] = [LATEST]): userReviewsConnection
+  userReviews(after: String, "The amount of users reviews to display." first: Int = 10, before: String, last: Int, "Only includes reviews that were written after this date." from: DateTime, "Only includes reviews that were written before this date." to: DateTime, "Filters the reviews by positive or negative sentiment." sentiment: ReviewSentimentFilter = BOTH, "Only includes reviews for rating equals to X or X,5." rating: ReviewRating, "A filter on range of reviews rating" ratingList: [ReviewRatingFloat], "A filter on reviews statuses" statuses: [ReviewStatus!], "The order to apply to the reviews." order: [ReviewSorting] = [LATEST]): userReviewsConnection
 
   """
   Reviews written by the website itself.
@@ -6866,7 +6866,7 @@ type Series implements Node {
   """
   The list of the user reviews of this Series.
   """
-  userReviews(after: String, "The amount of user's reviews to return." first: Int = 10, before: String, last: Int, "Only includes reviews that were written after this date." from: DateTime, "Only includes reviews that were written before this date." to: DateTime, "Filters the reviews by positive or negative sentiment." sentiment: ReviewSentimentFilter = BOTH, "Only includes reviews for rating equals to X or X,5." rating: ReviewRating, "The order to apply to the reviews." order: [ReviewSorting] = [LATEST], "If true will also include reviews from seasons of the parentId." withChildren: Boolean = false, "A filter on reviews statuses" statuses: [ReviewStatus!]): userReviewsConnection
+  userReviews(after: String, "The amount of user's reviews to return." first: Int = 10, before: String, last: Int, "Only includes reviews that were written after this date." from: DateTime, "Only includes reviews that were written before this date." to: DateTime, "Filters the reviews by positive or negative sentiment." sentiment: ReviewSentimentFilter = BOTH, "Only includes reviews for rating equals to X or X,5." rating: ReviewRating, "A filter on range of reviews rating" ratingList: [ReviewRatingFloat], "The order to apply to the reviews." order: [ReviewSorting] = [LATEST], "If true will also include reviews from seasons of the parentId." withChildren: Boolean = false, "A filter on reviews statuses" statuses: [ReviewStatus!]): userReviewsConnection
 
   """
   The selections the series was selected in.
@@ -7152,7 +7152,7 @@ type Season implements Node {
   """
   The list of the user reviews of this Season.
   """
-  userReviews(after: String, "The amount of user's reviews to return." first: Int = 10, before: String, last: Int, "Only includes reviews that were written after this date." from: DateTime, "Only includes reviews that were written before this date." to: DateTime, "Filters the reviews by positive or negative sentiment." sentiment: ReviewSentimentFilter = BOTH, "Only includes reviews for rating equals to X or X,5." rating: ReviewRating, "The order to apply to the reviews." order: [ReviewSorting] = [LATEST], "If true will also include reviews from episodes of the parentId." withChildren: Boolean = false, "A filter on reviews statuses" statuses: [ReviewStatus!]): userReviewsConnection
+  userReviews(after: String, "The amount of user's reviews to return." first: Int = 10, before: String, last: Int, "Only includes reviews that were written after this date." from: DateTime, "Only includes reviews that were written before this date." to: DateTime, "Filters the reviews by positive or negative sentiment." sentiment: ReviewSentimentFilter = BOTH, "Only includes reviews for rating equals to X or X,5." rating: ReviewRating, "A filter on range of reviews rating" ratingList: [ReviewRatingFloat], "The order to apply to the reviews." order: [ReviewSorting] = [LATEST], "If true will also include reviews from episodes of the parentId." withChildren: Boolean = false, "A filter on reviews statuses" statuses: [ReviewStatus!]): userReviewsConnection
 
   """
   The audiences of the season per country.
@@ -8605,6 +8605,33 @@ enum ReviewRating {
   """
   Only show reviews for rating equals to 5.
   """
+  FIVE
+}
+
+"""
+Filter users reviews by n floating ratings.
+"""
+enum ReviewRatingFloat {
+  ZERO
+
+  ZERO_HALF
+
+  ONE
+
+  ONE_HALF
+
+  TWO
+
+  TWO_HALF
+
+  THREE
+
+  THREE_HALF
+
+  FOUR
+
+  FOUR_HALF
+
   FIVE
 }
 
@@ -12749,7 +12776,7 @@ type Program implements Node {
   """
   The list of the user reviews of this Program.
   """
-  userReviews(after: String, first: Int = 10, before: String, last: Int, "Only includes reviews that were written after this date." from: DateTime, "Only includes reviews that were written before this date." to: DateTime, "Filters the reviews by positive or negative sentiment." sentiment: ReviewSentimentFilter = BOTH, "The order to apply to the reviews." order: [ReviewSorting] = [LATEST], "Only includes reviews for rating equals to X or X,5." rating: ReviewRating, "If true will also include reviews from seasons of the parentId." withChildren: Boolean = false): userReviewsConnection
+  userReviews(after: String, first: Int = 10, before: String, last: Int, "Only includes reviews that were written after this date." from: DateTime, "Only includes reviews that were written before this date." to: DateTime, "Filters the reviews by positive or negative sentiment." sentiment: ReviewSentimentFilter = BOTH, "The order to apply to the reviews." order: [ReviewSorting] = [LATEST], "Only includes reviews for rating equals to X or X,5." rating: ReviewRating, "A filter on range of reviews rating" ratingList: [ReviewRatingFloat], "If true will also include reviews from seasons of the parentId." withChildren: Boolean = false): userReviewsConnection
 
   """
   Informations about the first broadcast of the program.
